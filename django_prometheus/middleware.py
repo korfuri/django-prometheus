@@ -141,9 +141,17 @@ class PrometheusAfterMiddleware(BasePrometheusMiddleware):
     def _transport(self, request):
         return 'https' if request.is_secure() else 'http'
 
+    def _method(self, request):
+        m = request.method
+        if m not in ('GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'TRACE',
+                     'OPTIONS', 'CONNECT', 'PATCH'):
+            return '<invalid method>'
+        return m
+
     def process_request(self, request):
         transport = self._transport(request)
-        self.requests_by_method.labels(request.method).inc()
+        method = self._method(request)
+        self.requests_by_method.labels(method).inc()
         self.requests_by_transport.labels(transport).inc()
         if request.is_ajax():
             self.ajax_requests.inc()
@@ -152,18 +160,21 @@ class PrometheusAfterMiddleware(BasePrometheusMiddleware):
 
     def process_view(self, request, view_func, *view_args, **view_kwargs):
         transport = self._transport(request)
+        method = self._method(request)
         name = request.resolver_match.view_name or '<unnamed view>'
         self.requests_by_view.labels(name).inc()
         self.requests_by_view_transport_method.labels(
-            name, transport, request.method).inc()
+            name, transport, method).inc()
 
     def process_template_response(self, request, response):
-        self.responses_by_templatename.labels(response.template_name).inc()
+        self.responses_by_templatename.labels(str(
+            response.template_name)).inc()
         return response
 
     def process_response(self, request, response):
         self.responses_by_status.labels(str(response.status_code)).inc()
-        self.responses_by_charset.labels(response.charset).inc()
+        if hasattr(response, 'charset'):
+            self.responses_by_charset.labels(str(response.charset)).inc()
         if response.streaming:
             self.responses_streaming.inc()
         self.responses_body_bytes.observe(len(response.content))

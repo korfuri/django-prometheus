@@ -3,6 +3,10 @@ Export Django monitoring metrics for Prometheus.io
 
 ## Usage
 
+### Requirements
+
+* Django >= 1.8
+
 ### Installation
 
 Install with:
