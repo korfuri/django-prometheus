@@ -13,8 +13,9 @@ requests_latency_before = Histogram(
     ('Histogram of requests processing time (including middleware '
      'processing time).'))
 requests_unknown_latency_before = Counter(
-    'django_http_requests_unknown_latency_total',
-    'Count of requests for which the latency was unknown.')
+    'django_http_requests_unknown_latency_including_middlewares_total',
+    ('Count of requests for which the latency was unknown (when computing '
+     'django_http_requests_latency_including_middlewares_seconds).'))
 
 
 class PrometheusBeforeMiddleware(object):
