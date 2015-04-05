@@ -28,9 +28,12 @@ def SetupPrometheusExports():
     SetupPrometheusEndpointOnPort(8001)
 
 
-def PowersOf(logbase, count, lower=0):
+def PowersOf(logbase, count, lower=0, include_zero=True):
     """Returns a list of count powers of logbase (from logbase**lower)."""
-    return [logbase ** i for i in range(lower, count)] + [_INF]
+    if not include_zero:
+        return [logbase ** i for i in range(lower, count)] + [_INF]
+    else:
+        return [0] + [logbase ** i for i in range(lower, count)] + [_INF]
 
 
 class BasePrometheusMiddleware(object):
