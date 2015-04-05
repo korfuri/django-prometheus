@@ -128,6 +128,16 @@ class PrometheusAfterMiddleware(BasePrometheusMiddleware):
             'django_http_responses_streaming_total',
             'Count of streaming responses.')
 
+        # Set in process_exception
+        self.exceptions_by_type = self.addCounter(
+            'django_http_exceptions_total_by_type',
+            'Count of exceptions by object type',
+            ['type'])
+        self.exceptions_by_view = self.addCounter(
+            'django_http_exceptions_total_by_view',
+            'Count of exceptions by view.',
+            ['view_name'])
+
     def _transport(self, request):
         return 'https' if request.is_secure() else 'http'
 
@@ -160,3 +170,10 @@ class PrometheusAfterMiddleware(BasePrometheusMiddleware):
         self.requests_latency.observe(TimeSince(
             request.prometheus_after_middleware_event))
         return response
+
+    def process_exception(self, request, exception):
+        name = request.resolver_match.view_name or '<unnamed view>'
+        self.exceptions_by_type.labels(type(exception).__name__).inc()
+        self.exceptions_by_view.labels(name).inc()
+        self.requests_latency.observe(TimeSince(
+            request.prometheus_after_middleware_event))
