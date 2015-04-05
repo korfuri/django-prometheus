@@ -58,7 +58,6 @@ class PrometheusBeforeMiddleware(BasePrometheusMiddleware):
             'django_http_requests_latency_including_middlewares_seconds',
             ('Histogram of requests processing time (including middleware '
              'processing time).'))
-        SetupPrometheusExports()
 
     def process_request(self, request):
         self.requests_total.inc()
@@ -188,3 +187,8 @@ class PrometheusAfterMiddleware(BasePrometheusMiddleware):
         self.exceptions_by_view.labels(name).inc()
         self.requests_latency.observe(TimeSince(
             request.prometheus_after_middleware_event))
+
+
+# The prometheus exporter is global, so we initialize it once in the
+# global scope.
+SetupPrometheusExports()
