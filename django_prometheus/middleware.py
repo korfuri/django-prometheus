@@ -50,14 +50,14 @@ class PrometheusBeforeMiddleware(BasePrometheusMiddleware):
     def __init__(self):
         self.requests_total = self.addCounter(
             'django_http_requests_before_middlewares_total',
-            'Total count of requests before middlewares run')
+            'Total count of requests before middlewares run.')
         self.responses_total = self.addCounter(
             'django_http_responses_before_middlewares_total',
-            'Total count of responses before middlewares run')
+            'Total count of responses before middlewares run.')
         self.requests_latency = self.addHistogram(
             'django_http_requests_latency_including_middlewares_seconds',
             ('Histogram of requests processing time (including middleware '
-             'processing time)'))
+             'processing time).'))
         SetupPrometheusExports()
 
     def process_request(self, request):
@@ -81,28 +81,28 @@ class PrometheusAfterMiddleware(BasePrometheusMiddleware):
         # Set in process_request
         self.ajax_requests = self.addCounter(
             'django_http_ajax_requests_total',
-            'Count of AJAX requests')
+            'Count of AJAX requests.')
         self.requests_by_method = self.addCounter(
             'django_http_requests_total_by_method',
-            'Count of requests by method',
+            'Count of requests by method.',
             ['method'])
         self.requests_by_transport = self.addCounter(
             'django_http_requests_total_by_transport',
-            'Count of requests by transport',
+            'Count of requests by transport.',
             ['transport'])
 
         # Set in process_view
         self.requests_by_view = self.addCounter(
             'django_http_requests_total_by_view',
-            'Count of requests by view',
+            'Count of requests by view.',
             ['view_name'])
         self.requests_by_view_transport_method = self.addCounter(
             'django_http_requests_total_by_view_transport_method',
-            'Count of requests by view, transport, method',
+            'Count of requests by view, transport, method.',
             ['view', 'transport', 'method'])
         self.requests_body_bytes = self.addHistogram(
             'django_http_requests_body_total_bytes',
-            'Histogram of requests by body size',
+            'Histogram of requests by body size.',
             buckets=PowersOf(2, 30))
 
         # Set in process_template_response
@@ -114,11 +114,11 @@ class PrometheusAfterMiddleware(BasePrometheusMiddleware):
         # Set in process_response
         self.responses_by_status = self.addCounter(
             'django_http_responses_total_by_status',
-            'Count of responses by status',
+            'Count of responses by status.',
             ['status'])
         self.responses_body_bytes = self.addHistogram(
             'django_http_responses_body_total_bytes',
-            'Histogram of responses by body size',
+            'Histogram of responses by body size.',
             buckets=PowersOf(2, 30))
         self.responses_by_charset = self.addCounter(
             'django_http_responses_total_by_charset',
@@ -131,7 +131,7 @@ class PrometheusAfterMiddleware(BasePrometheusMiddleware):
         # Set in process_exception
         self.exceptions_by_type = self.addCounter(
             'django_http_exceptions_total_by_type',
-            'Count of exceptions by object type',
+            'Count of exceptions by object type.',
             ['type'])
         self.exceptions_by_view = self.addCounter(
             'django_http_exceptions_total_by_view',

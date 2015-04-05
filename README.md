@@ -42,3 +42,16 @@ MIDDLEWARE_CLASSES = (
 Currently, the PrometheusBeforemiddleware will start an HTTP server in
 a thread on port 8001 to export the metrics. This will become
 configurable in the future.
+
+## Adding your own metrics
+
+You can add application-level metrics in your code by using
+[prometheus_client](https://github.com/prometheus/client_python)
+directly. The exporter is global and will pick up your metrics.
+
+To add metrics to the Django internals, the easiest way is to extend
+django-prometheus' classes. Please consider contributing your metrics,
+pull requests are welcome. Make sure to read the Prometheus best
+practices on
+[instrumentation](http://prometheus.io/docs/practices/instrumentation/)
+and [naming](http://prometheus.io/docs/practices/naming/).
