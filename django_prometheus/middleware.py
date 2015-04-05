@@ -45,9 +45,11 @@ class PrometheusBeforeMiddleware(BasePrometheusMiddleware):
     """Monitoring middleware that should run before other middlewares."""
     def __init__(self):
         self.requests_total = self.addCounter(
-            'requests_total', 'Total count of requests')
+            'django_http_requests_before_middlewares_total',
+            'Total count of requests before middlewares run')
         self.responses_total = self.addCounter(
-            'responses_total', 'Total count of responses')
+            'django_http_responses_before_middlewares_total',
+            'Total count of responses before middlewares run')
         SetupPrometheusExports()
 
     def process_request(self, request):
@@ -62,34 +64,34 @@ class PrometheusAfterMiddleware(BasePrometheusMiddleware):
     """Monitoring middleware that should run after other middlewares."""
     def __init__(self):
         self.ajax_requests = self.addCounter(
-            'ajax_requests',
+            'django_http_ajax_requests_total',
             'Count of AJAX requests')
         self.requests_by_method = self.addCounter(
-            'requests_by_method',
+            'django_http_requests_total_by_method',
             'Count of requests by method',
             ['method'])
         self.requests_by_transport = self.addCounter(
-            'requests_by_transport',
+            'django_http_requests_total_by_transport',
             'Count of requests by transport',
             ['transport'])
         self.requests_by_view = self.addCounter(
-            'requests_by_view',
+            'django_http_requests_total_by_view',
             'Count of requests by view',
             ['view_name'])
         self.requests_by_view_transport_method = self.addCounter(
-            'requests_by_view_transport_method',
+            'django_http_requests_total_by_view_transport_method',
             'Count of requests by view, transport, method',
             ['view', 'transport', 'method'])
         self.requests_body_bytes = self.addHistogram(
-            'requests_body_bytes',
+            'django_http_requests_body_total_bytes',
             'Histogram of requests by body size',
             buckets=PowersOf(2, 30))
         self.responses_by_status = self.addCounter(
-            'responses_by_status',
+            'django_http_responses_total_by_status',
             'Count of responses by status',
             ['status'])
         self.responses_body_bytes = self.addHistogram(
-            'responses_body_bytes',
+            'django_http_responses_body_total_bytes',
             'Histogram of responses by body size',
             buckets=PowersOf(2, 30))
 
