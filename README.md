@@ -3,11 +3,14 @@ Export Django monitoring metrics for Prometheus.io
 
 ## Usage
 
-This is still very experimental, so no Pypi package for you yet.
-
 ### Installation
 
 Install with:
+```shell
+pip install django-prometheus
+```
+
+Or, if you're using a development version cloned from this repository:
 ```shell
 python path-to-where-you-cloned-django-prometheus/setup.py install
 ```
