@@ -8,10 +8,13 @@ requests_total = Counter(
 responses_total = Counter(
     'django_http_responses_before_middlewares_total',
     'Total count of responses before middlewares run.')
-requests_latency = Histogram(
+requests_latency_before = Histogram(
     'django_http_requests_latency_including_middlewares_seconds',
     ('Histogram of requests processing time (including middleware '
      'processing time).'))
+requests_unknown_latency_before = Counter(
+    'django_http_requests_unknown_latency_total',
+    'Count of requests for which the latency was unknown.')
 
 
 class PrometheusBeforeMiddleware(object):
@@ -22,14 +25,20 @@ class PrometheusBeforeMiddleware(object):
 
     def process_response(self, request, response):
         responses_total.inc()
-        requests_latency.observe(TimeSince(
-            request.prometheus_before_middleware_event))
+        if hasattr(request, 'prometheus_before_middleware_event'):
+            requests_latency_before.observe(TimeSince(
+                request.prometheus_before_middleware_event))
+        else:
+            requests_unknown_latency_before.inc()
         return response
 
 
 requests_latency = Histogram(
     'django_http_requests_latency_seconds',
     'Histogram of requests processing time.')
+requests_unknown_latency = Counter(
+    'django_http_requests_unknown_latency_total',
+    'Count of requests for which the latency was unknown.')
 # Set in process_request
 ajax_requests = Counter(
     'django_http_ajax_requests_total',
@@ -129,13 +138,19 @@ class PrometheusAfterMiddleware(object):
         if response.streaming:
             responses_streaming.inc()
         responses_body_bytes.observe(len(response.content))
-        requests_latency.observe(TimeSince(
-            request.prometheus_after_middleware_event))
+        if hasattr(request, 'prometheus_after_middleware_event'):
+            requests_latency.observe(TimeSince(
+                request.prometheus_after_middleware_event))
+        else:
+            requests_unknown_latency.inc()
         return response
 
     def process_exception(self, request, exception):
         name = request.resolver_match.view_name or '<unnamed view>'
         exceptions_by_type.labels(type(exception).__name__).inc()
         exceptions_by_view.labels(name).inc()
-        requests_latency.observe(TimeSince(
-            request.prometheus_after_middleware_event))
+        if hasattr(request, 'prometheus_after_middleware_event'):
+            requests_latency.observe(TimeSince(
+                request.prometheus_after_middleware_event))
+        else:
+            requests_unknown_latency.inc()
