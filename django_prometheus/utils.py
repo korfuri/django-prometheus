@@ -1,4 +1,5 @@
 import time
+from prometheus_client import _INF
 
 # TODO(korfuri): if python>3.3, use perf_counter() or monotonic().
 
@@ -21,3 +22,11 @@ def TimeSince(t):
       the time since t, in fractional seconds.
     """
     return time.time() - t
+
+
+def PowersOf(logbase, count, lower=0, include_zero=True):
+    """Returns a list of count powers of logbase (from logbase**lower)."""
+    if not include_zero:
+        return [logbase ** i for i in range(lower, count)] + [_INF]
+    else:
+        return [0] + [logbase ** i for i in range(lower, count)] + [_INF]
