@@ -2,6 +2,7 @@
 Export Django monitoring metrics for Prometheus.io
 
 [![PyPI version](https://badge.fury.io/py/django-prometheus.svg)](http://badge.fury.io/py/django-prometheus)
+[![Build Status](https://travis-ci.org/korfuri/django-prometheus.svg?branch=master)](https://travis-ci.org/korfuri/django-prometheus)
 
 ## Usage
 
