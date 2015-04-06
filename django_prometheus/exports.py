@@ -1,4 +1,5 @@
-from prometheus_client import MetricsHandler
+from django.http import HttpResponse
+from prometheus_client import MetricsHandler, generate_latest
 from BaseHTTPServer import HTTPServer
 import thread
 
@@ -20,10 +21,18 @@ def SetupPrometheusEndpointOnPort(port, addr=''):
 
 def SetupPrometheusExports():
     """Exports metrics so Prometheus can collect them."""
-    # TODO(korfuri): add the option of exporting to Django. Use
-    # django's settings to pick the export methods (possibly both at
-    # the same time) and the port.
     SetupPrometheusEndpointOnPort(8001)
+
+
+def ExportToDjangoView(request):
+    """Exports /metrics as a Django view.
+
+    You can use django_prometheus.urls to map /metrics to this view.
+    """
+    metrics_page = generate_latest()
+    return HttpResponse(
+        metrics_page,
+        content_type='text/plain; version=0.0.4; charset=utf-8')
 
 
 # The prometheus exporter is global, so we initialize it once in the

@@ -49,6 +49,28 @@ Currently, the PrometheusBeforemiddleware will start an HTTP server in
 a thread on port 8001 to export the metrics. This will become
 configurable in the future.
 
+#### Exporting metrics as a Django view
+
+As an alternative, you can use
+django_prometheus.exports.ExportToDjangoView to render `/metrics` as a
+Django view. The easiest way to do so is to include
+django_prometheus.urls in your root urlpatterns as such:
+
+```python
+urlpatterns = [
+    url(r'^$', views.index, name='index'),
+    url(r'^monitoring/', include('django_prometheus.urls')),
+    url(r'^admin/', include(admin.site.urls)),
+    ...
+]
+```
+
+This is not recommended if you can avoid it. The default method serves
+`/metrics` in a dedicated thread with its own HTTP server, which
+ensures that even if Django gets stuck, your monitoring will still
+collect data. However, exporting as a Django view lets you use all the
+features of Django, like IP restriction, authentication, logging, etc.
+
 ### Monitoring and aggregating the metrics
 
 Prometheus is quite easy to set up. An example prometheus.conf to
