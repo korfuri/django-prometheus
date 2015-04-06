@@ -41,11 +41,21 @@ MIDDLEWARE_CLASSES = (
 )
 ```
 
-### Exported metrics
+### Exporting metrics
 
 Currently, the PrometheusBeforemiddleware will start an HTTP server in
 a thread on port 8001 to export the metrics. This will become
 configurable in the future.
+
+### Monitoring and aggregating the metrics
+
+Prometheus is quite easy to set up. An example prometheus.conf to
+scrape `127.0.0.1:8001` can be found in `examples/prometheus`.
+
+Here's an example of a PromDash displaying some of the metrics
+collected by django-prometheus:
+
+![Example dashboard](https://raw.githubusercontent.com/korfuri/django-prometheus/master/examples/django-promdash.png)
 
 ## Adding your own metrics
 
