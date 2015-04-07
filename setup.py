@@ -21,6 +21,7 @@ setup(
     keywords="django monitoring prometheus",
     url="http://github.com/korfuri/django-prometheus",
     packages=["django_prometheus"],
+    test_suite="tests",
     long_description=LONG_DESCRIPTION,
     install_requires=["prometheus_client==0.0.8"],
     classifiers=[
