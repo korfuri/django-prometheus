@@ -44,6 +44,34 @@ MIDDLEWARE_CLASSES = (
 )
 ```
 
+### Monitoring your models
+
+You may want to monitor the creation/deletion/update rate for your
+model. This can be done by adding a mixin to them. This is safe to do
+on existing models (it does not require a migration).
+
+If your model is:
+
+```python
+class Dog(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    breed = models.CharField(max_length=100, blank=True, null=True)
+    age = models.PositiveIntegerField(blank=True, null=True)
+```
+
+Just add the `ExportModelOperationsMixin` as such:
+
+```python
+class Dog(ExportModelsOperationsMixin('dog'), models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    breed = models.CharField(max_length=100, blank=True, null=True)
+    age = models.PositiveIntegerField(blank=True, null=True)
+```
+
+This will export 3 metrics, `django_model_inserts_total{model="dog"}`,
+`django_model_updates_total{model="dog"}` and
+`django_model_deletes_total{model="dog"}`.
+
 ### Exporting metrics
 
 Currently, the PrometheusBeforemiddleware will start an HTTP server in
