@@ -53,10 +53,6 @@ requests_by_transport = Counter(
     'Count of requests by transport.',
     ['transport'])
 # Set in process_view
-requests_by_view = Counter(
-    'django_http_requests_total_by_view',
-    'Count of requests by view.',
-    ['view_name'])
 requests_by_view_transport_method = Counter(
     'django_http_requests_total_by_view_transport_method',
     'Count of requests by view, transport, method.',
@@ -123,7 +119,6 @@ class PrometheusAfterMiddleware(object):
         transport = self._transport(request)
         method = self._method(request)
         name = request.resolver_match.view_name or '<unnamed view>'
-        requests_by_view.labels(name).inc()
         requests_by_view_transport_method.labels(
             name, transport, method).inc()
 
