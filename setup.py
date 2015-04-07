@@ -12,7 +12,7 @@ instructions.
 
 setup(
     name="django-prometheus",
-    version="0.0.7",
+    version="0.0.8",
     author="Uriel Corfa",
     author_email="uriel@corfa.fr",
     description=(
@@ -25,6 +25,10 @@ setup(
     install_requires=["prometheus_client==0.0.8"],
     classifiers=[
         "Development Status :: 3 - Alpha",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Information Technology",
+        "Intended Audience :: System Administrators",
+        "Framework :: Django",
         "Topic :: System :: Monitoring",
         "License :: OSI Approved :: Apache Software License",
     ],
