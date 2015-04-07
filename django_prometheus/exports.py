@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from prometheus_client import MetricsHandler, generate_latest
+import prometheus_client
 from BaseHTTPServer import HTTPServer
 import thread
 
@@ -14,9 +14,7 @@ def SetupPrometheusEndpointOnPort(port, addr=''):
     export metrics. However, this also means that none of the features
     offered by Django (like middlewares or WSGI) can't be used.
     """
-    server_address = (addr, port)
-    httpd = HTTPServer(server_address, MetricsHandler)
-    thread.start_new_thread(httpd.serve_forever, ())
+    prometheus_client.start_http_server(port, addr=addr)
 
 
 def SetupPrometheusExports():
@@ -32,7 +30,7 @@ def ExportToDjangoView(request):
     metrics_page = generate_latest()
     return HttpResponse(
         metrics_page,
-        content_type='text/plain; version=0.0.4; charset=utf-8')
+        content_type=prometheus_client.CONTENT_TYPE_LATEST)
 
 
 # The prometheus exporter is global, so we initialize it once in the
