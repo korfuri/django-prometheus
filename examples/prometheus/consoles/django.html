@@ -1,0 +1,90 @@
+{{template "head" .}}
+
+{{template "prom_right_table_head"}}
+<tr>
+  <th>Django</th>
+  <th>{{ template "prom_query_drilldown" (args "sum(up{job='django'})") }}
+      / {{ template "prom_query_drilldown" (args "count(up{job='django'})") }}
+  </th>
+</tr>
+<tr>
+  <td>avg CPU</td>
+  <td>{{ template "prom_query_drilldown" (args "avg by(job)(rate(process_cpu_seconds_total{job='django'}[5m]))" "s/s" "humanizeNoSmallPrefix") }}
+  </td>
+</tr>
+<tr>
+  <td>avg Memory</td>
+  <td>{{ template "prom_query_drilldown" (args "avg by(job)(process_resident_memory_bytes{job='django'})" "B" "humanize1024") }}
+  </td>
+</tr>
+{{template "prom_right_table_tail"}}
+
+
+{{template "prom_content_head" .}}
+<h1>Django</h1>
+
+<h2>Requests</h2>
+<h3>Total</h3>
+<div id="gr_requests_total"></div>
+<script>
+new PromConsole.Graph({
+  node: document.querySelector("#gr_requests_total"),
+  expr: "job:django_http_requests_total:sum_rate30s",
+  name: "Requests",
+  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
+  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
+  yUnits: "/s",
+  yTitle: "Requests",
+  min: 0
+})
+</script>
+
+<h3>By view</h3>
+<div id="gr_requests_byview"></div>
+<script>
+new PromConsole.Graph({
+  node: document.querySelector("#gr_requests_byview"),
+  expr: "job:django_http_requests_total_by_view:sum_rate30s",
+  name: "[[ view ]]",
+  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
+  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
+  yUnits: "/s",
+  yTitle: "Requests",
+  renderer: "area",
+  min: 0
+})
+</script>
+
+<h3>Latency (median)</h3>
+<div id="gr_requests_latency_median"></div>
+<script>
+new PromConsole.Graph({
+  node: document.querySelector("#gr_requests_latency_median"),
+  expr: "job:django_http_requests_latency_seconds:quantile_rate30s{quantile=\"50\"}",
+  name: "median latency",
+  xUnits: "s",
+  yAxisFormatter: PromConsole.NumberFormatter.humanize,
+  yHoverFormatter: PromConsole.NumberFormatter.humanize,
+  yTitle: "s",
+  min: 0
+})
+</script>
+
+<h3>Latency (99.9th percentile)</h3>
+<div id="gr_requests_latency_tail"></div>
+<script>
+new PromConsole.Graph({
+  node: document.querySelector("#gr_requests_latency_tail"),
+  expr: "job:django_http_requests_latency_seconds:quantile_rate30s{quantile=\"99.9\"}",
+  name: "tail latency",
+  xUnits: "s",
+  yAxisFormatter: PromConsole.NumberFormatter.humanize,
+  yHoverFormatter: PromConsole.NumberFormatter.humanize,
+  yTitle: "s",
+  min: 0
+})
+</script>
+
+{{template "prom_content_tail" .}}
+
+{{template "tail"}}
