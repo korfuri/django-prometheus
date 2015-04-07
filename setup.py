@@ -22,7 +22,7 @@ setup(
     url="http://github.com/korfuri/django-prometheus",
     packages=["django_prometheus"],
     long_description=LONG_DESCRIPTION,
-    install_requires=["prometheus_client"],
+    install_requires=["prometheus_client==0.0.8"],
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Topic :: System :: Monitoring",
