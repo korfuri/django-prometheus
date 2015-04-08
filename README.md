@@ -24,7 +24,7 @@ python path-to-where-you-cloned-django-prometheus/setup.py install
 
 This will install [prometheus_client](https://github.com/prometheus/client_python) as a dependency.
 
-### Configuration
+### Quickstart
 
 In your settings.py:
 
@@ -42,6 +42,15 @@ MIDDLEWARE_CLASSES = (
     # CsrfViewmiddleware, SecurityMiddleware, etc.
     'django_prometheus.middleware.PrometheusAfterMiddleware',
 )
+```
+
+In your urls.py:
+
+```python
+urlpatterns = [
+    ...
+    url('', include('django_prometheus.urls')),
+]
 ```
 
 ### Monitoring your models
@@ -72,33 +81,9 @@ This will export 3 metrics, `django_model_inserts_total{model="dog"}`,
 `django_model_updates_total{model="dog"}` and
 `django_model_deletes_total{model="dog"}`.
 
-### Exporting metrics
-
-Currently, the PrometheusBeforemiddleware will start an HTTP server in
-a thread on port 8001 to export the metrics. This will become
-configurable in the future.
-
-#### Exporting metrics as a Django view
-
-As an alternative, you can use
-django_prometheus.exports.ExportToDjangoView to render `/metrics` as a
-Django view. The easiest way to do so is to include
-django_prometheus.urls in your root urlpatterns as such:
-
-```python
-urlpatterns = [
-    url(r'^$', views.index, name='index'),
-    url(r'^monitoring/', include('django_prometheus.urls')),
-    url(r'^admin/', include(admin.site.urls)),
-    ...
-]
-```
-
-This is not recommended if you can avoid it. The default method serves
-`/metrics` in a dedicated thread with its own HTTP server, which
-ensures that even if Django gets stuck, your monitoring will still
-collect data. However, exporting as a Django view lets you use all the
-features of Django, like IP restriction, authentication, logging, etc.
+Note that the exported metrics are counters of creations,
+modifications and deletions done in the current process. They are not
+gauges of the number of objects in the model.
 
 ### Monitoring and aggregating the metrics
 
