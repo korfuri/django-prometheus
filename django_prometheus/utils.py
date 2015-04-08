@@ -27,6 +27,6 @@ def TimeSince(t):
 def PowersOf(logbase, count, lower=0, include_zero=True):
     """Returns a list of count powers of logbase (from logbase**lower)."""
     if not include_zero:
-        return [logbase ** i for i in range(lower, count)] + [_INF]
+        return [logbase ** i for i in range(lower, count+lower)] + [_INF]
     else:
-        return [0] + [logbase ** i for i in range(lower, count)] + [_INF]
+        return [0] + [logbase ** i for i in range(lower, count+lower)] + [_INF]
