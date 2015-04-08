@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-import django_prometheus
 from django_prometheus.utils import PowersOf, _INF
 import unittest
 

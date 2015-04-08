@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from prometheus_client import Counter
 
 model_inserts = Counter(
