@@ -76,7 +76,7 @@ responses_body_bytes = Histogram(
     buckets=PowersOf(2, 30))
 responses_by_charset = Counter(
     'django_http_responses_total_by_charset',
-    'Count of responses by charset. Django >=1.8 only.',
+    'Count of responses by charset.',
     ['charset'])
 responses_streaming = Counter(
     'django_http_responses_streaming_total',
