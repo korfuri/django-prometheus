@@ -6,4 +6,4 @@ install: pip install -r requirements.txt
 before_script: pep8 .
 script:
   - python setup.py test
-  - PYTHONPATH=. python tests/end2end/manage.py test
+  - (cd tests/end2end; PYTHONPATH=../.. python manage.py test)
