@@ -1,7 +1,5 @@
 from django.http import HttpResponse
 import prometheus_client
-from BaseHTTPServer import HTTPServer
-import thread
 
 
 def SetupPrometheusEndpointOnPort(port, addr=''):
