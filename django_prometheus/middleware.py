@@ -1,5 +1,6 @@
 from prometheus_client import Counter, Histogram
 from django_prometheus.utils import Time, TimeSince, PowersOf
+import django_prometheus.exports
 
 requests_total = Counter(
     'django_http_requests_before_middlewares_total',
@@ -117,7 +118,10 @@ class PrometheusAfterMiddleware(object):
     def process_view(self, request, view_func, *view_args, **view_kwargs):
         transport = self._transport(request)
         method = self._method(request)
-        name = request.resolver_match.view_name or '<unnamed view>'
+        if hasattr(request, 'resolver_match'):
+            name = request.resolver_match.view_name or '<unnamed view>'
+        else:
+            name = view_func.__name__
         requests_by_view_transport_method.labels(
             name, transport, method).inc()
 
@@ -130,7 +134,7 @@ class PrometheusAfterMiddleware(object):
         responses_by_status.labels(str(response.status_code)).inc()
         if hasattr(response, 'charset'):
             responses_by_charset.labels(str(response.charset)).inc()
-        if response.streaming:
+        if hasattr(response, 'streaming') and response.streaming:
             responses_streaming.inc()
         responses_body_bytes.observe(len(response.content))
         if hasattr(request, 'prometheus_after_middleware_event'):
@@ -141,7 +145,10 @@ class PrometheusAfterMiddleware(object):
         return response
 
     def process_exception(self, request, exception):
-        name = request.resolver_match.view_name or '<unnamed view>'
+        if hasattr(request, 'resolver_match'):
+            name = request.resolver_match.view_name or '<unnamed view>'
+        else:
+            name = '<unnamed view>'
         exceptions_by_type.labels(type(exception).__name__).inc()
         exceptions_by_view.labels(name).inc()
         if hasattr(request, 'prometheus_after_middleware_event'):
