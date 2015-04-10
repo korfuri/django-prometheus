@@ -71,7 +71,9 @@ class Dog(models.Model):
 Just add the `ExportModelOperationsMixin` as such:
 
 ```python
-class Dog(ExportModelsOperationsMixin('dog'), models.Model):
+from django_prometheus.models import ExportModelOperationsMixin
+
+class Dog(ExportModelOperationsMixin('dog'), models.Model):
     name = models.CharField(max_length=100, unique=True)
     breed = models.CharField(max_length=100, blank=True, null=True)
     age = models.PositiveIntegerField(blank=True, null=True)
