@@ -85,6 +85,49 @@ new PromConsole.Graph({
 })
 </script>
 
+<h2>Models</h2>
+<h3>Insertions/s</h3>
+<div id="gr_model_inserts"></div>
+<script>
+new PromConsole.Graph({
+  node: document.querySelector("#gr_model_inserts"),
+  expr: "job:django_model_inserts_total:sum_rate1m",
+  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
+  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
+  yUnits: "/s",
+  yTitle: "Insertions",
+  min: 0
+})
+</script>
+
+<h3>Updates/s</h3>
+<div id="gr_model_updates"></div>
+<script>
+new PromConsole.Graph({
+  node: document.querySelector("#gr_model_updates"),
+  expr: "job:django_model_updates_total:sum_rate1m",
+  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
+  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
+  yUnits: "/s",
+  yTitle: "Updates",
+  min: 0
+})
+</script>
+
+<h3>Deletions/s</h3>
+<div id="gr_model_deletes"></div>
+<script>
+new PromConsole.Graph({
+  node: document.querySelector("#gr_model_deletes"),
+  expr: "job:django_model_deletes_total:sum_rate1m",
+  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
+  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
+  yUnits: "/s",
+  yTitle: "Deletions",
+  min: 0
+})
+</script>
+
 {{template "prom_content_tail" .}}
 
 {{template "tail"}}

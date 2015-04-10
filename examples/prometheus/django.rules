@@ -1,3 +1,4 @@
+// Aggregate request counters
 job:django_http_requests_before_middlewares_total:sum_rate30s = sum(rate(django_http_requests_before_middlewares_total[30s])) by (job)
 job:django_http_requests_unknown_latency_total:sum_rate30s = sum(rate(django_http_requests_unknown_latency_total[30s])) by (job)
 job:django_http_ajax_requests_total:sum_rate30s = sum(rate(django_http_ajax_requests_total[30s])) by (job)
@@ -17,6 +18,7 @@ job:django_http_responses_total_by_charset:sum_rate30s = sum(rate(django_http_re
 job:django_http_exceptions_total_by_type:sum_rate30s = sum(rate(django_http_exceptions_total_by_type[30s])) by (job,type)
 job:django_http_exceptions_total_by_view:sum_rate30s = sum(rate(django_http_exceptions_total_by_view[30s])) by (job,view)
 
+// Aggregate latency histograms
 job:django_http_requests_latency_including_middlewares_seconds:quantile_rate30s{quantile="50"} = histogram_quantile(0.50, sum(rate(django_http_requests_latency_including_middlewares_seconds_bucket[30s])) by (job, le))
 job:django_http_requests_latency_including_middlewares_seconds:quantile_rate30s{quantile="95"} = histogram_quantile(0.95, sum(rate(django_http_requests_latency_including_middlewares_seconds_bucket[30s])) by (job, le))
 job:django_http_requests_latency_including_middlewares_seconds:quantile_rate30s{quantile="99"} = histogram_quantile(0.99, sum(rate(django_http_requests_latency_including_middlewares_seconds_bucket[30s])) by (job, le))
@@ -25,3 +27,8 @@ job:django_http_requests_latency_seconds:quantile_rate30s{quantile="50"} = histo
 job:django_http_requests_latency_seconds:quantile_rate30s{quantile="95"} = histogram_quantile(0.95, sum(rate(django_http_requests_latency_seconds_bucket[30s])) by (job, le))
 job:django_http_requests_latency_seconds:quantile_rate30s{quantile="99"} = histogram_quantile(0.99, sum(rate(django_http_requests_latency_seconds_bucket[30s])) by (job, le))
 job:django_http_requests_latency_seconds:quantile_rate30s{quantile="99.9"} = histogram_quantile(0.999, sum(rate(django_http_requests_latency_seconds_bucket[30s])) by (job, le))
+
+// Aggregate model operations
+job:django_model_inserts_total:sum_rate1m = sum(rate(django_model_inserts_total[1m])) by (job, model)
+job:django_model_updates_total:sum_rate1m = sum(rate(django_model_updates_total[1m])) by (job, model)
+job:django_model_deletes_total:sum_rate1m = sum(rate(django_model_deletes_total[1m])) by (job, model)
