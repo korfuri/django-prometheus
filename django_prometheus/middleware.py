@@ -1,6 +1,5 @@
 from prometheus_client import Counter, Histogram
 from django_prometheus.utils import Time, TimeSince, PowersOf
-import django_prometheus.exports
 
 requests_total = Counter(
     'django_http_requests_before_middlewares_total',
