@@ -34,3 +34,21 @@ class ObjectionException(Exception):
 
 def objection(request):
     raise ObjectionException('Objection!')
+
+
+def sql(request):
+    query = request.GET.get('query')
+    if query:
+        from django.db import connection
+        cursor = connection.cursor()
+        cursor.execute(query, [])
+        results = cursor.fetchall()
+        return TemplateResponse(request, 'sql.html', {
+            'query': query,
+            'rows': results,
+        })
+    else:
+        return TemplateResponse(request, 'sql.html', {
+            'query': None,
+            'rows': None,
+        })

@@ -1,0 +1,20 @@
+<html>
+<body>
+<p>Execute some HTML here, for fun and profit!</p>
+<p>Note that this is a very bad vulnerability: it gives anyone direct
+access to your whole database. This only exists to test that
+django_prometheus is working.</p>
+<form action="/sql" method="GET">
+<textarea rows="25" cols="80" name="query" />
+{% if query %}{{ query }}{% else %}
+SELECT * FROM testapp_lawn;
+{% endif %}</textarea><input type="submit" />
+</form>
+{% if query %}
+<p>Your query was:</p>
+<p><pre>{{ query }}</pre>
+<p>Your results were:</p>
+<p><pre>{{ rows }}</pre></p>
+{% endif %}
+</body>
+</html>
