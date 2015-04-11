@@ -1,4 +1,4 @@
-import sys
+from django_prometheus.db.common import get_current_exception_type
 from django_prometheus.db import (
     connections_total, execute_total, execute_many_total, errors_total)
 from django.db.backends.sqlite3 import base
@@ -29,20 +29,13 @@ def ExportingCursorWrapper(alias, vendor):
     class CursorWrapper(base.SQLiteCursorWrapper):
         """Extends the base CursorWrapper to count events."""
 
-        def get_current_exception_type(self):
-            """Returns the name of the type of the current exception."""
-            ex_type = sys.exc_info()[0]
-            if ex_type is None:
-                return '<no exception>'
-            return ex_type.__name__
-
         def execute(self, *args, **kwargs):
             execute_total.labels(alias, vendor).inc()
             try:
                 return super(CursorWrapper, self).execute(*args, **kwargs)
             except:
                 errors_total.labels(
-                    alias, vendor, self.get_current_exception_type()).inc()
+                    alias, vendor, get_current_exception_type()).inc()
                 raise
 
         def executemany(self, query, param_list, *args, **kwargs):
@@ -53,6 +46,6 @@ def ExportingCursorWrapper(alias, vendor):
                     query=query, param_list=param_list, *args, **kwargs)
             except:
                 errors_total.labels(
-                    alias, vendor, self.get_current_exception_type()).inc()
+                    alias, vendor, get_current_exception_type()).inc()
                 raise
     return CursorWrapper
