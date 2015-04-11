@@ -55,9 +55,18 @@ urlpatterns = [
 
 ### Monitoring your databases
 
-Currently, only SQLite databases can be monitored. Just replace the
-`ENGINE` property of your database, replacing `django.db.backends`
-with `django_prometheus.db.backends`.
+Currently, only SQLite and MySQL databases can be monitored. Just
+replace the `ENGINE` property of your database, replacing
+`django.db.backends` with `django_prometheus.db.backends`.
+
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django_prometheus.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    },
+}
+```
 
 ### Monitoring your models
 
