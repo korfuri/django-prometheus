@@ -16,7 +16,8 @@ class DatabaseWrapper(base.DatabaseWrapper):
     def get_new_connection(self, *args, **kwargs):
         connections_total.labels(self.alias, self.vendor).inc()
         try:
-            return super(DatabaseWrapper, self).get_new_connection(*args, **kwargs)
+            return super(DatabaseWrapper, self).get_new_connection(
+                *args, **kwargs)
         except:
             connection_errors_total.labels(self.alias, self.vendor).inc()
             raise
