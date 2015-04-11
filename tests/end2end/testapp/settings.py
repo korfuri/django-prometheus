@@ -92,6 +92,16 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     },
 
+    # Uncomment this to test django_prometheus.db.backends.mysql.
+    # 'mysql': {
+    #     'ENGINE': 'django_prometheus.db.backends.mysql',
+    #     'NAME': 'django_prometheus_1',
+    #     'USER': '',
+    #     'PASSWORD': '',
+    #     'HOST': 'localhost',
+    #     'PORT': '3306',
+    # },
+
     # The following databases are used by test_db.py only
     'test_db_1': {
         'ENGINE': 'django_prometheus.db.backends.sqlite3',
@@ -100,8 +110,7 @@ DATABASES = {
     'test_db_2': {
         'ENGINE': 'django_prometheus.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'test_db_2.sqlite3'),
-    }
-
+    },
 }
 
 
