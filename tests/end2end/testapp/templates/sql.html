@@ -5,6 +5,8 @@
 access to your whole database. This only exists to test that
 django_prometheus is working.</p>
 <form action="/sql" method="GET">
+<select name="database">
+{% for d in databases %}<option value="{{ d }}">{{ d }}</option>{% endfor %}
 <textarea rows="25" cols="80" name="query" />
 {% if query %}{{ query }}{% else %}
 SELECT * FROM testapp_lawn;

@@ -1,3 +1,4 @@
+from django.db import connections
 from django.shortcuts import render
 from django.template.response import TemplateResponse
 from testapp.models import Lawn
@@ -37,18 +38,21 @@ def objection(request):
 
 
 def sql(request):
+    databases = connections.databases.keys()
     query = request.GET.get('query')
-    if query:
-        from django.db import connection
-        cursor = connection.cursor()
+    db = request.GET.get('database')
+    if query and db:
+        cursor = connections[db].cursor()
         cursor.execute(query, [])
         results = cursor.fetchall()
         return TemplateResponse(request, 'sql.html', {
             'query': query,
             'rows': results,
+            'databases': databases,
         })
     else:
         return TemplateResponse(request, 'sql.html', {
             'query': None,
             'rows': None,
+            'databases': databases,
         })
