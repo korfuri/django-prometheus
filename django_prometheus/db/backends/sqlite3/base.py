@@ -45,10 +45,11 @@ def ExportingCursorWrapper(alias, vendor):
                     alias, vendor, self.get_current_exception_type()).inc()
                 raise
 
-        def execute_many(self, query, param_list, *args, **kwargs):
+        def executemany(self, query, param_list, *args, **kwargs):
             execute_total.labels(alias, vendor).inc(len(param_list))
+            execute_many_total.labels(alias, vendor).inc(len(param_list))
             try:
-                return super(CursorWrapper, self).execute(
+                return super(CursorWrapper, self).executemany(
                     query=query, param_list=param_list, *args, **kwargs)
             except:
                 errors_total.labels(
