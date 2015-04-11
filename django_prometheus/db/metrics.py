@@ -6,6 +6,10 @@ connections_total = Counter(
     'Counter of created connections by database and by vendor.',
     ['alias', 'vendor'])
 
+connection_errors_total = Counter(
+    'django_db_new_connection_errors_total',
+    'Counter of connection failures by database and by vendor.',
+    ['alias', 'vendor'])
 
 execute_total = Counter(
     'django_db_execute_total',

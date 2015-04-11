@@ -1,6 +1,7 @@
 from django_prometheus.db.common import get_current_exception_type
 from django_prometheus.db import (
-    connections_total, execute_total, execute_many_total, errors_total)
+    connections_total, execute_total, execute_many_total, errors_total,
+    connection_errors_total)
 from django.db.backends.sqlite3 import base
 
 
@@ -14,7 +15,11 @@ class DatabaseWrapper(base.DatabaseWrapper):
 
     def get_new_connection(self, *args, **kwargs):
         connections_total.labels(self.alias, self.vendor).inc()
-        return super(DatabaseWrapper, self).get_new_connection(*args, **kwargs)
+        try:
+            return super(DatabaseWrapper, self).get_new_connection(*args, **kwargs)
+        except:
+            connection_errors_total.labels(self.alias, self.vendor).inc()
+            raise
 
     def create_cursor(self):
         return self.connection.cursor(factory=ExportingCursorWrapper(
