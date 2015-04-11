@@ -88,9 +88,20 @@ WSGI_APPLICATION = 'testapp.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
+        'ENGINE': 'django_prometheus.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    },
+
+    # The following databases are used by test_db.py only
+    'test_db_1': {
+        'ENGINE': 'django_prometheus.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'test_db_1.sqlite3'),
+    },
+    'test_db_2': {
+        'ENGINE': 'django_prometheus.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'test_db_2.sqlite3'),
     }
+
 }
 
 
