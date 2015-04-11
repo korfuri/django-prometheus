@@ -128,6 +128,67 @@ new PromConsole.Graph({
 })
 </script>
 
+<h2>Database</h2>
+<h3>Connections/s</h3>
+<div id="gr_db_conn"></div>
+<script>
+new PromConsole.Graph({
+  node: document.querySelector("#gr_db_conn"),
+  expr: "job:django_db_new_connections_total:sum_rate30s",
+  name: "[[ alias ]]/[[ vendor ]]",
+  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
+  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
+  yUnits: "/s",
+  yTitle: "Connections",
+  min: 0
+})
+</script>
+
+<h3>Connections errors/s</h3>
+<div id="gr_db_connerr"></div>
+<script>
+new PromConsole.Graph({
+  node: document.querySelector("#gr_db_connerr"),
+  expr: "job:django_db_new_connection_erros_total:sum_rate30s",
+  name: "[[ alias ]]/[[ vendor ]]",
+  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
+  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
+  yUnits: "/s",
+  yTitle: "Connection errors",
+  min: 0
+})
+</script>
+
+<h3>Queries/s</h3>
+<div id="gr_db_execs"></div>
+<script>
+new PromConsole.Graph({
+  node: document.querySelector("#gr_db_execs"),
+  expr: "job:django_db_execute_total:sum_rate30s",
+  name: "[[ alias ]]/[[ vendor ]]",
+  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
+  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
+  yUnits: "/s",
+  yTitle: "Queries",
+  min: 0
+})
+</script>
+
+<h3>Errors/s</h3>
+<div id="gr_db_errs"></div>
+<script>
+new PromConsole.Graph({
+  node: document.querySelector("#gr_db_errs"),
+  expr: "job:django_db_errors_total:sum_rate30s",
+  name: "[[ alias ]]/[[ vendor ]]",
+  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
+  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
+  yUnits: "/s",
+  yTitle: "Errors",
+  min: 0
+})
+</script>
+
 {{template "prom_content_tail" .}}
 
 {{template "tail"}}

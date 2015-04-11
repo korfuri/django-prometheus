@@ -32,3 +32,10 @@ job:django_http_requests_latency_seconds:quantile_rate30s{quantile="99.9"} = his
 job:django_model_inserts_total:sum_rate1m = sum(rate(django_model_inserts_total[1m])) by (job, model)
 job:django_model_updates_total:sum_rate1m = sum(rate(django_model_updates_total[1m])) by (job, model)
 job:django_model_deletes_total:sum_rate1m = sum(rate(django_model_deletes_total[1m])) by (job, model)
+
+// Aggregate database operations
+job:django_db_new_connections_total:sum_rate30s = sum(rate(django_db_new_connections_total[30s])) by (alias, vendor)
+job:django_db_new_connection_errors_total:sum_rate30s = sum(rate(django_db_new_connection_errors_total[30s])) by (alias, vendor)
+job:django_db_execute_total:sum_rate30s = sum(rate(django_db_execute_total[30s])) by (alias, vendor)
+job:django_db_execute_many_total:sum_rate30s = sum(rate(django_db_execute_many_total[30s])) by (alias, vendor)
+job:django_db_errors_total:sum_rate30s = sum(rate(django_db_errors_total[30s])) by (alias, vendor, type)
