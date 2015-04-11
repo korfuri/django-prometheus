@@ -23,6 +23,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = ')0-t%mc5y1^fn8e7i**^^v166@5iu(&-2%9#kxud0&4ap#k!_k'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+#
+# BIGGER SECURITY WARNING: if you're trying to disable DEBUG, you're
+# probably trying to run the testapp in production. DO NOT RUN THE
+# TESTAPP IN PRODUCTION. It contains several features that are
+# horrible hacks or even intentional security holes, to facilitate
+# automated or manual testing (like /sql which lets you, or anyone,
+# execute arbitrary SQL queries). DO NOT RUN THE TESTAPP IN
+# PRODUCTION.
 DEBUG = True
 
 ALLOWED_HOSTS = []
