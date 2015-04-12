@@ -9,5 +9,7 @@ https://github.com/korfuri/django-prometheus
 import django_prometheus.middleware
 import django_prometheus.models
 
+# Import pip_prometheus to export the pip metrics automatically.
+import pip_prometheus
 
 default_app_config = 'django_prometheus.apps.DjangoPrometheusConfig'
