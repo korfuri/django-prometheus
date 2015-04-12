@@ -1,5 +1,5 @@
 import os
-from setuptools import setup
+from setuptools import setup, find_packages
 
 LONG_DESCRIPTION = """Django-Prometheus
 
@@ -12,7 +12,7 @@ instructions.
 
 setup(
     name="django-prometheus",
-    version="0.1.1",
+    version="0.2.0",
     author="Uriel Corfa",
     author_email="uriel@corfa.fr",
     description=(
@@ -20,7 +20,7 @@ setup(
     license="Apache",
     keywords="django monitoring prometheus",
     url="http://github.com/korfuri/django-prometheus",
-    packages=["django_prometheus"],
+    packages=find_packages(),
     test_suite="tests",
     long_description=LONG_DESCRIPTION,
     install_requires=[
