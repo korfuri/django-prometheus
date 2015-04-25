@@ -59,13 +59,15 @@ def ExportingCursorWrapper(cursor_class, alias, vendor):
 
         def execute(self, *args, **kwargs):
             execute_total.labels(alias, vendor).inc()
-            with ExceptionCounterByType(errors_total, extra_labels={'alias': alias, 'vendor': vendor}):
+            with ExceptionCounterByType(errors_total, extra_labels={
+                    'alias': alias, 'vendor': vendor}):
                 return super(CursorWrapper, self).execute(*args, **kwargs)
 
         def executemany(self, query, param_list, *args, **kwargs):
             execute_total.labels(alias, vendor).inc(len(param_list))
             execute_many_total.labels(alias, vendor).inc(len(param_list))
-            with ExceptionCounterByType(errors_total, extra_labels={'alias': alias, 'vendor': vendor}):
+            with ExceptionCounterByType(errors_total, extra_labels={
+                    'alias': alias, 'vendor': vendor}):
                 return super(CursorWrapper, self).executemany(
                     query=query, param_list=param_list, *args, **kwargs)
     return CursorWrapper
