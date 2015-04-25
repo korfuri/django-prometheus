@@ -24,7 +24,7 @@ setup(
     test_suite="tests",
     long_description=LONG_DESCRIPTION,
     install_requires=[
-        "prometheus_client>=0.0.8",
+        "prometheus_client>=0.0.9",
         "pip-prometheus>=1.0.0",
     ],
     classifiers=[
