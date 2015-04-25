@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^objection$', 'testapp.views.objection'),
     url(r'^sql$', 'testapp.views.sql'),
     url(r'^newlawn/(?P<location>[a-zA-Z0-9 ]+)$', 'testapp.views.newlawn'),
+    url(r'^file$', 'testapp.views.file'),
     url('', include('django_prometheus.urls')),
     url(r'^admin/', include(admin.site.urls)),
 ]

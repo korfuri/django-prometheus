@@ -132,7 +132,8 @@ class PrometheusAfterMiddleware(object):
             responses_by_charset.labels(str(response.charset)).inc()
         if response.streaming:
             responses_streaming.inc()
-        responses_body_bytes.observe(len(response.content))
+        if hasattr(response, 'content'):
+            responses_body_bytes.observe(len(response.content))
         if hasattr(request, 'prometheus_after_middleware_event'):
             requests_latency.observe(TimeSince(
                 request.prometheus_after_middleware_event))

@@ -83,3 +83,14 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, TestCase):
         self.client.get('/')
         self.assertMetricEquals(
             2, M('requests_latency_seconds_bucket'), le='+Inf')
+
+    def test_streaming_responses(self):
+        self.client.get('/')
+        total_bytes = self.getMetric(
+            M('responses_body_total_bytes_bucket'), le='+Inf')
+        self.assertTrue(total_bytes > 0)
+        self.client.get('/file')
+        self.assertMetricEquals(1, M('responses_streaming_total'))
+        self.assertMetricEquals(
+            total_bytes,
+            M('responses_body_total_bytes_bucket'), le='+Inf')

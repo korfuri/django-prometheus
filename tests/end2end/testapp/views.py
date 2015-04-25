@@ -1,7 +1,9 @@
 from django.db import connections
+from django.http import FileResponse
 from django.shortcuts import render
 from django.template.response import TemplateResponse
 from testapp.models import Lawn
+import os
 import time
 
 
@@ -56,3 +58,7 @@ def sql(request):
             'rows': None,
             'databases': databases,
         })
+
+
+def file(request):
+    return FileResponse(open(os.devnull, 'rb'))
