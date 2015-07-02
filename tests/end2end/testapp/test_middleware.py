@@ -1,5 +1,7 @@
+import django
 from django_prometheus.testutils import PrometheusTestCaseMixin
 from django.test import TestCase
+import unittest
 
 
 def M(metric_name):
@@ -62,9 +64,10 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, TestCase):
             3, M('responses_body_total_bytes_bucket'), le='128.0')
         self.assertMetricEquals(
             4, M('responses_body_total_bytes_bucket'), le='8192.0')
-        self.assertMetricEquals(
-            4, M('responses_total_by_charset'), charset='utf-8')
-        self.assertMetricEquals(0, M('responses_streaming_total'))
+        if django.VERSION >= (1, 8):
+            self.assertMetricEquals(
+                4, M('responses_total_by_charset'), charset='utf-8')
+            self.assertMetricEquals(0, M('responses_streaming_total'))
 
     def test_latency_histograms(self):
         # Caution: this test is timing-based. This is not ideal. It
@@ -84,6 +87,8 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, TestCase):
         self.assertMetricEquals(
             2, M('requests_latency_seconds_bucket'), le='+Inf')
 
+    @unittest.skipIf(django.VERSION < (1, 8),
+                     'Streaming responses are not supported before Django 1.8')
     def test_streaming_responses(self):
         self.client.get('/')
         total_bytes = self.getMetric(

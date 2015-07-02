@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
+import django
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
@@ -49,18 +50,24 @@ INSTALLED_APPS = (
     'testapp',
 )
 
-MIDDLEWARE_CLASSES = (
-    'django_prometheus.middleware.PrometheusBeforeMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'django_prometheus.middleware.PrometheusAfterMiddleware',
-)
+
+def GetMiddlewareClasses():
+    classes = ['django_prometheus.middleware.PrometheusBeforeMiddleware']
+    classes.extend([
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+        'django.middleware.clickjacking.XFrameOptionsMiddleware'])
+    if django.VERSION >= (1, 8):
+        classes.append('django.middleware.security.SecurityMiddleware')
+    classes.append('django_prometheus.middleware.PrometheusAfterMiddleware')
+    return classes
+
+
+MIDDLEWARE_CLASSES = GetMiddlewareClasses()
 
 ROOT_URLCONF = 'testapp.urls'
 
