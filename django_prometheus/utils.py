@@ -1,5 +1,5 @@
 import time
-from prometheus_client import _INF
+from prometheus_client.core import _INF
 
 # TODO(korfuri): if python>3.3, use perf_counter() or monotonic().
 
