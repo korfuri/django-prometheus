@@ -1,7 +1,6 @@
 from django_prometheus.db import (
     connections_total, execute_total, execute_many_total, errors_total,
     connection_errors_total)
-import sys
 
 
 class ExceptionCounterByType(object):
