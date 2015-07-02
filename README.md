@@ -102,6 +102,11 @@ Note that the exported metrics are counters of creations,
 modifications and deletions done in the current process. They are not
 gauges of the number of objects in the model.
 
+Starting with Django 1.7, migrations are also monitored. Two gauges
+are exported, `django_migrations_applied_by_connection` and
+`django_migrations_unapplied_by_connection`. You may want to alert if
+there are unapplied migrations.
+
 ### Monitoring and aggregating the metrics
 
 Prometheus is quite easy to set up. An example prometheus.conf to
