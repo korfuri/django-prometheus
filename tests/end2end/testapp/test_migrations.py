@@ -1,5 +1,5 @@
+import django
 from django_prometheus.testutils import PrometheusTestCaseMixin
-from django_prometheus.migrations import ExportMigrationsForDatabase
 from django.test import TestCase
 import unittest
 import sys
@@ -18,10 +18,14 @@ def M(metric_name):
     return 'django_migrations_%s' % metric_name
 
 
+@unittest.skipIf(django.VERSION < (1, 7),
+                 'Migrations are not supported before Django 1.7')
 class TestMigrations(PrometheusTestCaseMixin, TestCase):
     """Test migration counters."""
 
     def test_counters(self):
+        from django_prometheus.migrations import ExportMigrationsForDatabase
+
         executor = MagicMock()
         executor.migration_plan = MagicMock()
         executor.migration_plan.return_value = set()
