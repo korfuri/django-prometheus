@@ -2,3 +2,4 @@ Django>=1.4
 pep8>=1.6.2
 prometheus-client>=0.0.10
 pip-prometheus>=1.0.0
+mock>=1.0.1
