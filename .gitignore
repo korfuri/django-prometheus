@@ -90,3 +90,6 @@ tramp
 
 # cask packages
 .cask/
+
+### Prometheus ###
+examples/prometheus/data
