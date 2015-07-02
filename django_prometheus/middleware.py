@@ -117,9 +117,10 @@ class PrometheusAfterMiddleware(object):
     def process_view(self, request, view_func, *view_args, **view_kwargs):
         transport = self._transport(request)
         method = self._method(request)
-        name = request.resolver_match.view_name or '<unnamed view>'
-        requests_by_view_transport_method.labels(
-            name, transport, method).inc()
+        if hasattr(request, 'resolver_match'):
+            name = request.resolver_match.view_name or '<unnamed view>'
+            requests_by_view_transport_method.labels(
+                name, transport, method).inc()
 
     def process_template_response(self, request, response):
         responses_by_templatename.labels(str(
@@ -130,7 +131,7 @@ class PrometheusAfterMiddleware(object):
         responses_by_status.labels(str(response.status_code)).inc()
         if hasattr(response, 'charset'):
             responses_by_charset.labels(str(response.charset)).inc()
-        if response.streaming:
+        if hasattr(response, 'streaming') and response.streaming:
             responses_streaming.inc()
         if hasattr(response, 'content'):
             responses_body_bytes.observe(len(response.content))
@@ -142,9 +143,10 @@ class PrometheusAfterMiddleware(object):
         return response
 
     def process_exception(self, request, exception):
-        name = request.resolver_match.view_name or '<unnamed view>'
         exceptions_by_type.labels(type(exception).__name__).inc()
-        exceptions_by_view.labels(name).inc()
+        if hasattr(request, 'resolver_match'):
+            name = request.resolver_match.view_name or '<unnamed view>'
+            exceptions_by_view.labels(name).inc()
         if hasattr(request, 'prometheus_after_middleware_event'):
             requests_latency.observe(TimeSince(
                 request.prometheus_after_middleware_event))
