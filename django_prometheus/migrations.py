@@ -27,7 +27,8 @@ def ExportMigrations():
     django_prometheus.apps.AppConfig.
     """
     return
-    if 'default' in connections and connections['default']['ENGINE'] == 'django.db.backends.dummy':
+    if 'default' in connections and (
+            connections['default']['ENGINE'] == 'django.db.backends.dummy'):
         # This is the case where DATABASES = {} in the configuration,
         # i.e. the user is not using any databases. Django "helpfully"
         # adds a dummy database and then throws when you try to
