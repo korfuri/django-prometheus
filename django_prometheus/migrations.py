@@ -26,6 +26,14 @@ def ExportMigrations():
     This is meant to be called during app startup, ideally by
     django_prometheus.apps.AppConfig.
     """
+    return
+    if 'default' in connections and connections['default']['ENGINE'] == 'django.db.backends.dummy':
+        # This is the case where DATABASES = {} in the configuration,
+        # i.e. the user is not using any databases. Django "helpfully"
+        # adds a dummy database and then throws when you try to
+        # actually use it. So we don't do anything, because trying to
+        # export stats would crash the app on startup.
+        return
     for alias in connections.databases:
         executor = MigrationExecutor(connections[alias])
         ExportMigrationsForDatabase(alias, executor)
