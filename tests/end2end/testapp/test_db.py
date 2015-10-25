@@ -34,16 +34,6 @@ class TestDbMetrics(PrometheusTestCaseMixin, TestCase):
         except:
             pass
 
-        self.assertTrue(self.getMetric(
-            'django_db_new_connections_total',
-            alias='default', vendor='sqlite') > 0)
-        self.assertTrue(self.getMetric(
-            'django_db_new_connections_total',
-            alias='test_db_1', vendor='sqlite') > 0)
-        self.assertTrue(self.getMetric(
-            'django_db_new_connections_total',
-            alias='test_db_2', vendor='sqlite') > 0)
-
         self.assertMetricEquals(
             1, 'django_db_errors_total',
             alias='test_db_1', vendor='sqlite', type='OperationalError')
@@ -53,7 +43,7 @@ class TestDbMetrics(PrometheusTestCaseMixin, TestCase):
             alias='test_db_1', vendor='sqlite') > 0)
         self.assertTrue(self.getMetric(
             'django_db_execute_total',
-            alias='test_db_2', vendor='sqlite') > 200)
+            alias='test_db_2', vendor='sqlite') >= 200)
 
     def testExecuteMany(self):
         cursor_db1 = connections['test_db_1'].cursor()
