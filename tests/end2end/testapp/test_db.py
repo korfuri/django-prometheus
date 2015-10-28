@@ -1,9 +1,9 @@
 from django_prometheus.testutils import PrometheusTestCaseMixin
-from django.test import TestCase
+from django.test import SimpleTestCase
 from django.db import connections
 
 
-class TestDbMetrics(PrometheusTestCaseMixin, TestCase):
+class TestDbMetrics(PrometheusTestCaseMixin, SimpleTestCase):
     """Test django_prometheus.db metrics.
 
     Note regarding the values of metrics: many tests interact with the
@@ -12,9 +12,6 @@ class TestDbMetrics(PrometheusTestCaseMixin, TestCase):
     fragile. Consider asserting that the value exceeds a certain
     threshold, or check by how much it increased during the test.
     """
-    def setUp(self):
-        pass
-
     def testConfigHasExpectedDatabases(self):
         """Not a real unit test: ensures that testapp.settings contains the
         databases this test expects."""
@@ -46,10 +43,10 @@ class TestDbMetrics(PrometheusTestCaseMixin, TestCase):
             alias='test_db_2', vendor='sqlite') >= 200)
 
     def testExecuteMany(self):
+        r = self.saveRegistry()
         cursor_db1 = connections['test_db_1'].cursor()
         cursor_db1.executemany(
             'INSERT INTO testapp_lawn(location) VALUES (?)', [
                 ('Paris',), ('New York',), ('Berlin',), ('San Francisco',)])
-        self.assertTrue(self.getMetric(
-            'django_db_execute_many_total',
-            alias='test_db_1', vendor='sqlite') >= 4)
+        self.assertMetricDiff(r, 4, 'django_db_execute_many_total',
+                              alias='test_db_1', vendor='sqlite')

@@ -1,6 +1,6 @@
 import django
 from django_prometheus.testutils import PrometheusTestCaseMixin
-from django.test import TestCase
+from django.test import SimpleTestCase
 import unittest
 import sys
 if sys.version_info[:2] >= (3, 0):
@@ -20,7 +20,7 @@ def M(metric_name):
 
 @unittest.skipIf(django.VERSION < (1, 7),
                  'Migrations are not supported before Django 1.7')
-class TestMigrations(PrometheusTestCaseMixin, TestCase):
+class TestMigrations(PrometheusTestCaseMixin, SimpleTestCase):
     """Test migration counters."""
 
     def test_counters(self):

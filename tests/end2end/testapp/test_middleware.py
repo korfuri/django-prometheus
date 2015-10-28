@@ -1,6 +1,6 @@
 import django
 from django_prometheus.testutils import PrometheusTestCaseMixin
-from django.test import TestCase
+from django.test import SimpleTestCase
 import unittest
 
 
@@ -13,7 +13,7 @@ def M(metric_name):
     return 'django_http_%s' % metric_name
 
 
-class TestMiddlewareMetrics(PrometheusTestCaseMixin, TestCase):
+class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
     """Test django_prometheus.middleware.
 
     Note that counters related to exceptions can't be tested as
@@ -21,53 +21,54 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, TestCase):
     handling flow is very different in that simulation.
     """
     def test_request_counters(self):
+        r = self.saveRegistry()
         self.client.get('/')
         self.client.get('/')
         self.client.get('/help')
         self.client.post('/', {'test': 'data'})
 
-        self.assertMetricEquals(4, M('requests_before_middlewares_total'))
-        self.assertMetricEquals(4, M('responses_before_middlewares_total'))
-        self.assertMetricEquals(
-            3, M('requests_total_by_method'), method='GET')
-        self.assertMetricEquals(
-            1, M('requests_total_by_method'), method='POST')
-        self.assertMetricEquals(
-            4, M('requests_total_by_transport'), transport='http')
-        self.assertMetricEquals(
-            2, M('requests_total_by_view_transport_method'),
+        self.assertMetricDiff(r, 4, M('requests_before_middlewares_total'))
+        self.assertMetricDiff(r, 4, M('responses_before_middlewares_total'))
+        self.assertMetricDiff(
+            r, 3, M('requests_total_by_method'), method='GET')
+        self.assertMetricDiff(
+            r, 1, M('requests_total_by_method'), method='POST')
+        self.assertMetricDiff(
+            r, 4, M('requests_total_by_transport'), transport='http')
+        self.assertMetricDiff(
+            r, 2, M('requests_total_by_view_transport_method'),
             view='testapp.views.index', transport='http', method='GET')
-        self.assertMetricEquals(
-            1, M('requests_total_by_view_transport_method'),
+        self.assertMetricDiff(
+            r, 1, M('requests_total_by_view_transport_method'),
             view='testapp.views.help', transport='http', method='GET')
-        self.assertMetricEquals(
-            1, M('requests_total_by_view_transport_method'),
+        self.assertMetricDiff(
+            r, 1, M('requests_total_by_view_transport_method'),
             view='testapp.views.index', transport='http', method='POST')
         # We have 3 requests with no post body, and one with a few
         # bytes, but buckets are cumulative so that is 4 requests with
         # <=128 bytes bodies.
-        self.assertMetricEquals(
-            3, M('requests_body_total_bytes_bucket'), le='0.0')
-        self.assertMetricEquals(
-            4, M('requests_body_total_bytes_bucket'), le='128.0')
+        self.assertMetricDiff(
+            r, 3, M('requests_body_total_bytes_bucket'), le='0.0')
+        self.assertMetricDiff(
+            r, 4, M('requests_body_total_bytes_bucket'), le='128.0')
         self.assertMetricEquals(
             None, M('responses_total_by_templatename'),
             templatename='help.html')
-        self.assertMetricEquals(
-            3, M('responses_total_by_templatename'),
+        self.assertMetricDiff(
+            r, 3, M('responses_total_by_templatename'),
             templatename='index.html')
-        self.assertMetricEquals(
-            4, M('responses_total_by_status'), status='200')
-        self.assertMetricEquals(
-            0, M('responses_body_total_bytes_bucket'), le='0.0')
-        self.assertMetricEquals(
-            3, M('responses_body_total_bytes_bucket'), le='128.0')
-        self.assertMetricEquals(
-            4, M('responses_body_total_bytes_bucket'), le='8192.0')
+        self.assertMetricDiff(
+            r, 4, M('responses_total_by_status'), status='200')
+        self.assertMetricDiff(
+            r, 0, M('responses_body_total_bytes_bucket'), le='0.0')
+        self.assertMetricDiff(
+            r, 3, M('responses_body_total_bytes_bucket'), le='128.0')
+        self.assertMetricDiff(
+            r, 4, M('responses_body_total_bytes_bucket'), le='8192.0')
         if django.VERSION >= (1, 8):
-            self.assertMetricEquals(
-                4, M('responses_total_by_charset'), charset='utf-8')
-            self.assertMetricEquals(0, M('responses_streaming_total'))
+            self.assertMetricDiff(
+                r, 4, M('responses_total_by_charset'), charset='utf-8')
+            self.assertMetricDiff(r, 0, M('responses_streaming_total'))
 
     def test_latency_histograms(self):
         # Caution: this test is timing-based. This is not ideal. It
@@ -75,27 +76,27 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, TestCase):
         # to complete) and it may be flaky when run on very slow
         # systems.
 
+        r = self.saveRegistry()
+
         # This always takes more than .1 second, so checking the lower
         # buckets is fine.
         self.client.get('/slow')
-        self.assertMetricEquals(
-            0, M('requests_latency_seconds_bucket'), le='0.05')
-        self.assertMetricEquals(
-            1, M('requests_latency_seconds_bucket'), le='5.0')
+        self.assertMetricDiff(
+            r, 0, M('requests_latency_seconds_bucket'), le='0.05')
+        self.assertMetricDiff(
+            r, 1, M('requests_latency_seconds_bucket'), le='5.0')
 
         self.client.get('/')
-        self.assertMetricEquals(
-            2, M('requests_latency_seconds_bucket'), le='+Inf')
+        self.assertMetricDiff(
+            r, 2, M('requests_latency_seconds_bucket'), le='+Inf')
 
     @unittest.skipIf(django.VERSION < (1, 8),
                      'Streaming responses are not supported before Django 1.8')
     def test_streaming_responses(self):
+        r = self.saveRegistry()
         self.client.get('/')
-        total_bytes = self.getMetric(
-            M('responses_body_total_bytes_bucket'), le='+Inf')
-        self.assertTrue(total_bytes > 0)
         self.client.get('/file')
-        self.assertMetricEquals(1, M('responses_streaming_total'))
-        self.assertMetricEquals(
-            total_bytes,
+        self.assertMetricDiff(r, 1, M('responses_streaming_total'))
+        self.assertMetricDiff(
+            r, 1,
             M('responses_body_total_bytes_bucket'), le='+Inf')
