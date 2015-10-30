@@ -25,7 +25,7 @@ class PrometheusTestCaseMixin(object):
     that interact with metrics.
     """
 
-    def saveRegistry(self):
+    def saveRegistry(self, registry=REGISTRY):
         """Freezes a registry. This lets a user test changes to a metric
         instead of testing the absolute value. A typical use case looks like:
 
@@ -33,22 +33,22 @@ class PrometheusTestCaseMixin(object):
           doStuff()
           self.assertMetricDiff(r, 1, 'stuff_done_total')
         """
-        return copy.deepcopy(list(REGISTRY.collect()))
+        return copy.deepcopy(list(registry.collect()))
 
-    def getMetricFromFrozen_Registry(self, metric_name, frozen_registry,
-                                     **labels):
+    def getMetricFromFrozenRegistry(self, metric_name, frozen_registry,
+                                    **labels):
         """Gets a single metric from a frozen registry."""
         for metric in frozen_registry:
             for n, l, value in metric.samples:
                 if n == metric_name and l == labels:
                     return value
 
-    def getMetric(self, metric_name, **labels):
+    def getMetric(self, metric_name, registry=REGISTRY, **labels):
         """Gets a single metric."""
-        return self.getMetricFromFrozen_Registry(
-            metric_name, REGISTRY.collect(), **labels)
+        return self.getMetricFromFrozenRegistry(
+            metric_name, registry.collect(), **labels)
 
-    def getMetricVectorFromFrozen_Registry(self, metric_name, frozen_registry):
+    def getMetricVectorFromFrozenRegistry(self, metric_name, frozen_registry):
         """Like getMetricVector, but from a frozen registry."""
         output = []
         for metric in frozen_registry:
@@ -57,7 +57,7 @@ class PrometheusTestCaseMixin(object):
                     output.append((l, value))
         return output
 
-    def getMetricVector(self, metric_name):
+    def getMetricVector(self, metric_name, registry=REGISTRY):
         """Returns the values for all labels of a given metric.
 
         The result is returned as a list of (labels, value) tuples,
@@ -67,8 +67,8 @@ class PrometheusTestCaseMixin(object):
         representation of the prometheus_client, and it should
         probably be provided as a function there instead.
         """
-        return self.getMetricVectorFromFrozen_Registry(
-            metric_name, REGISTRY.collect())
+        return self.getMetricVectorFromFrozenRegistry(
+            metric_name, registry.collect())
 
     def formatLabels(self, labels):
         """Format a set of labels to Prometheus representation.
@@ -90,9 +90,10 @@ class PrometheusTestCaseMixin(object):
             '%s = %s' % (self.formatLabels(labels), value)
             for labels, value in vector])
 
-    def assertMetricEquals(self, expected_value, metric_name, **labels):
+    def assertMetricEquals(self, expected_value, metric_name,
+                           registry=REGISTRY, **labels):
         """Asserts that metric_name{**labels} == expected_value."""
-        value = self.getMetric(metric_name, **labels)
+        value = self.getMetric(metric_name, registry=registry, **labels)
         self.assertEqual(
             expected_value, value, METRIC_EQUALS_ERR_EXPLANATION % (
                 metric_name, self.formatLabels(labels), value,
@@ -100,15 +101,16 @@ class PrometheusTestCaseMixin(object):
                 self.formatVector(self.getMetricVector(metric_name))))
 
     def assertMetricDiff(self, frozen_registry, expected_diff,
-                         metric_name, **labels):
+                         metric_name, registry=REGISTRY, **labels):
         """Asserts that metric_name{**labels} changed by expected_diff between
         the frozen registry and now. A frozen registry can be obtained
         by calling saveRegistry, typically at the beginning of a test
         case.
         """
-        saved_value = self.getMetricFromFrozen_Registry(
+        saved_value = self.getMetricFromFrozenRegistry(
             metric_name, frozen_registry, **labels)
-        current_value = self.getMetric(metric_name, **labels)
+        current_value = self.getMetric(metric_name, registry=registry,
+                                       **labels)
         self.assertFalse(
             current_value is None,
             METRIC_DIFF_ERR_NONE_EXPLANATION % (
