@@ -11,7 +11,7 @@ def SetupPrometheusEndpointOnPort(port, addr=''):
     all interfaces. This HTTPServer is fully independent of Django and
     its stack. This offers the advantage that even if Django becomes
     unable to respond, the HTTPServer will continue to function and
-    export metrics. However, this also means that none of the features
+    export metrics. However, this also means that the features
     offered by Django (like middlewares or WSGI) can't be used.
 
     Now here's the really weird part. When Django runs with the
