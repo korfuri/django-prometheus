@@ -55,3 +55,23 @@ option is always active:
 ```python
     execute_from_command_line(sys.argv + ['--noreload'])
 ```
+
+## Exporting /metrics in a WSGI application with multiple processes
+
+If you're using WSGI (e.g. with uwsgi or with gunicorn) and multiple
+Django processes, using either option above won't work, as requests
+using the Django view would just go to an inconsistent backend each
+time, and exporting on a single port doesn't work.
+
+The following settings can be used instead:
+
+```python
+PROMETHEUS_METRICS_EXPORT_PORT_RANGE = xrange(8001, 8050)
+```
+
+This will make Django-Prometheus try to export /metrics on port
+8001. If this fails (i.e. the port is in use), it will try 8002, then
+8003, etc.
+
+You can then configure Prometheus to collect metrics on as many
+targets as you have workers, using each port separately.

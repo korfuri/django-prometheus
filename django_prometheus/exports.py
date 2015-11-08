@@ -1,7 +1,18 @@
 from django.http import HttpResponse
 from django.conf import settings
+try:
+    # Python 2
+    from BaseHTTPServer import HTTPServer
+except ImportError:
+    # Python 3
+    from http.server import HTTPServer
+import logging
 import os
 import prometheus_client
+import threading
+
+
+logger = logging.getLogger(__name__)
 
 
 def SetupPrometheusEndpointOnPort(port, addr=''):
@@ -30,11 +41,59 @@ def SetupPrometheusEndpointOnPort(port, addr=''):
     prometheus_client.start_http_server(port, addr=addr)
 
 
+class PrometheusEndpointServer(threading.Thread):
+    """A thread class that holds an http and makes it serve_forever()."""
+    def __init__(self, httpd, *args, **kwargs):
+        self.httpd = httpd
+        super(PrometheusEndpointServer, self).__init__(*args, **kwargs)
+
+    def run(self):
+        self.httpd.serve_forever()
+
+
+def SetupPrometheusEndpointOnPortRange(port_range, addr=''):
+    """Like SetupPrometheusEndpointOnPort, but tries several ports.
+
+    This is useful when you're running Django as a WSGI application
+    with multiple processes and you want Prometheus to discover all
+    workers. Each worker will grab a port and you can use Prometheus
+    to aggregate accross workers.
+
+    port_range may be any iterable object that contains a list of
+    ports. Typically this would be an xrange of contiguous ports.
+
+    As soon as one port is found that can serve, use this one and stop
+    trying.
+
+    The same caveats regarding autoreload apply. Do not use this when
+    Django's autoreloader is active.
+
+    """
+    assert os.environ.get('RUN_MAIN') != 'true', (
+        'The thread-based exporter can\'t be safely used when django\'s '
+        'autoreloader is active. Use the URL exporter, or start django '
+        'with --noreload. See documentation/exports.md.')
+    for port in port_range:
+        try:
+            httpd = HTTPServer((addr, port), prometheus_client.MetricsHandler)
+        except OSError:
+            continue  # Try next port
+        thread = PrometheusEndpointServer(httpd)
+        thread.daemon = True
+        thread.start()
+        logger.info('Exporting Prometheus /metrics/ on port %s' % port)
+        return  # Stop trying ports at this point
+
+
 def SetupPrometheusExportsFromConfig():
     """Exports metrics so Prometheus can collect them."""
     port = getattr(settings, 'PROMETHEUS_METRICS_EXPORT_PORT', None)
-    addr = getattr(settings, 'PROMETHEUS_METRICS_EXPORT_ADDRESS', None)
-    if port:
+    port_range = getattr(
+        settings, 'PROMETHEUS_METRICS_EXPORT_PORT_RANGE', None)
+    addr = getattr(settings, 'PROMETHEUS_METRICS_EXPORT_ADDRESS', '')
+    if port_range:
+        SetupPrometheusEndpointOnPortRange(port_range, addr)
+    elif port:
         SetupPrometheusEndpointOnPort(port, addr)
 
 
