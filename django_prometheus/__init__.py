@@ -7,7 +7,7 @@ https://github.com/korfuri/django-prometheus
 # `import django_prometheus` will always instanciate all metric
 # objects right away.
 import django_prometheus.middleware
-import django_prometheus.models
+# import django_prometheus.models
 
 # Import pip_prometheus to export the pip metrics automatically.
 import pip_prometheus
