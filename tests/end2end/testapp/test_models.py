@@ -1,5 +1,5 @@
 from django_prometheus.testutils import PrometheusTestCaseMixin
-from django.test import SimpleTestCase
+from django.test import TestCase
 from testapp.models import Dog, Lawn
 
 
@@ -12,7 +12,7 @@ def M(metric_name):
     return 'django_model_%s' % metric_name
 
 
-class TestModelMetrics(PrometheusTestCaseMixin, SimpleTestCase):
+class TestModelMetrics(PrometheusTestCaseMixin, TestCase):
     """Test django_prometheus.models."""
 
     def test_counters(self):

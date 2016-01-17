@@ -1,9 +1,9 @@
 from django_prometheus.testutils import PrometheusTestCaseMixin
-from django.test import SimpleTestCase
+from django.test import TestCase
 from django.db import connections
 
 
-class TestDbMetrics(PrometheusTestCaseMixin, SimpleTestCase):
+class TestDbMetrics(PrometheusTestCaseMixin, TestCase):
     """Test django_prometheus.db metrics.
 
     Note regarding the values of metrics: many tests interact with the
