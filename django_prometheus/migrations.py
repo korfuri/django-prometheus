@@ -1,6 +1,5 @@
 from django.db import connections
 from django.db.backends.dummy.base import DatabaseWrapper
-from django.db.migrations.executor import MigrationExecutor
 from prometheus_client import Gauge
 
 unapplied_migrations = Gauge(
@@ -27,6 +26,14 @@ def ExportMigrations():
     This is meant to be called during app startup, ideally by
     django_prometheus.apps.AppConfig.
     """
+
+    # Import MigrationExecutor lazily. MigrationExecutor checks at
+    # import time that the apps are ready, and they are not when
+    # django_prometheus is imported. ExportMigrations() should be
+    # called in AppConfig.ready(), which signals that all apps are
+    # ready.
+    from django.db.migrations.executor import MigrationExecutor
+
     if 'default' in connections and (
             type(connections['default']) == DatabaseWrapper):
         # This is the case where DATABASES = {} in the configuration,
