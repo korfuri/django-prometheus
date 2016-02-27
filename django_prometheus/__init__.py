@@ -10,6 +10,10 @@ import django_prometheus.middleware
 import django_prometheus.models
 
 # Import pip_prometheus to export the pip metrics automatically.
-import pip_prometheus
+try:
+    import pip_prometheus
+except ImportError:
+    # If people don't have pip, don't export anything.
+    pass
 
 default_app_config = 'django_prometheus.apps.DjangoPrometheusConfig'
