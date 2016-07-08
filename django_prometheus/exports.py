@@ -6,6 +6,7 @@ try:
 except ImportError:
     # Python 3
     from http.server import HTTPServer
+import socket
 import logging
 import os
 import prometheus_client
@@ -76,7 +77,9 @@ def SetupPrometheusEndpointOnPortRange(port_range, addr=''):
     for port in port_range:
         try:
             httpd = HTTPServer((addr, port), prometheus_client.MetricsHandler)
-        except OSError:
+        except (OSError, socket.error):
+            # Python 2 raises socket.error, in Python 3 socket.error is an
+            # alias for OSError
             continue  # Try next port
         thread = PrometheusEndpointServer(httpd)
         thread.daemon = True
