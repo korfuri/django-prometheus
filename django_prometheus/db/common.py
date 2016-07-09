@@ -68,5 +68,5 @@ def ExportingCursorWrapper(cursor_class, alias, vendor):
             with ExceptionCounterByType(errors_total, extra_labels={
                     'alias': alias, 'vendor': vendor}):
                 return super(CursorWrapper, self).executemany(
-                    query=query, param_list=param_list, *args, **kwargs)
+                    query, param_list, *args, **kwargs)
     return CursorWrapper
