@@ -1,6 +1,4 @@
-import time
-
-# TODO(korfuri): if python>3.3, use perf_counter() or monotonic().
+from timeit import default_timer
 
 
 def Time():
@@ -11,7 +9,7 @@ def Time():
     treated as an opaque object. It can be compared to the current
     time with TimeSince().
     """
-    return time.time()
+    return default_timer()
 
 
 def TimeSince(t):
@@ -20,7 +18,7 @@ def TimeSince(t):
     Returns:
       the time since t, in fractional seconds.
     """
-    return time.time() - t
+    return default_timer() - t
 
 
 def PowersOf(logbase, count, lower=0, include_zero=True):
