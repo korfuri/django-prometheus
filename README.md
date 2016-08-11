@@ -107,6 +107,14 @@ are exported, `django_migrations_applied_by_connection` and
 `django_migrations_unapplied_by_connection`. You may want to alert if
 there are unapplied migrations.
 
+### Monitoring Celery tasks
+
+You can enable the ``celery_queued_tasks`` counter in your settings module:
+
+```python
+DJANGO_PROMETHEUS_MONITOR_CELERY = True
+````
+
 ### Monitoring and aggregating the metrics
 
 Prometheus is quite easy to set up. An example prometheus.conf to
