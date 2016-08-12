@@ -9,12 +9,12 @@ There are two levels of monitoring available:
    use of the Prometheus push-gateway to aggregate the metrics sent from the transient
    worker processes.
 
-   Set the ``DJANGO_PROMETHEUS_PUSH_GATEWAY`` setting to the hostname and port which
+   Set the ``PROMETHEUS_PUSH_GATEWAY`` setting to the hostname and port which
    your pushgateway server is running on::
 
-    DJANGO_PROMETHEUS_PUSH_GATEWAY = 'localhost:9091'
+    PROMETHEUS_PUSH_GATEWAY = 'localhost:9091'
 
-   The job ID can be customized by setting `DJANGO_PROMETHEUS_PUSH_GATEWAY_JOB_ID`
+   The job ID can be customized by setting `PROMETHEUS_PUSH_GATEWAY_JOB_ID`
 
    See https://prometheus.io/docs/instrumenting/pushing/ for more information about
    the push-gateway.

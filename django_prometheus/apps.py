@@ -27,11 +27,11 @@ class DjangoPrometheusConfig(AppConfig):
         # Celery not longer reliably has something like `djcelery` in INSTALLED_APPS
         # so we'll use a setting to trigger generic registry. This also allows users
         # register the task listener only for specific senders.
-        if getattr(settings, 'DJANGO_PROMETHEUS_MONITOR_CELERY', False):
+        if getattr(settings, 'PROMETHEUS_MONITOR_CELERY', False):
             from . import celery
             celery.register_metrics()
 
-            push_gateway = getattr(settings, 'DJANGO_PROMETHEUS_PUSH_GATEWAY', None)
+            push_gateway = getattr(settings, 'PROMETHEUS_PUSH_GATEWAY', None)
             if push_gateway:
-                job_id = getattr(settings, 'DJANGO_PROMETHEUS_PUSH_GATEWAY_JOB_ID', 'celery')
+                job_id = getattr(settings, 'PROMETHEUS_PUSH_GATEWAY_JOB_ID', 'celery')
                 celery.enable_push_gateway(push_gateway, job_id)
