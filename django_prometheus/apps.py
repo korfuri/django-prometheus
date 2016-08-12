@@ -30,3 +30,8 @@ class DjangoPrometheusConfig(AppConfig):
         if getattr(settings, 'DJANGO_PROMETHEUS_MONITOR_CELERY', False):
             from . import celery
             celery.register_metrics()
+
+            push_gateway = getattr(settings, 'DJANGO_PROMETHEUS_PUSH_GATEWAY', None)
+            if push_gateway:
+                job_id = getattr(settings, 'DJANGO_PROMETHEUS_PUSH_GATEWAY_JOB_ID', 'celery')
+                celery.enable_push_gateway(push_gateway, job_id)

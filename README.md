@@ -115,6 +115,20 @@ You can enable the ``celery_queued_tasks`` counter in your settings module:
 DJANGO_PROMETHEUS_MONITOR_CELERY = True
 ````
 
+If you use the `push-gateway <https://prometheus.io/docs/instrumenting/pushing/>`_
+you can enable per-task metrics by specifying the push server's hostname and port:
+
+```python
+DJANGO_PROMETHEUS_PUSH_GATEWAY = 'localhost:9091'
+```
+
+The default job ID is `celery` and may be customized by setting ``DJANGO_PROMETHEUS_PUSH_GATEWAY_JOB_ID``
+
+More advanced users may wish to customize the job ID or push gateway server per-task. This can be done
+by calling the `celery.task_prerun_listener` and `celery.task_postrun_listener` functions from your
+custom handlers using the desired `push_gateway` and `job_id` arguments.
+
+
 ### Monitoring and aggregating the metrics
 
 Prometheus is quite easy to set up. An example prometheus.conf to
