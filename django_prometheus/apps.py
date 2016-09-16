@@ -1,4 +1,5 @@
 from django.apps import AppConfig
+from django.conf import settings
 from django_prometheus.exports import SetupPrometheusExportsFromConfig
 from django_prometheus.migrations import ExportMigrations
 # unused import to force instantiating the metric objects at startup.
@@ -19,4 +20,5 @@ class DjangoPrometheusConfig(AppConfig):
         are usually short-lived), but can be useful for debugging.
         """
         SetupPrometheusExportsFromConfig()
-        ExportMigrations()
+        if getattr(settings, 'PROMETHEUS_EXPORT_MIGRATIONS', True):
+            ExportMigrations()
