@@ -3,5 +3,5 @@ pep8>=1.6.2
 prometheus-client>=0.0.13
 pip-prometheus>=1.0.0
 mock>=1.0.1
-MySQL-python
+mysqlclient
 psycopg2
