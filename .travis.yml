@@ -38,4 +38,4 @@ before_script:
   - pep8 .
 script:
   - python setup.py test
-  - (cd tests/end2end; PYTHONPATH=../.. python manage.py test)
+  - (cd django_prometheus/tests/end2end; PYTHONPATH=../../.. python manage.py test)
