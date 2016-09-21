@@ -11,6 +11,9 @@ env:
   - DJANGO_VERSION=1.6
   - DJANGO_VERSION=1.5
   - DJANGO_VERSION=1.4
+services:
+  - mysql
+  - postgresql
 matrix:
   exclude:
     - python: "3.3"
@@ -30,7 +33,9 @@ matrix:
 install:
   - pip install -r requirements.txt
   - pip install -q Django==$DJANGO_VERSION
-before_script: pep8 .
+  - mysql -e 'create database django_prometheus_1;'
+before_script:
+  - pep8 .
 script:
   - python setup.py test
   - (cd tests/end2end; PYTHONPATH=../.. python manage.py test)

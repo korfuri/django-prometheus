@@ -13,6 +13,12 @@ Value before: %s
 Value after: %s
 """
 
+METRIC_COMPARE_ERR_EXPLANATION = """
+The change in value of %s%s didn't match the predicate.
+Value before: %s
+Value after: %s
+"""
+
 METRIC_DIFF_ERR_NONE_EXPLANATION = """
 %s%s was None after.
 Value before: %s
@@ -122,5 +128,29 @@ class PrometheusTestCaseMixin(object):
             expected_diff, diff,
             METRIC_DIFF_ERR_EXPLANATION % (
                 metric_name, self.formatLabels(labels), diff, expected_diff,
+                saved_value,
+                current_value))
+
+    def assertMetricCompare(self, frozen_registry, predicate,
+                            metric_name, registry=REGISTRY, **labels):
+        """Asserts that metric_name{**labels} changed according to a provided
+        predicate function between the frozen registry and now. A
+        frozen registry can be obtained by calling saveRegistry,
+        typically at the beginning of a test case.
+        """
+        saved_value = self.getMetricFromFrozenRegistry(
+            metric_name, frozen_registry, **labels)
+        current_value = self.getMetric(metric_name, registry=registry,
+                                       **labels)
+        self.assertFalse(
+            current_value is None,
+            METRIC_DIFF_ERR_NONE_EXPLANATION % (
+                metric_name, self.formatLabels(labels),
+                saved_value,
+                current_value))
+        self.assertTrue(
+            predicate(saved_value, current_value),
+            METRIC_COMPARE_ERR_EXPLANATION % (
+                metric_name, self.formatLabels(labels),
                 saved_value,
                 current_value))

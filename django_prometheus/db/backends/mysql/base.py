@@ -1,4 +1,5 @@
-from django_prometheus.db.common import DatabaseWrapperMixin
+from django_prometheus.db.common import (
+    DatabaseWrapperMixin, ExportingCursorWrapper)
 from django.db.backends.mysql import base
 
 
@@ -9,3 +10,9 @@ class DatabaseFeatures(base.DatabaseFeatures):
 
 class DatabaseWrapper(DatabaseWrapperMixin, base.DatabaseWrapper):
     CURSOR_CLASS = base.CursorWrapper
+
+    def create_cursor(self):
+        cursor = self.connection.cursor()
+        CursorWrapper = ExportingCursorWrapper(
+            self.CURSOR_CLASS, self.alias, self.vendor)
+        return CursorWrapper(cursor)

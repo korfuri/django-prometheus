@@ -1,8 +1,13 @@
+import django
 import psycopg2.extensions
 
 from django_prometheus.db.common import DatabaseWrapperMixin, \
     ExportingCursorWrapper
-from django.db.backends.postgresql import base
+
+if django.VERSION >= (1, 9):
+    from django.db.backends.postgresql import base
+else:
+    from django.db.backends.postgresql_psycopg2 import base
 
 
 class DatabaseFeatures(base.DatabaseFeatures):
