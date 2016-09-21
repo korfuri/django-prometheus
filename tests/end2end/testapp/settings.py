@@ -102,15 +102,15 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     },
 
-    # Uncomment this to test django_prometheus.db.backends.postgres.
-    # 'postgresql': {
-    #     'ENGINE': 'django_prometheus.db.backends.postgresql',
-    #     'NAME': 'django_prometheus_1',
-    #     'USER': '',
-    #     'PASSWORD': '',
-    #     'HOST': 'localhost',
-    #     'PORT': '5432',
-    # },
+    # Comment this to not test django_prometheus.db.backends.postgres.
+    'postgresql': {
+        'ENGINE': 'django_prometheus.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    },
 
     # Comment this to not test django_prometheus.db.backends.mysql.
     'mysql': {
@@ -126,15 +126,6 @@ DATABASES = {
     'test_db_1': {
         'ENGINE': 'django_prometheus.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'test_db_1.sqlite3'),
-    },
-    #  Comment this to not test django_prometheus.db.backends.postgresql
-    'test_db_1': {
-        'ENGINE': 'django_prometheus.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '5432',
     },
     'test_db_2': {
         'ENGINE': 'django_prometheus.db.backends.sqlite3',
