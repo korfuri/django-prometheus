@@ -123,8 +123,9 @@ class PrometheusAfterMiddleware(object):
                 name, transport, method).inc()
 
     def process_template_response(self, request, response):
-        responses_by_templatename.labels(str(
-            response.template_name)).inc()
+        if hasattr(response, 'template_name'):
+            responses_by_templatename.labels(str(
+                response.template_name)).inc()
         return response
 
     def process_response(self, request, response):
