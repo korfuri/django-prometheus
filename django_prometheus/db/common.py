@@ -28,7 +28,7 @@ class ExceptionCounterByType(object):
     def __exit__(self, typ, value, traceback):
         if typ is not None:
             self._labels.update({self._type_label: typ.__name__})
-            self._counter.labels(self._labels).inc()
+            self._counter.labels(**self._labels).inc()
 
 
 class DatabaseWrapperMixin(object):
