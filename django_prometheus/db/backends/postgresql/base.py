@@ -25,7 +25,7 @@ class DatabaseWrapper(DatabaseWrapperMixin, base.DatabaseWrapper):
         )
         return conn_params
 
-    def create_cursor(self):
+    def create_cursor(self, name=None):
         # cursor_factory is a kwarg to connect() so restore create_cursor()'s
         # default behavior
-        return base.DatabaseWrapper.create_cursor(self)
+        return base.DatabaseWrapper.create_cursor(self, name=name)

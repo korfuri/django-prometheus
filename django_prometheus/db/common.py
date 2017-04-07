@@ -43,7 +43,7 @@ class DatabaseWrapperMixin(object):
             connection_errors_total.labels(self.alias, self.vendor).inc()
             raise
 
-    def create_cursor(self):
+    def create_cursor(self, name=None):
         return self.connection.cursor(factory=ExportingCursorWrapper(
             self.CURSOR_CLASS, self.alias, self.vendor))
 
