@@ -11,8 +11,8 @@ To run a demo Prometheus, you'll need to follow these steps:
 * Run prometheus like this:
   ```shell
   ~/prometheus/prometheus \
-    --config.file=prometheus.conf \
-    --web.console.templates consoles/ \
-    --web.console.libraries ~/prometheus/console_libraries/
+    -config.file=prometheus.conf \
+    -web.console.templates consoles/ \
+    -web.console.libraries ~/prometheus/console_libraries/
   ```
 * Navigate to [http://localhost:9090].

@@ -110,7 +110,7 @@ there are unapplied migrations.
 ### Monitoring and aggregating the metrics
 
 Prometheus is quite easy to set up. An example prometheus.conf to
-scrape `127.0.0.1:8001` can be found in `examples/prometheus`.
+scrape `127.0.0.1:8000` can be found in `examples/prometheus`.
 
 Here's an example of a PromDash displaying some of the metrics
 collected by django-prometheus:

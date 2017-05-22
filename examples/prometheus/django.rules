@@ -49,9 +49,8 @@ job:django_migrations_unapplied_total:max = max(django_migrations_unapplied_tota
 # Alerts
 ALERT UnappliedMigrations
   IF job:django_migrations_unapplied_total:max > 0
-  FOR 1m
-  WITH {
-    severity="testing"
+  LABELS { severity = "testing" }
+  ANNOTATIONS {
+    SUMMARY = "Unapplied django migrations on {{$labels.connection}}",
+    DESCRIPTION = "Django detected {{$value}} unapplied migrations on database {{$labels.connection}}",
   }
-  SUMMARY "Unapplied django migrations on {{$labels.connection}}"
-  DESCRIPTION "Django detected {{$value}} unapplied migrations on database {{$labels.connection}}"
