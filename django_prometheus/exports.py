@@ -1,5 +1,7 @@
 from django.http import HttpResponse
 from django.conf import settings
+from prometheus_client import multiprocess
+
 try:
     # Python 2
     from BaseHTTPServer import HTTPServer
@@ -105,7 +107,10 @@ def ExportToDjangoView(request):
 
     You can use django_prometheus.urls to map /metrics to this view.
     """
-    metrics_page = prometheus_client.generate_latest()
+    registry = prometheus_client.CollectorRegistry()
+    if 'prometheus_multiproc_dir' in os.environ:
+        multiprocess.MultiProcessCollector(registry)
+    metrics_page = prometheus_client.generate_latest(registry)
     return HttpResponse(
         metrics_page,
         content_type=prometheus_client.CONTENT_TYPE_LATEST)
