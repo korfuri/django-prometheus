@@ -58,7 +58,7 @@ def SetupPrometheusEndpointOnPortRange(port_range, addr=''):
     This is useful when you're running Django as a WSGI application
     with multiple processes and you want Prometheus to discover all
     workers. Each worker will grab a port and you can use Prometheus
-    to aggregate accross workers.
+    to aggregate across workers.
 
     port_range may be any iterable object that contains a list of
     ports. Typically this would be an xrange of contiguous ports.
