@@ -1,6 +1,6 @@
 Django>=1.4
 pep8>=1.6.2
--e git+https://github.com/prometheus/client_python@7fb50581ec03fe9f320dcecfcba0952b683d279c#egg=prometheus_client
+prometheus-client>=0.0.21
 pip-prometheus>=1.0.0
 mock>=1.0.1
 mysqlclient
