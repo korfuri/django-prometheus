@@ -58,14 +58,12 @@ def GetMiddlewareClasses():
         'django.middleware.common.CommonMiddleware',
         'django.middleware.csrf.CsrfViewMiddleware',
         'django.contrib.auth.middleware.AuthenticationMiddleware'])
-    if django.VERSION >= (1, 7):
-        classes.append(
-            'django.contrib.auth.middleware.SessionAuthenticationMiddleware')
+    classes.append(
+        'django.contrib.auth.middleware.SessionAuthenticationMiddleware')
     classes.extend([
         'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware'])
-    if django.VERSION >= (1, 8):
-        classes.append('django.middleware.security.SecurityMiddleware')
+    classes.append('django.middleware.security.SecurityMiddleware')
     classes.append('django_prometheus.middleware.PrometheusAfterMiddleware')
     return classes
 

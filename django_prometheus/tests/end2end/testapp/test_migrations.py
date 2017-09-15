@@ -18,8 +18,6 @@ def M(metric_name):
     return 'django_migrations_%s' % metric_name
 
 
-@unittest.skipIf(django.VERSION < (1, 7),
-                 'Migrations are not supported before Django 1.7')
 class TestMigrations(PrometheusTestCaseMixin, SimpleTestCase):
     """Test migration counters."""
 

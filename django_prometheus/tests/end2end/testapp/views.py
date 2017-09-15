@@ -5,8 +5,7 @@ from django.template.response import TemplateResponse
 from testapp.models import Lawn
 import os
 import time
-if django.VERSION >= (1, 8):
-    from django.http import FileResponse
+from django.http import FileResponse
 
 
 def index(request):
@@ -63,6 +62,4 @@ def sql(request):
 
 
 def file(request):
-    assert django.VERSION >= (1, 8), (
-        'FileResponse is only supported afted Django 1.8')
     return FileResponse(open(os.devnull, 'rb'))
