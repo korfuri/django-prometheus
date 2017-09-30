@@ -85,9 +85,13 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
         self.assertMetricDiff(
             r, 1, M('requests_latency_seconds_bucket'), le='5.0')
         self.assertMetricDiff(
-            r, 0, M("requests_latency_seconds_by_view_and_method_bucket"), le='0.05', view="slow", method="GET")
+            r, 0,
+            M("requests_latency_seconds_by_view_and_method_bucket"),
+            le='0.05', view="slow", method="GET")
         self.assertMetricDiff(
-            r, 1, M("requests_latency_seconds_by_view_and_method_bucket"), le='5.0', view="slow", method="GET")
+            r, 1,
+            M("requests_latency_seconds_by_view_and_method_bucket"),
+            le='5.0', view="slow", method="GET")
 
         self.client.get('/')
         self.assertMetricDiff(

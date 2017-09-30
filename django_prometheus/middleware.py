@@ -155,7 +155,7 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
             requests_latency_by_view_and_method\
                 .labels(view=name, method=request.method)\
                 .observe(TimeSince(
-                request.prometheus_after_middleware_event
+                    request.prometheus_after_middleware_event
                 ))
         else:
             requests_unknown_latency.inc()
