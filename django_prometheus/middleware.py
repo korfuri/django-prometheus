@@ -43,9 +43,10 @@ class PrometheusBeforeMiddleware(MiddlewareMixin):
 requests_latency = Histogram(
     'django_http_requests_latency_seconds',
     'Histogram of requests processing time.')
-requests_latency_by_view = Histogram(
-    'django_http_requests_latency_seconds_by_view',
-    'Historgram of request processing time labelled by view.')
+requests_latency_by_view_and_method = Histogram(
+    'django_http_requests_latency_seconds_by_view_and_method',
+    'Histogram of request processing time labelled by view.',
+    ['view', 'method'])
 requests_unknown_latency = Counter(
     'django_http_requests_unknown_latency_total',
     'Count of requests for which the latency was unknown.')
@@ -151,8 +152,11 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
                 request.prometheus_after_middleware_event))
         if hasattr(request, 'resolver_match'):
             name = request.resolver_match.view_name or '<unnamed view>'
-            requests_latency_by_view.observe(TimeSince(
-                request.prometheus_after_middleware_event))
+            requests_latency_by_view_and_method\
+                .labels(view=name, method=request.method)\
+                .observe(TimeSince(
+                request.prometheus_after_middleware_event
+                ))
         else:
             requests_unknown_latency.inc()
         return response
