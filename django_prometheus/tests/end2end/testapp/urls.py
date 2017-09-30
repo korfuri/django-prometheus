@@ -5,7 +5,7 @@ from testapp import views
 urlpatterns = [
     url(r'^$', views.index),
     url(r'^help$', views.help),
-    url(r'^slow$', views.slow),
+    url(r'^slow$', views.slow, name="slow"),
     url(r'^objection$', views.objection),
     url(r'^sql$', views.sql),
     url(r'^newlawn/(?P<location>[a-zA-Z0-9 ]+)$', views.newlawn),
