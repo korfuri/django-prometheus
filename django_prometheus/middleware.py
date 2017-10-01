@@ -151,7 +151,10 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
             requests_latency.observe(TimeSince(
                 request.prometheus_after_middleware_event))
         if hasattr(request, 'resolver_match'):
-            name = request.resolver_match.view_name or '<unnamed view>'
+            name = "<unnamed view>"
+            if request.resolver_match is not None:
+                if request.resolver_match.view_name is not None:
+                    name = request.resolver_match.view_name
             requests_latency_by_view_and_method\
                 .labels(view=name, method=request.method)\
                 .observe(TimeSince(
