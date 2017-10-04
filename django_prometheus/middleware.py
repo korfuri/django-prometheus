@@ -119,7 +119,8 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
         requests_by_transport.labels(transport).inc()
         if request.is_ajax():
             ajax_requests.inc()
-        requests_body_bytes.observe(len(request.body))
+        content_length = int(request.META.get('CONTENT_LENGTH') or 0)
+        requests_body_bytes.observe(content_length)
         request.prometheus_after_middleware_event = Time()
 
     def process_view(self, request, view_func, *view_args, **view_kwargs):
