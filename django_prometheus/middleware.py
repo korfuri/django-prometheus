@@ -40,9 +40,10 @@ class PrometheusBeforeMiddleware(MiddlewareMixin):
         return response
 
 
-requests_latency = Histogram(
-    'django_http_requests_latency_seconds',
-    'Histogram of requests processing time.')
+requests_latency_by_view_method = Histogram(
+    'django_http_requests_latency_seconds_by_view_method',
+    'Histogram of request processing time labelled by view.',
+    ['view', 'method'])
 requests_unknown_latency = Counter(
     'django_http_requests_unknown_latency_total',
     'Count of requests for which the latency was unknown.')
@@ -123,6 +124,14 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
         requests_body_bytes.observe(content_length)
         request.prometheus_after_middleware_event = Time()
 
+    def _get_view_name(self, request):
+        view_name = "<unnamed view>"
+        if hasattr(request, 'resolver_match'):
+            if request.resolver_match is not None:
+                if request.resolver_match.view_name is not None:
+                    view_name = request.resolver_match.view_name
+        return view_name
+
     def process_view(self, request, view_func, *view_args, **view_kwargs):
         transport = self._transport(request)
         method = self._method(request)
@@ -145,8 +154,13 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
         if hasattr(response, 'content'):
             responses_body_bytes.observe(len(response.content))
         if hasattr(request, 'prometheus_after_middleware_event'):
-            requests_latency.observe(TimeSince(
-                request.prometheus_after_middleware_event))
+            requests_latency_by_view_method\
+                .labels(
+                    view=self._get_view_name(request),
+                    method=request.method)\
+                .observe(TimeSince(
+                    request.prometheus_after_middleware_event
+                ))
         else:
             requests_unknown_latency.inc()
         return response
@@ -157,7 +171,12 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
             name = request.resolver_match.view_name or '<unnamed view>'
             exceptions_by_view.labels(name).inc()
         if hasattr(request, 'prometheus_after_middleware_event'):
-            requests_latency.observe(TimeSince(
-                request.prometheus_after_middleware_event))
+            requests_latency_by_view_method\
+                .labels(
+                    view=self._get_view_name(request),
+                    method=request.method)\
+                .observe(TimeSince(
+                    request.prometheus_after_middleware_event
+                ))
         else:
             requests_unknown_latency.inc()
