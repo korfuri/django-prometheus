@@ -101,24 +101,24 @@ DATABASES = {
     },
 
     # Comment this to not test django_prometheus.db.backends.postgres.
-    # 'postgresql': {
-        # 'ENGINE': 'django_prometheus.db.backends.postgresql',
-        # 'NAME': 'postgres',
-        # 'USER': 'postgres',
-        # 'PASSWORD': '',
-        # 'HOST': 'localhost',
-        # 'PORT': '5432',
-    # },
+    'postgresql': {
+        'ENGINE': 'django_prometheus.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    },
 
     # Comment this to not test django_prometheus.db.backends.mysql.
-    # 'mysql': {
-        # 'ENGINE': 'django_prometheus.db.backends.mysql',
-        # 'NAME': 'django_prometheus_1',
-        # 'USER': 'travis',
-        # 'PASSWORD': '',
-        # 'HOST': 'localhost',
-        # 'PORT': '3306',
-    # },
+    'mysql': {
+        'ENGINE': 'django_prometheus.db.backends.mysql',
+        'NAME': 'django_prometheus_1',
+        'USER': 'travis',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    },
 
     # The following databases are used by test_db.py only
     'test_db_1': {
