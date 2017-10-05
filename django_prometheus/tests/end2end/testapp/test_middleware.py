@@ -81,10 +81,6 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
         # buckets is fine.
         self.client.get('/slow')
         self.assertMetricDiff(
-            r, 0, M('requests_latency_seconds_bucket'), le='0.05')
-        self.assertMetricDiff(
-            r, 1, M('requests_latency_seconds_bucket'), le='5.0')
-        self.assertMetricDiff(
             r, 0,
             M("requests_latency_seconds_by_view_and_method_bucket"),
             le='0.05', view="slow", method="GET")
