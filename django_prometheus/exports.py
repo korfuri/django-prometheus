@@ -107,9 +107,11 @@ def ExportToDjangoView(request):
 
     You can use django_prometheus.urls to map /metrics to this view.
     """
-    registry = prometheus_client.CollectorRegistry()
     if 'prometheus_multiproc_dir' in os.environ:
+        registry = prometheus_client.CollectorRegistry()
         multiprocess.MultiProcessCollector(registry)
+    else:
+        registry = prometheus_client.REGISTRY
     metrics_page = prometheus_client.generate_latest(registry)
     return HttpResponse(
         metrics_page,
