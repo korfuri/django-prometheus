@@ -1,5 +1,6 @@
 language: python
 python:
+  - "3.6"
   - "3.5"
   - "3.4"
   - "3.3"
@@ -20,6 +21,13 @@ matrix:
       env: DJANGO_VERSION=1.10
     - python: "3.3"
       env: DJANGO_VERSION=1.11
+    - python: "3.4"
+      env: DJANGO_VERSION=1.9
+    - python: "2.7"
+      env: DJANGO_VERSION=1.9
+    - python: "2.7"
+      env: DJANGO_VERSION=1.10
+      
 install:
   - pip install -r requirements.txt
   - pip install -q Django==$DJANGO_VERSION
