@@ -3,16 +3,16 @@ python:
   - "3.6"
   - "2.7"
 env:
+  - DJANGO_VERSION=2.0
   - DJANGO_VERSION=1.11
+  - DJANGO_VERSION=1.8
 services:
   - mysql
   - postgresql
 matrix:
   exclude:
     - python: "2.7"
-      env: DJANGO_VERSION=1.9
-    - python: "2.7"
-      env: DJANGO_VERSION=1.10
+      env: DJANGO_VERSION=2.0
       
 install:
   - pip install -r requirements.txt
