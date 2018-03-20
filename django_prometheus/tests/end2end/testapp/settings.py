@@ -58,8 +58,9 @@ def GetMiddlewareClasses():
         'django.middleware.common.CommonMiddleware',
         'django.middleware.csrf.CsrfViewMiddleware',
         'django.contrib.auth.middleware.AuthenticationMiddleware'])
-    classes.append(
-        'django.contrib.auth.middleware.SessionAuthenticationMiddleware')
+    if django.VERSION < (1, 10):
+        classes.append(
+            'django.contrib.auth.middleware.SessionAuthenticationMiddleware')
     classes.extend([
         'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware'])
@@ -68,7 +69,10 @@ def GetMiddlewareClasses():
     return classes
 
 
+# For Django 1.x
 MIDDLEWARE_CLASSES = GetMiddlewareClasses()
+# For Django 2.x
+MIDDLEWARE = MIDDLEWARE_CLASSES
 
 ROOT_URLCONF = 'testapp.urls'
 
