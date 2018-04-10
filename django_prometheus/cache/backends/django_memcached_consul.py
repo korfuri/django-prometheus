@@ -4,7 +4,7 @@ from django_prometheus.cache.metrics import (
 
 
 class MemcachedCache(memcached.MemcachedCache):
-    """Inherit filebased cached to add metrics about hit/miss ratio"""
+    """Inherit django_memcached_consul to add metrics about hit/miss ratio"""
 
     def get(self, key, default=None, version=None):
         django_cache_get_total.labels(backend='django_memcached_consul').inc()

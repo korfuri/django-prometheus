@@ -4,7 +4,7 @@ from django_prometheus.cache.metrics import (
 
 
 class FileBasedCache(filebased.FileBasedCache):
-    """Inherit filebased cached to add metrics about hit/miss ratio"""
+    """Inherit filebased cache to add metrics about hit/miss ratio"""
 
     def get(self, key, default=None, version=None):
         django_cache_get_total.labels(backend='filebased').inc()
