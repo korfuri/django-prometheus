@@ -135,6 +135,22 @@ DATABASES = {
     },
 }
 
+# Caches
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_prometheus.cache.backends.memcached.MemcachedCache',
+        'LOCATION': 'localhost:11211',
+    },
+    'memcached': {
+        'BACKEND': 'django_prometheus.cache.backends.memcached.MemcachedCache',
+        'LOCATION': 'localhost:11211',
+    },
+    'filebased': {
+        'BACKEND': 'django_prometheus.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/var/tmp/django_cache',
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
