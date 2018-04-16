@@ -91,5 +91,8 @@ tramp
 # cask packages
 .cask/
 
+# venv
+venv/
+
 ### Prometheus ###
 examples/prometheus/data

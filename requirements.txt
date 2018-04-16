@@ -5,3 +5,4 @@ pip-prometheus>=1.0.0
 mock>=1.0.1
 mysqlclient
 psycopg2
+python-memcached
