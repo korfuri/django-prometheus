@@ -5,10 +5,9 @@ from django.test import TestCase
 from django.core.cache import caches
 
 
-# @skipUnless(caches['test_db_1'].vendor == 'sqlite',
-#             "Skipped unless test_db_1 uses sqlite")
 class TestCachesMetrics(PrometheusTestCaseMixin, TestCase):
     """Test django_prometheus.caches metrics."""
+
     def testCounters(self):
         cache_memcached = caches['memcached']
         cache_filebased = caches['filebased']
