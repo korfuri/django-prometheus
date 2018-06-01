@@ -149,6 +149,10 @@ CACHES = {
     'filebased': {
         'BACKEND': 'django_prometheus.cache.backends.filebased.FileBasedCache',
         'LOCATION': '/var/tmp/django_cache',
+    },
+    'locmem': {
+        'BACKEND': 'django_prometheus.cache.backends.locmem.LocMemCache',
+        'LOCATION': '/var/tmp/locmem_cache',
     }
 }
 
