@@ -1,6 +1,9 @@
 from prometheus_client import Counter, Histogram
 from django_prometheus.utils import Time, TimeSince, PowersOf
 import django
+from django.conf import settings
+
+LATENCY_BUCKETS = getattr(settings, "PROMETHEUS_LATENCY_BUCKETS", None)
 
 if django.VERSION >= (1, 10, 0):
     from django.utils.deprecation import MiddlewareMixin
@@ -13,10 +16,17 @@ requests_total = Counter(
 responses_total = Counter(
     'django_http_responses_before_middlewares_total',
     'Total count of responses before middlewares run.')
-requests_latency_before = Histogram(
-    'django_http_requests_latency_including_middlewares_seconds',
-    ('Histogram of requests processing time (including middleware '
-     'processing time).'))
+if LATENCY_BUCKETS is not None:
+    requests_latency_before = Histogram(
+        'django_http_requests_latency_including_middlewares_seconds',
+        ('Histogram of requests processing time (including middleware '
+         'processing time).'), buckets=LATENCY_BUCKETS)
+else:
+    requests_latency_before = Histogram(
+        'django_http_requests_latency_including_middlewares_seconds',
+        ('Histogram of requests processing time (including middleware '
+         'processing time).'))
+
 requests_unknown_latency_before = Counter(
     'django_http_requests_unknown_latency_including_middlewares_total',
     ('Count of requests for which the latency was unknown (when computing '
@@ -39,11 +49,16 @@ class PrometheusBeforeMiddleware(MiddlewareMixin):
             requests_unknown_latency_before.inc()
         return response
 
+if LATENCY_BUCKETS is not None:
+    requests_latency_by_view_method = Histogram(
+        'django_http_requests_latency_seconds_by_view_method',
+        'Histogram of request processing time labelled by view.',
+        ['view', 'method'], buckets=LATENCY_BUCKETS)
+else:
+    requests_latency_by_view_method = Histogram(
+        'django_http_requests_latency_seconds_by_view_method',
+        'Histogram of request processing time labelled by view.', ['view', 'method'])
 
-requests_latency_by_view_method = Histogram(
-    'django_http_requests_latency_seconds_by_view_method',
-    'Histogram of request processing time labelled by view.',
-    ['view', 'method'])
 requests_unknown_latency = Counter(
     'django_http_requests_unknown_latency_total',
     'Count of requests for which the latency was unknown.')
