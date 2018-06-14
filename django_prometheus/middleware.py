@@ -3,8 +3,10 @@ from django_prometheus.utils import Time, TimeSince, PowersOf
 import django
 from django.conf import settings
 
-DEFAULT_LATENCY_BUCKETS = (.005, .01, .025, .05, .075, .1, .25, .5, .75, 1.0, 2.5, 5.0, 7.5, 10.0, float("inf"))
-LATENCY_BUCKETS = getattr(settings, "PROMETHEUS_LATENCY_BUCKETS", DEFAULT_LATENCY_BUCKETS)
+DEFAULT_LATENCY_BUCKETS = (.005, .01, .025, .05, .075, .1, .25, .5, .75,
+                           1.0, 2.5, 5.0, 7.5, 10.0, float("inf"))
+LATENCY_BUCKETS = getattr(settings, "PROMETHEUS_LATENCY_BUCKETS",
+                          DEFAULT_LATENCY_BUCKETS)
 
 if django.VERSION >= (1, 10, 0):
     from django.utils.deprecation import MiddlewareMixin
