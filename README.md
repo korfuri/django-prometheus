@@ -144,3 +144,46 @@ pull requests are welcome. Make sure to read the Prometheus best
 practices on
 [instrumentation](http://prometheus.io/docs/practices/instrumentation/)
 and [naming](http://prometheus.io/docs/practices/naming/).
+
+## Importing Django Prometheus using only local settings
+
+If you wish to use Django Prometheus but are not able to change
+the code base, it's possible to have all the default metrics by
+modifying only the settings.
+
+First step is to inject prometheus' middlewares and to add
+django_prometheus in INSTALLED_APPS
+
+```python
+MIDDLEWARE = (
+        ('django_prometheus.middleware.PrometheusBeforeMiddleware',) +
+       MIDDLEWARE +
+        ('django_prometheus.middleware.PrometheusAfterMiddleware',)
+    )
+
+INSTALLED_APPS = INSTALLED_APPS + ('django_prometheus',)
+```
+
+Second step is to create the /metrics end point, for that we need
+another file (called urls_prometheus_wrapper.py in this example) that
+will wraps the apps URLs and add one on top:
+
+
+```python
+from django.conf.urls import include, url
+
+
+urlpatterns = []
+
+urlpatterns.append(url('^prometheus/', include('django_prometheus.urls')))
+urlpatterns.append(url('', include('myapp.urls')))
+```
+
+This file will add a "/prometheus/metrics" end point to the URLs of django
+that will export the metrics (replace myapp by your project name).
+
+Then we inject the wrapper in settings:
+
+```python 
+ROOT_URLCONF = "graphite.urls_prometheus_wrapper"
+```

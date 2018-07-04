@@ -56,7 +56,7 @@ option is always active:
     execute_from_command_line(sys.argv + ['--noreload'])
 ```
 
-## Exporting /metrics in a WSGI application with multiple processes
+## Exporting /metrics in a WSGI application with multiple processes per process
 
 If you're using WSGI (e.g. with uwsgi or with gunicorn) and multiple
 Django processes, using either option above won't work, as requests
@@ -75,3 +75,40 @@ This will make Django-Prometheus try to export /metrics on port
 
 You can then configure Prometheus to collect metrics on as many
 targets as you have workers, using each port separately.
+
+## Exporting /metrics in a WSGI application with multiple processes globally
+
+In some WSGI application, worker are short lived (less than a minute) so some
+are never scrapped by prometheus by default. Prometheus client already provide
+a nice system to aggregate them using the env variable: ```prometheus_multiproc_dir```
+that will contain the directory where metrics will be stored.
+
+Configuration in uwsgi will look like:
+
+```
+env = prometheus_multiproc_dir=/path/to/django_metrics
+```
+
+By default this will create four files (one for counters, one for summaries, ...etc)
+for each pid used. In uwsgi, the number of different pids used can be quite large
+(the pid change every time a worker respawn). To prevent having thousand of files
+created, it's possible to create file using worker ids rather than pids.
+
+It should be in settings, before any metric are created:
+
+```python
+from prometheus_client import core
+import uwsgi
+# Use uwsgi's worker_id rather than system pids
+core._ValueClass = core._MultiProcessValue(_pidFunc=uwsgi.worker_id)
+```
+
+The number of resulting files will be:
+number of processes * 4 (counter, histogram, gauge, summary)
+
+Be aware that by default this will generate a large amount of file descriptors:
+Each worker will keep 3 file descriptors for each files it created.
+
+If uwsgi is not using lazy-apps (lazy-apps = true), there will be a
+file descriptors leak (tens to hundreds of fds on a single file) due
+to the way uwsgi forks processes to create workers.
