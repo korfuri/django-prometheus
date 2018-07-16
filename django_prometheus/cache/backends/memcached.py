@@ -16,4 +16,4 @@ class MemcachedCache(memcached.MemcachedCache):
         else:
             django_cache_misses_total.labels(
                 backend='memcached').inc()
-        return cached
+        return cached or default

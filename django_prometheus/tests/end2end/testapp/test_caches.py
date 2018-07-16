@@ -20,9 +20,13 @@ class TestCachesMetrics(PrometheusTestCaseMixin, TestCase):
             tested_cache.get('foo1')
             tested_cache.get('foofoo')
 
+            result = tested_cache.get('foofoo', default='default')
+
+            assert result == 'default'
+
             self.assertMetricEquals(
-                3, 'django_cache_get_total', backend=supported_cache)
+                4, 'django_cache_get_total', backend=supported_cache)
             self.assertMetricEquals(
                 2, 'django_cache_get_hits_total', backend=supported_cache)
             self.assertMetricEquals(
-                1, 'django_cache_get_misses_total', backend=supported_cache)
+                2, 'django_cache_get_misses_total', backend=supported_cache)
