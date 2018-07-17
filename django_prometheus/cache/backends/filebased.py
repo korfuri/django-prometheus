@@ -14,4 +14,4 @@ class FileBasedCache(filebased.FileBasedCache):
             django_cache_hits_total.labels(backend='filebased').inc()
         else:
             django_cache_misses_total.labels(backend='filebased').inc()
-        return cached
+        return cached or default

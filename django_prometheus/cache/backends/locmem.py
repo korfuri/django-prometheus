@@ -14,4 +14,4 @@ class LocMemCache(locmem.LocMemCache):
             django_cache_hits_total.labels(backend='locmem').inc()
         else:
             django_cache_misses_total.labels(backend='locmem').inc()
-        return cached
+        return cached or default
