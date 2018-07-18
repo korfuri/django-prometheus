@@ -70,7 +70,7 @@ DATABASES = {
 
 ### Monitoring your caches
 
-Filebased and memcached caches can be monitored. Just replace
+Filebased, memcached, redis caches can be monitored. Just replace
 the cache backend to use the one provided by django_prometheus
 `django.core.cache.backends` with `django_prometheus.cache.backends`.
 

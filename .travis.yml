@@ -8,6 +8,7 @@ env:
   - DJANGO_VERSION=1.8
 services:
   - memcached
+  - redis
   - mysql
   - postgresql
 matrix:
