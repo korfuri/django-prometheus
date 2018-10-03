@@ -93,6 +93,7 @@ tramp
 
 # venv
 venv/
+virtualenv/
 
 ### Prometheus ###
 examples/prometheus/data
