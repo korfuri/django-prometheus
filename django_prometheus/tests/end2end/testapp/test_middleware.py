@@ -34,17 +34,6 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
             r, 3, M('requests_total_by_method'), method='GET')
         self.assertMetricDiff(
             r, 1, M('requests_total_by_method'), method='POST')
-        self.assertMetricDiff(
-            r, 4, M('requests_total_by_transport'), transport='http')
-        self.assertMetricDiff(
-            r, 2, M('requests_total_by_view_transport_method'),
-            view='testapp.views.index', transport='http', method='GET')
-        self.assertMetricDiff(
-            r, 1, M('requests_total_by_view_transport_method'),
-            view='testapp.views.help', transport='http', method='GET')
-        self.assertMetricDiff(
-            r, 1, M('requests_total_by_view_transport_method'),
-            view='testapp.views.index', transport='http', method='POST')
         # We have 3 requests with no post body, and one with a few
         # bytes, but buckets are cumulative so that is 4 requests with
         # <=128 bytes bodies.

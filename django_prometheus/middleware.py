@@ -55,15 +55,7 @@ requests_by_method = Counter(
     'django_http_requests_total_by_method',
     'Count of requests by method.',
     ['method'])
-requests_by_transport = Counter(
-    'django_http_requests_total_by_transport',
-    'Count of requests by transport.',
-    ['transport'])
 # Set in process_view
-requests_by_view_transport_method = Counter(
-    'django_http_requests_total_by_view_transport_method',
-    'Count of requests by view, transport, method.',
-    ['view', 'transport', 'method'])
 requests_body_bytes = Histogram(
     'django_http_requests_body_total_bytes',
     'Histogram of requests by body size.',
@@ -103,8 +95,6 @@ exceptions_by_view = Counter(
 class PrometheusAfterMiddleware(MiddlewareMixin):
 
     """Monitoring middleware that should run after other middlewares."""
-    def _transport(self, request):
-        return 'https' if request.is_secure() else 'http'
 
     def _method(self, request):
         m = request.method
@@ -114,10 +104,8 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
         return m
 
     def process_request(self, request):
-        transport = self._transport(request)
         method = self._method(request)
         requests_by_method.labels(method).inc()
-        requests_by_transport.labels(transport).inc()
         if request.is_ajax():
             ajax_requests.inc()
         content_length = int(request.META.get('CONTENT_LENGTH') or 0)
@@ -131,14 +119,6 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
                 if request.resolver_match.view_name is not None:
                     view_name = request.resolver_match.view_name
         return view_name
-
-    def process_view(self, request, view_func, *view_args, **view_kwargs):
-        transport = self._transport(request)
-        method = self._method(request)
-        if hasattr(request, 'resolver_match'):
-            name = request.resolver_match.view_name or '<unnamed view>'
-            requests_by_view_transport_method.labels(
-                name, transport, method).inc()
 
     def process_template_response(self, request, response):
         if hasattr(response, 'template_name'):
