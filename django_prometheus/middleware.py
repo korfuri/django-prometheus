@@ -1,11 +1,26 @@
-from prometheus_client import Counter, Histogram
-from django_prometheus.utils import Time, TimeSince, PowersOf
 import django
+from prometheus_client import Counter, Histogram
+
+from django_prometheus.utils import Time, TimeSince, PowersOf
 
 if django.VERSION >= (1, 10, 0):
     from django.utils.deprecation import MiddlewareMixin
 else:
     MiddlewareMixin = object
+
+
+ACCEPTABLE_HTTP_METHODS = (
+    'connect',
+    'delete',
+    'get',
+    'head',
+    'options',
+    'patch',
+    'post',
+    'put',
+    'trace',
+)
+
 
 requests_total = Counter(
     'django_http_requests_before_middlewares_total',
@@ -95,8 +110,7 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
 
     def _method(self, request):
         method = request.method.lower()
-        if method not in ('get', 'head', 'post', 'put', 'delete', 'trace',
-                     'options', 'connect', 'patch'):
+        if method not in ACCEPTABLE_HTTP_METHODS:
             return 'invalid'
         return method
 
