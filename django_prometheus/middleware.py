@@ -66,10 +66,11 @@ responses_by_templatename = Counter(
     'Count of responses by template name.',
     ['templatename'])
 # Set in process_response
-responses_by_status = Counter(
-    'django_http_responses_total_by_status',
-    'Count of responses by status.',
-    ['status'])
+http_responses = Counter(
+    'django_http_responses_total',
+    'Count of HTTP responses.',
+    ['code', 'handler', 'method'],
+)
 responses_body_bytes = Histogram(
     'django_http_responses_body_total_bytes',
     'Histogram of responses by body size.',
@@ -96,8 +97,8 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
         m = request.method
         if m not in ('GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'TRACE',
                      'OPTIONS', 'CONNECT', 'PATCH'):
-            return '<invalid method>'
-        return m
+            return 'invalid'
+        return m.lower()
 
     def process_request(self, request):
         method = self._method(request)
@@ -123,7 +124,11 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
         return response
 
     def process_response(self, request, response):
-        responses_by_status.labels(str(response.status_code)).inc()
+        http_responses.labels(
+            code=str(response.status_code),
+            handler=self._get_view_name(request),
+            method=self._method(request),
+        ).inc()
         if hasattr(response, 'streaming') and response.streaming:
             responses_streaming.inc()
         if hasattr(response, 'content'):
@@ -132,7 +137,7 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
             requests_latency_by_view_method\
                 .labels(
                     view=self._get_view_name(request),
-                    method=request.method)\
+                    method=self._method(request))\
                 .observe(TimeSince(
                     request.prometheus_after_middleware_event
                 ))
@@ -149,7 +154,7 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
             requests_latency_by_view_method\
                 .labels(
                     view=self._get_view_name(request),
-                    method=request.method)\
+                    method=self._method(request))\
                 .observe(TimeSince(
                     request.prometheus_after_middleware_event
                 ))
