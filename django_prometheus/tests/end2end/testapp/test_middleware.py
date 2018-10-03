@@ -49,11 +49,14 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
             templatename='index.html')
 
         self.assertMetricDiff(
-            r, 2, M('responses_total'), code='200', method='get', handler='testapp.views.index')
+            r, 2, M('responses_total'),
+            code='200', method='get', handler='testapp.views.index')
         self.assertMetricDiff(
-            r, 1, M('responses_total'), code='200', method='get', handler='testapp.views.help')
+            r, 1, M('responses_total'),
+            code='200', method='get', handler='testapp.views.help')
         self.assertMetricDiff(
-            r, 1, M('responses_total'), code='200', method='post', handler='testapp.views.index')
+            r, 1, M('responses_total'),
+            code='200', method='post', handler='testapp.views.index')
 
         self.assertMetricDiff(
             r, 0, M('responses_body_total_bytes_bucket'), le='0.0')
