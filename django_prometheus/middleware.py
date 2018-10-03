@@ -66,23 +66,20 @@ requests_unknown_latency = Counter(
 ajax_requests = Counter(
     'django_http_ajax_requests_total',
     'Count of AJAX requests.')
-requests_by_method = Counter(
-    'django_http_requests_total_by_method',
-    'Count of requests by method.',
-    ['method'])
 # Set in process_view
 requests_body_bytes = Histogram(
     'django_http_requests_body_total_bytes',
     'Histogram of requests by body size.',
     buckets=PowersOf(2, 30))
 # Set in process_template_response
-responses_by_templatename = Counter(
-    'django_http_responses_total_by_templatename',
-    'Count of responses by template name.',
-    ['templatename'])
+http_template_responses = Counter(
+    'django_http_template_responses',
+    'Count of template responses.',
+    ['template_name'],
+)
 # Set in process_response
 http_responses = Counter(
-    'django_http_responses_total',
+    'django_http_responses',
     'Count of HTTP responses.',
     ['code', 'handler', 'method'],
 )
@@ -112,8 +109,6 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
         return method
 
     def process_request(self, request):
-        method = self._method(request)
-        requests_by_method.labels(method=method).inc()
         if request.is_ajax():
             ajax_requests.inc()
         content_length = int(request.META.get('CONTENT_LENGTH') or 0)
@@ -130,8 +125,8 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
 
     def process_template_response(self, request, response):
         if hasattr(response, 'template_name'):
-            responses_by_templatename.labels(
-                templatename=str(response.template_name),
+            http_template_responses.labels(
+                template_name=str(response.template_name),
             ).inc()
         return response
 

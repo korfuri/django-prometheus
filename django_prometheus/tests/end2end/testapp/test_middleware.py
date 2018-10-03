@@ -30,10 +30,6 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
 
         self.assertMetricDiff(r, 4, M('requests_before_middlewares_total'))
         self.assertMetricDiff(r, 4, M('responses_before_middlewares_total'))
-        self.assertMetricDiff(
-            r, 3, M('requests_total_by_method'), method='get')
-        self.assertMetricDiff(
-            r, 1, M('requests_total_by_method'), method='post')
         # We have 3 requests with no post body, and one with a few
         # bytes, but buckets are cumulative so that is 4 requests with
         # <=128 bytes bodies.
@@ -42,11 +38,13 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
         self.assertMetricDiff(
             r, 4, M('requests_body_total_bytes_bucket'), le='128.0')
         self.assertMetricEquals(
-            None, M('responses_total_by_templatename'),
-            templatename='help.html')
+            None, M('template_responses_total'),
+            template_name='help.html'
+        )
         self.assertMetricDiff(
-            r, 3, M('responses_total_by_templatename'),
-            templatename='index.html')
+            r, 3, M('template_responses_total'),
+            template_name='index.html'
+        )
 
         self.assertMetricDiff(
             r, 2, M('responses_total'),
