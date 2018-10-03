@@ -45,7 +45,7 @@ class PrometheusTestCaseMixin(object):
                                     **labels):
         """Gets a single metric from a frozen registry."""
         for metric in frozen_registry:
-            for n, l, value in metric.samples:
+            for n, l, value, timestamp, exemplar in metric.samples:
                 if n == metric_name and l == labels:
                     return value
 
@@ -58,7 +58,7 @@ class PrometheusTestCaseMixin(object):
         """Like getMetricVector, but from a frozen registry."""
         output = []
         for metric in frozen_registry:
-            for n, l, value in metric.samples:
+            for n, l, value, timestamp, exemplar in metric.samples:
                 if n == metric_name:
                     output.append((l, value))
         return output
