@@ -92,7 +92,7 @@ responses_streaming = Counter(
     'Count of streaming responses.')
 # Set in process_exception
 exceptions_by_view = Counter(
-    'django_http_exceptions_total',
+    'django_exceptions',
     'Count of exceptions.',
     ['handler', 'method'],
 )

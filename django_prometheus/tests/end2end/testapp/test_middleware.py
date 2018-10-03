@@ -98,7 +98,7 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
             le='0.05', handler="testapp.views.objection", method="get")
         self.assertMetricDiff(  # Measure exception count
             r, 1,
-            M("exceptions_total"),
+            'django_exceptions_total',
             handler="testapp.views.objection", method="get")
 
     def test_streaming_responses(self):
