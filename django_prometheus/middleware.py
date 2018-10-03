@@ -116,7 +116,7 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
 
     def process_request(self, request):
         method = self._method(request)
-        requests_by_method.labels(method).inc()
+        requests_by_method.labels(method=method).inc()
         if request.is_ajax():
             ajax_requests.inc()
         content_length = int(request.META.get('CONTENT_LENGTH') or 0)
@@ -133,8 +133,9 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
 
     def process_template_response(self, request, response):
         if hasattr(response, 'template_name'):
-            responses_by_templatename.labels(str(
-                response.template_name)).inc()
+            responses_by_templatename.labels(
+                templatename=str(response.template_name),
+            ).inc()
         return response
 
     def process_response(self, request, response):
@@ -159,13 +160,12 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
         return response
 
     def process_exception(self, request, exception):
-        exceptions_by_type.labels(type(exception).__name__).inc()
-        if hasattr(request, 'resolver_match'):
-            name = request.resolver_match.view_name or '<unnamed view>'
-            exceptions_by_view.labels(name).inc()
+        handler = self._get_view_name(request)
+        exceptions_by_type.labels(type=type(exception).__name__).inc()
+        exceptions_by_view.labels(handler=handler).inc()
         if hasattr(request, 'prometheus_after_middleware_event'):
             requests_latency_by_view_method.labels(
-                handler=self._get_view_name(request),
+                handler=handler,
                 method=self._method(request),
             ).observe(TimeSince(request.prometheus_after_middleware_event))
         else:
