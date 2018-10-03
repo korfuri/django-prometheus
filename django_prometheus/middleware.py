@@ -62,10 +62,6 @@ requests_latency_by_view_method = Histogram(
 requests_unknown_latency = Counter(
     'django_http_requests_unknown_latency_total',
     'Count of requests for which the latency was unknown.')
-# Set in process_request
-ajax_requests = Counter(
-    'django_http_ajax_requests_total',
-    'Count of AJAX requests.')
 # Set in process_view
 requests_body_bytes = Histogram(
     'django_http_requests_body_total_bytes',
@@ -109,8 +105,6 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
         return method
 
     def process_request(self, request):
-        if request.is_ajax():
-            ajax_requests.inc()
         content_length = int(request.META.get('CONTENT_LENGTH') or 0)
         requests_body_bytes.observe(content_length)
         request.prometheus_after_middleware_event = Time()
