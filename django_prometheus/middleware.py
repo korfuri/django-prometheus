@@ -95,9 +95,10 @@ responses_streaming = Counter(
     'Count of streaming responses.')
 # Set in process_exception
 exceptions_by_view = Counter(
-    'django_http_exceptions_total_by_view',
-    'Count of exceptions by view.',
-    ['handler'])
+    'django_http_exceptions_total',
+    'Count of exceptions.',
+    ['handler', 'method'],
+)
 
 
 class PrometheusAfterMiddleware(MiddlewareMixin):
@@ -157,11 +158,6 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
 
     def process_exception(self, request, exception):
         handler = self._get_view_name(request)
-        exceptions_by_view.labels(handler=handler).inc()
-        if hasattr(request, 'prometheus_after_middleware_event'):
-            requests_latency_by_view_method.labels(
-                handler=handler,
-                method=self._method(request),
-            ).observe(TimeSince(request.prometheus_after_middleware_event))
-        else:
-            requests_unknown_latency.inc()
+        method = self._method(request)
+        exceptions_by_view.labels(handler=handler, method=method).inc()
+        return None

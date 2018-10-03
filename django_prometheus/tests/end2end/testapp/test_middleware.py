@@ -90,10 +90,15 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
             self.client.get('/objection')
         except ObjectionException:
             pass
-        self.assertMetricDiff(
-            r, 2,
+
+        self.assertMetricDiff(  # Still measure latency on exceptions
+            r, 1,
             M("requests_latency_seconds_by_view_method_bucket"),
             le='0.05', handler="testapp.views.objection", method="get")
+        self.assertMetricDiff(  # Measure exception count
+            r, 1,
+            M("exceptions_total"),
+            handler="testapp.views.objection", method="get")
 
     def test_streaming_responses(self):
         r = self.saveRegistry()
