@@ -58,7 +58,7 @@ class PrometheusBeforeMiddleware(MiddlewareMixin):
 requests_latency_by_view_method = Histogram(
     'django_http_requests_latency_seconds_by_view_method',
     'Histogram of request processing time labelled by view.',
-    ['view', 'method'])
+    ['handler', 'method'])
 requests_unknown_latency = Counter(
     'django_http_requests_unknown_latency_total',
     'Count of requests for which the latency was unknown.')
@@ -101,7 +101,7 @@ exceptions_by_type = Counter(
 exceptions_by_view = Counter(
     'django_http_exceptions_total_by_view',
     'Count of exceptions by view.',
-    ['view_name'])
+    ['handler'])
 
 
 class PrometheusAfterMiddleware(MiddlewareMixin):
@@ -151,7 +151,7 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
             responses_body_bytes.observe(len(response.content))
         if hasattr(request, 'prometheus_after_middleware_event'):
             requests_latency_by_view_method.labels(
-                view=handler,
+                handler=handler,
                 method=method,
             ).observe(TimeSince(request.prometheus_after_middleware_event))
         else:
@@ -165,7 +165,7 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
             exceptions_by_view.labels(name).inc()
         if hasattr(request, 'prometheus_after_middleware_event'):
             requests_latency_by_view_method.labels(
-                view=self._get_view_name(request),
+                handler=self._get_view_name(request),
                 method=self._method(request),
             ).observe(TimeSince(request.prometheus_after_middleware_event))
         else:

@@ -77,11 +77,11 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
         self.assertMetricDiff(
             r, 0,
             M("requests_latency_seconds_by_view_method_bucket"),
-            le='0.05', view="slow", method="get")
+            le='0.05', handler="slow", method="get")
         self.assertMetricDiff(
             r, 1,
             M("requests_latency_seconds_by_view_method_bucket"),
-            le='5.0', view="slow", method="get")
+            le='5.0', handler="slow", method="get")
 
     def test_exception_latency_histograms(self):
         r = self.saveRegistry()
@@ -93,7 +93,7 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
         self.assertMetricDiff(
             r, 2,
             M("requests_latency_seconds_by_view_method_bucket"),
-            le='0.05', view="testapp.views.objection", method="get")
+            le='0.05', handler="testapp.views.objection", method="get")
 
     def test_streaming_responses(self):
         r = self.saveRegistry()
