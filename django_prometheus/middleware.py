@@ -94,10 +94,6 @@ responses_streaming = Counter(
     'django_http_responses_streaming_total',
     'Count of streaming responses.')
 # Set in process_exception
-exceptions_by_type = Counter(
-    'django_http_exceptions_total_by_type',
-    'Count of exceptions by object type.',
-    ['type'])
 exceptions_by_view = Counter(
     'django_http_exceptions_total_by_view',
     'Count of exceptions by view.',
@@ -161,7 +157,6 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
 
     def process_exception(self, request, exception):
         handler = self._get_view_name(request)
-        exceptions_by_type.labels(type=type(exception).__name__).inc()
         exceptions_by_view.labels(handler=handler).inc()
         if hasattr(request, 'prometheus_after_middleware_event'):
             requests_latency_by_view_method.labels(
