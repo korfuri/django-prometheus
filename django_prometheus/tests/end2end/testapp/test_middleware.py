@@ -55,8 +55,6 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
             r, 3, M('responses_body_total_bytes_bucket'), le='128.0')
         self.assertMetricDiff(
             r, 4, M('responses_body_total_bytes_bucket'), le='8192.0')
-        self.assertMetricDiff(
-            r, 4, M('responses_total_by_charset'), charset='utf-8')
         self.assertMetricDiff(r, 0, M('responses_streaming_total'))
 
     def test_latency_histograms(self):

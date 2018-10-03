@@ -74,10 +74,6 @@ responses_body_bytes = Histogram(
     'django_http_responses_body_total_bytes',
     'Histogram of responses by body size.',
     buckets=PowersOf(2, 30))
-responses_by_charset = Counter(
-    'django_http_responses_total_by_charset',
-    'Count of responses by charset.',
-    ['charset'])
 responses_streaming = Counter(
     'django_http_responses_streaming_total',
     'Count of streaming responses.')
@@ -128,8 +124,6 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
 
     def process_response(self, request, response):
         responses_by_status.labels(str(response.status_code)).inc()
-        if hasattr(response, 'charset'):
-            responses_by_charset.labels(str(response.charset)).inc()
         if hasattr(response, 'streaming') and response.streaming:
             responses_streaming.inc()
         if hasattr(response, 'content'):
