@@ -28,15 +28,13 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
         self.client.get('/help')
         self.client.post('/', {'test': 'data'})
 
-        self.assertMetricDiff(r, 4, M('requests_before_middlewares_total'))
-        self.assertMetricDiff(r, 4, M('responses_before_middlewares_total'))
         # We have 3 requests with no post body, and one with a few
         # bytes, but buckets are cumulative so that is 4 requests with
         # <=128 bytes bodies.
         self.assertMetricDiff(
-            r, 3, M('requests_body_total_bytes_bucket'), le='0.0')
+            r, 3, M('request_size_bytes_bucket'), le='0.0')
         self.assertMetricDiff(
-            r, 4, M('requests_body_total_bytes_bucket'), le='128.0')
+            r, 4, M('request_size_bytes_bucket'), le='128.0')
         self.assertMetricEquals(
             None, M('template_responses_total'),
             template_name='help.html'
@@ -57,12 +55,12 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
             code='200', method='post', handler='testapp.views.index')
 
         self.assertMetricDiff(
-            r, 0, M('responses_body_total_bytes_bucket'), le='0.0')
+            r, 0, M('response_size_bytes_bucket'), le='0.0')
         self.assertMetricDiff(
-            r, 3, M('responses_body_total_bytes_bucket'), le='128.0')
+            r, 3, M('response_size_bytes_bucket'), le='128.0')
         self.assertMetricDiff(
-            r, 4, M('responses_body_total_bytes_bucket'), le='8192.0')
-        self.assertMetricDiff(r, 0, M('responses_streaming_total'))
+            r, 4, M('response_size_bytes_bucket'), le='8192.0')
+        self.assertMetricDiff(r, 0, M('streaming_responses_total'))
 
     def test_latency_histograms(self):
         # Caution: this test is timing-based. This is not ideal. It
@@ -75,14 +73,24 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
         # This always takes more than .1 second, so checking the lower
         # buckets is fine.
         self.client.get('/slow')
+
         self.assertMetricDiff(
             r, 0,
-            M("requests_latency_seconds_by_view_method_bucket"),
-            le='0.05', handler="slow", method="get")
+            'django_view_duration_seconds_bucket',
+            le='0.05', handler='slow')
         self.assertMetricDiff(
             r, 1,
-            M("requests_latency_seconds_by_view_method_bucket"),
-            le='5.0', handler="slow", method="get")
+            'django_view_duration_seconds_bucket',
+            le='5.0', handler='slow')
+
+        self.assertMetricDiff(
+            r, 0,
+            'django_http_request_duration_seconds_bucket',
+            le='0.05', handler='slow')
+        self.assertMetricDiff(
+            r, 1,
+            'django_http_request_duration_seconds_bucket',
+            le='5.0', handler='slow')
 
     def test_exception_latency_histograms(self):
         r = self.saveRegistry()
@@ -94,8 +102,12 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
 
         self.assertMetricDiff(  # Still measure latency on exceptions
             r, 1,
-            M("requests_latency_seconds_by_view_method_bucket"),
-            le='0.05', handler="testapp.views.objection", method="get")
+            'django_view_duration_seconds_bucket',
+            le='0.05', handler='testapp.views.objection')
+        self.assertMetricDiff(
+            r, 1,
+            'django_http_request_duration_seconds_bucket',
+            le='0.05', handler='testapp.views.objection')
         self.assertMetricDiff(  # Measure exception count
             r, 1,
             'django_exceptions_total',
@@ -105,7 +117,7 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
         r = self.saveRegistry()
         self.client.get('/')
         self.client.get('/file')
-        self.assertMetricDiff(r, 1, M('responses_streaming_total'))
+        self.assertMetricDiff(r, 1, M('streaming_responses_total'))
         self.assertMetricDiff(
             r, 1,
-            M('responses_body_total_bytes_bucket'), le='+Inf')
+            M('response_size_bytes_bucket'), le='+Inf')
