@@ -69,7 +69,7 @@ exceptions_by_view = Counter(
 
 
 def request_view_name(request):
-    view_name = "<unnamed view>"
+    view_name = '<unnamed view>'
     if hasattr(request, 'resolver_match'):
         if request.resolver_match is not None:
             if request.resolver_match.view_name is not None:

@@ -4,7 +4,7 @@
 
 Feel free to send pull requests, even for the tiniest things. Watch
 for Travis' opinion on them ([![Build
-Status](https://travis-ci.org/prezi/django-prometheus.svg?branch=master)](https://travis-ci.org/prezi/django-prometheus)).
+Status](https://travis-ci.org/prezi/django-exporter.svg?branch=master)](https://travis-ci.org/prezi/django-exporter)).
 
 Travis will also make sure your code is pep8 compliant, and it's a
 good idea to run flake8 as well (on django_prometheus/ and on

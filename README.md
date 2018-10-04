@@ -2,7 +2,7 @@
 Export Django monitoring metrics for Prometheus
 
 [![PyPI version](https://badge.fury.io/py/django-exporter.svg)](http://badge.fury.io/py/django-exporter)
-[![Build Status](https://travis-ci.org/prezi/django-prometheus.svg?branch=master)](https://travis-ci.org/prezi/django-prometheus)
+[![Build Status](https://travis-ci.org/prezi/django-exporter.svg?branch=master)](https://travis-ci.org/prezi/django-exporter)
 
 django-exporter is a fork of [korfuri/django-prometheus](https://github.com/korfuri/django-prometheus).
 
@@ -16,12 +16,12 @@ django-exporter is a fork of [korfuri/django-prometheus](https://github.com/korf
 
 Install with:
 ```shell
-pip install django-prometheus
+pip install django-exporter
 ```
 
 Or, if you're using a development version cloned from this repository:
 ```shell
-python path-to-where-you-cloned-django-prometheus/setup.py install
+python path-to-where-you-cloned-django-exporter/setup.py install
 ```
 
 This will install [prometheus_client](https://github.com/prometheus/client_python) as a dependency.
