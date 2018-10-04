@@ -1,8 +1,10 @@
-# django-prometheus
-Export Django monitoring metrics for Prometheus.io
+# django-exporter
+Export Django monitoring metrics for Prometheus
 
-[![PyPI version](https://badge.fury.io/py/django-prometheus.svg)](http://badge.fury.io/py/django-prometheus)
+[![PyPI version](https://badge.fury.io/py/django-exporter.svg)](http://badge.fury.io/py/django-exporter)
 [![Build Status](https://travis-ci.org/prezi/django-prometheus.svg?branch=master)](https://travis-ci.org/prezi/django-prometheus)
+
+django-exporter is a fork of [korfuri/django-prometheus](https://github.com/korfuri/django-prometheus).
 
 ## Usage
 
@@ -126,11 +128,6 @@ there are unapplied migrations.
 
 Prometheus is quite easy to set up. An example prometheus.conf to
 scrape `127.0.0.1:8001` can be found in `examples/prometheus`.
-
-Here's an example of a PromDash displaying some of the metrics
-collected by django-prometheus:
-
-![Example dashboard](https://raw.githubusercontent.com/korfuri/django-prometheus/master/examples/django-promdash.png)
 
 ## Adding your own metrics
 
