@@ -20,5 +20,5 @@ class DjangoPrometheusConfig(AppConfig):
         are usually short-lived), but can be useful for debugging.
         """
         SetupPrometheusExportsFromConfig()
-        if getattr(settings, 'PROMETHEUS_EXPORT_MIGRATIONS', True):
+        if getattr(settings, 'PROMETHEUS_EXPORT_MIGRATIONS', False):
             ExportMigrations()
