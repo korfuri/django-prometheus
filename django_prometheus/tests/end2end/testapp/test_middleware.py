@@ -31,19 +31,19 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
         self.assertMetricDiff(r, 4, M('requests_before_middlewares_total'))
         self.assertMetricDiff(r, 4, M('responses_before_middlewares_total'))
         self.assertMetricDiff(
-            r, 3, M('requests_total_by_method'), method='GET')
+            r, 3, M('requests_total_by_method_total'), method='GET')
         self.assertMetricDiff(
-            r, 1, M('requests_total_by_method'), method='POST')
+            r, 1, M('requests_total_by_method_total'), method='POST')
         self.assertMetricDiff(
-            r, 4, M('requests_total_by_transport'), transport='http')
+            r, 4, M('requests_total_by_transport_total'), transport='http')
         self.assertMetricDiff(
-            r, 2, M('requests_total_by_view_transport_method'),
+            r, 2, M('requests_total_by_view_transport_method_total'),
             view='testapp.views.index', transport='http', method='GET')
         self.assertMetricDiff(
-            r, 1, M('requests_total_by_view_transport_method'),
+            r, 1, M('requests_total_by_view_transport_method_total'),
             view='testapp.views.help', transport='http', method='GET')
         self.assertMetricDiff(
-            r, 1, M('requests_total_by_view_transport_method'),
+            r, 1, M('requests_total_by_view_transport_method_total'),
             view='testapp.views.index', transport='http', method='POST')
         # We have 3 requests with no post body, and one with a few
         # bytes, but buckets are cumulative so that is 4 requests with
@@ -53,13 +53,13 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
         self.assertMetricDiff(
             r, 4, M('requests_body_total_bytes_bucket'), le='128.0')
         self.assertMetricEquals(
-            None, M('responses_total_by_templatename'),
+            None, M('responses_total_by_templatename_total'),
             templatename='help.html')
         self.assertMetricDiff(
-            r, 3, M('responses_total_by_templatename'),
+            r, 3, M('responses_total_by_templatename_total'),
             templatename='index.html')
         self.assertMetricDiff(
-            r, 4, M('responses_total_by_status'), status='200')
+            r, 4, M('responses_total_by_status_total'), status='200')
         self.assertMetricDiff(
             r, 0, M('responses_body_total_bytes_bucket'), le='0.0')
         self.assertMetricDiff(
@@ -67,7 +67,7 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
         self.assertMetricDiff(
             r, 4, M('responses_body_total_bytes_bucket'), le='8192.0')
         self.assertMetricDiff(
-            r, 4, M('responses_total_by_charset'), charset='utf-8')
+            r, 4, M('responses_total_by_charset_total'), charset='utf-8')
         self.assertMetricDiff(r, 0, M('responses_streaming_total'))
 
     def test_latency_histograms(self):
