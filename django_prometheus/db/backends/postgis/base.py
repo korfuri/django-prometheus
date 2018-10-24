@@ -6,7 +6,7 @@ from django.db.backends.postgresql.base import (
 import psycopg2.extensions
 
 from django.contrib.gis.db.backends.postgis.features import DatabaseFeatures
-from django.contrib.gis.db.backends.postgis.introspection import  (
+from django.contrib.gis.db.backends.postgis.introspection import (
     PostGISIntrospection
 )
 from django.contrib.gis.db.backends.postgis.operations import PostGISOperations
