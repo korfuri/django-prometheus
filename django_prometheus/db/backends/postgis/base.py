@@ -3,14 +3,17 @@ from django.db.backends.base.base import NO_DB_ALIAS
 from django.db.backends.postgresql.base import (
     DatabaseWrapper as Psycopg2DatabaseWrapper,
 )
-
 import psycopg2.extensions
-from django_prometheus.db.common import DatabaseWrapperMixin, ExportingCursorWrapper
 
 from django.contrib.gis.db.backends.postgis.features import DatabaseFeatures
-from django.contrib.gis.db.backends.postgis.introspection import PostGISIntrospection
+from django.contrib.gis.db.backends.postgis.introspection import  (
+    PostGISIntrospection
+)
 from django.contrib.gis.db.backends.postgis.operations import PostGISOperations
 from django.contrib.gis.db.backends.postgis.schema import PostGISSchemaEditor
+
+from django_prometheus.db.common import DatabaseWrapperMixin, \
+    ExportingCursorWrapper
 
 
 class DatabaseWrapper(DatabaseWrapperMixin, Psycopg2DatabaseWrapper):
