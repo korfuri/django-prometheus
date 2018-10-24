@@ -55,8 +55,8 @@ urlpatterns = [
 
 ### Monitoring your databases
 
-SQLite, MySQL, and PostgreSQL databases can be monitored. Just
-replace the `ENGINE` property of your database, replacing
+SQLite, MySQL, PostgreSQL, and PostGIS databases can be monitored.
+Just replace the `ENGINE` property of your database, replacing
 `django.db.backends` with `django_prometheus.db.backends`.
 
 ```python
