@@ -6,5 +6,4 @@ import subprocess
 
 os.chdir('django_prometheus/tests/end2end')
 
-
-exit(subprocess.call(['python', 'manage.py' ,'test']))
+exit(subprocess.call(['python', 'manage.py', 'test']))
