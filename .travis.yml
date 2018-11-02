@@ -18,7 +18,7 @@ matrix:
 
 install:
   - pip install -r requirements.txt
-  - pip install -q Django==$DJANGO_VERSION
+  - pip install -q Django==$DJANGO_VERSION prometheus-client>=0.0.21
   - mysql -e 'create database django_prometheus_1;'
 before_script:
   - pep8 .

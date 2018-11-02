@@ -110,7 +110,7 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': '',
-        'HOST': 'localhost',
+        'HOST': '127.0.0.1',
         'PORT': '5432',
     },
 
@@ -119,8 +119,8 @@ DATABASES = {
         'ENGINE': 'django_prometheus.db.backends.mysql',
         'NAME': 'django_prometheus_1',
         'USER': 'travis',
-        'PASSWORD': '',
-        'HOST': 'localhost',
+        'PASSWORD': 'travis',
+        'HOST': '127.0.0.1',
         'PORT': '3306',
     },
 

@@ -1,0 +1,37 @@
+version: "3.7"
+
+# This docker-compose purpose is to be able to run the test suite locally.
+
+services:
+
+  postgres:
+    image: "postgres:10.5"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=
+      - POSTGRES_DB=test_django_prometheus_1
+
+  mysql:
+    # image: "mariadb:10.3"
+    image: "mysql:5.7"
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=django_prometheus_1
+      - MYSQL_USER=travis
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_PASSWORD=travis
+      - MYSQL_ROOT_PASSWORD=travis
+
+  redis:
+    image: redis:3
+    ports:
+      - "6379:6379"
+
+
+  memcached:
+    image: memcached:1.5
+    ports:
+      - "11211:11211"
