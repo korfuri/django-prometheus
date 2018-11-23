@@ -1,3 +1,13 @@
+import os
+from prometheus_client import core
+
+
+# Override pid function if we have a reusable gunicorn worker ID
+if os.environ.get('prometheus_multiproc_dir', None):
+    core._ValueClass = core._MultiProcessValue(
+        _pidFunc=lambda: os.environ.get('APP_WORKER_ID', 0),
+    )
+
 # Import all files that define metrics. This has the effect that
 # `import django_prometheus` will always instanciate all metric
 # objects right away.
@@ -9,6 +19,11 @@ try:
     import pip_prometheus
 except ImportError:
     # If people don't have pip, don't export anything.
+    pass
+
+try:  # Load celery exporter if possible
+    import django_prometheus.celery
+except ImportError:
     pass
 
 default_app_config = 'django_prometheus.apps.DjangoPrometheusConfig'
