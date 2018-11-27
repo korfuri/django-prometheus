@@ -5,7 +5,7 @@ from prometheus_client import core
 # Override pid function if we have a reusable gunicorn worker ID
 if os.environ.get('prometheus_multiproc_dir', None):  # noqa
     core._ValueClass = core._MultiProcessValue(
-        _pidFunc=lambda: os.environ.get('APP_WORKER_ID', 0),
+        _pidFunc=lambda: os.environ.get('APP_WORKER_ID', 1000),
     )
 
 # Import all files that define metrics. This has the effect that

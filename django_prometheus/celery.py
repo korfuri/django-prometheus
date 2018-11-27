@@ -15,6 +15,7 @@ from celery.signals import (
 from prometheus_client import core, multiprocess, Counter, Histogram
 
 
+WORKER_ID_OFFSET = 1001  # 1000 is Celery main process
 task_start_time = None  # Used to measure task execution time
 
 tasks_published = Counter(
@@ -83,7 +84,7 @@ def on_task_retry(sender=None, **kwargs):
 def on_worker_process_init(*args, **kwargs):
     """Make use of stable worker IDs to name the dbfiles."""
     core._ValueClass = core._MultiProcessValue(
-        _pidFunc=lambda: current_process().index + 1,
+        _pidFunc=lambda: current_process().index + WORKER_ID_OFFSET,
     )
 
 
@@ -92,4 +93,4 @@ def on_worker_process_shutdown(pid, exitcode, **kwargs):
     """Dispatched in all pool child processes just before they exit.
     We delete the dbfile at that time.
     """
-    multiprocess.mark_process_dead(current_process().index + 1)
+    multiprocess.mark_process_dead(current_process().index + WORKER_ID_OFFSET)
