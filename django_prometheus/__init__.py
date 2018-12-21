@@ -1,10 +1,10 @@
 import os
-from prometheus_client import core
+from prometheus_client import values
 
 
 # Override pid function if we have a reusable gunicorn worker ID
 if os.environ.get('prometheus_multiproc_dir', None):  # noqa
-    core._ValueClass = core._MultiProcessValue(
+    values.ValueClass = values.MultiProcessValue(
         _pidFunc=lambda: os.environ.get('APP_WORKER_ID', 1000),
     )
 
