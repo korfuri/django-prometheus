@@ -12,7 +12,7 @@ from celery.signals import (
     worker_process_shutdown,
     celeryd_init,
 )
-from prometheus_client import core, multiprocess, Counter, Histogram
+from prometheus_client import values, multiprocess, Counter, Histogram
 
 
 WORKER_ID_OFFSET = 1001  # 1000 is Celery main process
@@ -83,7 +83,7 @@ def on_task_retry(sender=None, **kwargs):
 @worker_process_init.connect
 def on_worker_process_init(*args, **kwargs):
     """Make use of stable worker IDs to name the dbfiles."""
-    core._ValueClass = core._MultiProcessValue(
+    values.ValueClass = values.MultiProcessValue(
         _pidFunc=lambda: current_process().index + WORKER_ID_OFFSET,
     )
 
