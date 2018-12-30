@@ -1,4 +1,6 @@
-from prometheus_client import Histogram, Counter, CollectorRegistry, push_to_gateway
+from prometheus_client import (
+    Histogram, Counter, CollectorRegistry, push_to_gateway
+)
 from django_prometheus.utils import Time, TimeSince, PowersOf
 import django
 import socket
