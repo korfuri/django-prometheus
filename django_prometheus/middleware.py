@@ -45,7 +45,7 @@ class PrometheusBeforeMiddleware(MiddlewareMixin):
         request.prometheus_before_middleware_event = Time()
 
         if settings.PROMETHEUS_ENABLE_FLAG and settings.PUSHGATEWAY_PROMETHEUS_URL:
-            push_to_gateway(settings.PUSHGATEWAY_PROMETHEUS_URL, job='bayonet', registry=registry)
+            push_to_gateway(settings.PUSHGATEWAY_PROMETHEUS_URL, job=settings.PUSHGATEWAY_PROMETHEUS_JOB_NAME, registry=registry)
 
     def process_response(self, request, response):
         responses_total.labels(socket.gethostname()).inc()
@@ -56,7 +56,7 @@ class PrometheusBeforeMiddleware(MiddlewareMixin):
             requests_unknown_latency_before.labels(socket.gethostname()).inc()
 
         if settings.PROMETHEUS_ENABLE_FLAG and settings.PUSHGATEWAY_PROMETHEUS_URL:
-            push_to_gateway(settings.PUSHGATEWAY_PROMETHEUS_URL, job='bayonet', registry=registry)
+            push_to_gateway(settings.PUSHGATEWAY_PROMETHEUS_URL, job=settings.PUSHGATEWAY_PROMETHEUS_JOB_NAME, registry=registry)
 
         return response
 
@@ -167,7 +167,7 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
         request.prometheus_after_middleware_event = Time()
 
         if settings.PROMETHEUS_ENABLE_FLAG and settings.PUSHGATEWAY_PROMETHEUS_URL:
-            push_to_gateway(settings.PUSHGATEWAY_PROMETHEUS_URL, job='bayonet', registry=registry)
+            push_to_gateway(settings.PUSHGATEWAY_PROMETHEUS_URL, job=settings.PUSHGATEWAY_PROMETHEUS_JOB_NAME, registry=registry)
 
     def _get_view_name(self, request):
         view_name = "<unnamed view>"
@@ -186,7 +186,7 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
                 name, transport, method, socket.gethostname()).inc()
 
             if settings.PROMETHEUS_ENABLE_FLAG and settings.PUSHGATEWAY_PROMETHEUS_URL:
-                push_to_gateway(settings.PUSHGATEWAY_PROMETHEUS_URL, job='bayonet', registry=registry)
+                push_to_gateway(settings.PUSHGATEWAY_PROMETHEUS_URL, job=settings.PUSHGATEWAY_PROMETHEUS_JOB_NAME, registry=registry)
 
     def process_template_response(self, request, response):
         if hasattr(response, 'template_name'):
@@ -194,7 +194,7 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
                 response.template_name), socket.gethostname()).inc()
 
             if settings.PROMETHEUS_ENABLE_FLAG and settings.PUSHGATEWAY_PROMETHEUS_URL:
-                push_to_gateway(settings.PUSHGATEWAY_PROMETHEUS_URL, job='bayonet', registry=registry)
+                push_to_gateway(settings.PUSHGATEWAY_PROMETHEUS_URL, job=settings.PUSHGATEWAY_PROMETHEUS_JOB_NAME, registry=registry)
         return response
 
     def process_response(self, request, response):
@@ -219,7 +219,7 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
             requests_unknown_latency.labels(socket.gethostname()).inc()
 
         if settings.PROMETHEUS_ENABLE_FLAG and settings.PUSHGATEWAY_PROMETHEUS_URL:
-            push_to_gateway(settings.PUSHGATEWAY_PROMETHEUS_URL, job='bayonet', registry=registry)
+            push_to_gateway(settings.PUSHGATEWAY_PROMETHEUS_URL, job=settings.PUSHGATEWAY_PROMETHEUS_JOB_NAME, registry=registry)
         return response
 
     def process_exception(self, request, exception):
@@ -240,4 +240,4 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
             requests_unknown_latency.labels(socket.gethostname()).inc()
 
         if settings.PROMETHEUS_ENABLE_FLAG and settings.PUSHGATEWAY_PROMETHEUS_URL:
-            push_to_gateway(settings.PUSHGATEWAY_PROMETHEUS_URL, job='bayonet', registry=registry)
+            push_to_gateway(settings.PUSHGATEWAY_PROMETHEUS_URL, job=settings.PUSHGATEWAY_PROMETHEUS_JOB_NAME, registry=registry)
