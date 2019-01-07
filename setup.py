@@ -12,7 +12,7 @@ instructions.
 
 setup(
     name="django-prometheus",
-    version="1.0.15",
+    version="1.0.16",
     author="Uriel Corfa",
     author_email="uriel@corfa.fr",
     description=(
