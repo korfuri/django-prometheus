@@ -39,7 +39,7 @@ class DatabaseWrapperMixin(object):
         try:
             return super(DatabaseWrapperMixin, self).get_new_connection(
                 *args, **kwargs)
-        except:
+        except Exception:
             connection_errors_total.labels(self.alias, self.vendor).inc()
             raise
 
