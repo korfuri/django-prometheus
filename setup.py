@@ -1,4 +1,3 @@
-import os
 from setuptools import setup, find_packages
 
 LONG_DESCRIPTION = """Django-Prometheus
