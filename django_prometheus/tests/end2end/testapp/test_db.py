@@ -32,7 +32,7 @@ class TestDbMetrics(PrometheusTestCaseMixin, TestCase):
         cursor_db1.execute('SELECT 3')
         try:
             cursor_db1.execute('this is clearly not valid SQL')
-        except:
+        except Exception:
             pass
 
         self.assertMetricEquals(
