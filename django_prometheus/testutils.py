@@ -1,6 +1,6 @@
 import copy
-from prometheus_client import REGISTRY
 
+from prometheus_client import REGISTRY
 
 METRIC_EQUALS_ERR_EXPLANATION = """
 %s%s = %s, expected %s.

@@ -1,5 +1,11 @@
-from django.http import HttpResponse
+import socket
+import logging
+import os
+import prometheus_client
+import threading
+
 from django.conf import settings
+from django.http import HttpResponse
 from prometheus_client import multiprocess
 
 try:
@@ -8,11 +14,6 @@ try:
 except ImportError:
     # Python 3
     from http.server import HTTPServer
-import socket
-import logging
-import os
-import prometheus_client
-import threading
 
 
 logger = logging.getLogger(__name__)

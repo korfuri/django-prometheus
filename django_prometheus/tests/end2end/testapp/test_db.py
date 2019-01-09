@@ -1,8 +1,9 @@
 from unittest import skipUnless
 
-from django_prometheus.testutils import PrometheusTestCaseMixin
-from django.test import TestCase
 from django.db import connections
+from django.test import TestCase
+
+from django_prometheus.testutils import PrometheusTestCaseMixin
 
 
 @skipUnless(connections['test_db_1'].vendor == 'sqlite',

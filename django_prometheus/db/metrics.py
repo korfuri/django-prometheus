@@ -1,6 +1,5 @@
 from prometheus_client import Counter
 
-
 connections_total = Counter(
     'django_db_new_connections_total',
     'Counter of created connections by database and by vendor.',

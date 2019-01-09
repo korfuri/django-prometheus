@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-from django_prometheus.testutils import PrometheusTestCaseMixin
-import prometheus_client
-from operator import itemgetter
 import unittest
+from operator import itemgetter
+
+import prometheus_client
+from django_prometheus.testutils import PrometheusTestCaseMixin
 
 
 class SomeTestCase(PrometheusTestCaseMixin):

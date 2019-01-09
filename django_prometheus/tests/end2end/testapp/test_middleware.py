@@ -1,6 +1,8 @@
-from django_prometheus.testutils import PrometheusTestCaseMixin
-from testapp.views import ObjectionException
 from django.test import SimpleTestCase
+
+from django_prometheus.testutils import PrometheusTestCaseMixin
+
+from testapp.views import ObjectionException
 
 
 def M(metric_name):
