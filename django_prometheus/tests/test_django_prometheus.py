@@ -1,6 +1,7 @@
 #!/usr/bin/env python
-from django_prometheus.utils import PowersOf
 import unittest
+
+from django_prometheus.utils import PowersOf
 
 
 class DjangoPrometheusTest(unittest.TestCase):

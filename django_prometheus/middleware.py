@@ -1,6 +1,7 @@
-from prometheus_client import Counter, Histogram
-from django_prometheus.utils import Time, TimeSince, PowersOf
 import django
+from prometheus_client import Counter, Histogram
+
+from django_prometheus.utils import Time, TimeSince, PowersOf
 
 if django.VERSION >= (1, 10, 0):
     from django.utils.deprecation import MiddlewareMixin

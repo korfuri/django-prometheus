@@ -1,6 +1,9 @@
 from django.core.cache.backends import locmem
+
 from django_prometheus.cache.metrics import (
-    django_cache_get_total, django_cache_hits_total, django_cache_misses_total)
+    django_cache_get_total,
+    django_cache_hits_total,
+    django_cache_misses_total)
 
 
 class LocMemCache(locmem.LocMemCache):
