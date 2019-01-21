@@ -1,4 +1,3 @@
-import os
 from setuptools import setup, find_packages
 
 LONG_DESCRIPTION = """Django-Prometheus
@@ -12,7 +11,7 @@ instructions.
 
 setup(
     name="django-prometheus",
-    version="1.0.15",
+    version="1.0.16",
     author="Uriel Corfa",
     author_email="uriel@corfa.fr",
     description=(
@@ -24,7 +23,7 @@ setup(
     test_suite="django_prometheus.tests",
     long_description=LONG_DESCRIPTION,
     install_requires=[
-        "prometheus_client>=0.0.21",
+        "prometheus_client>=0.0.21,<0.4.0",
     ],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
@@ -37,6 +36,8 @@ setup(
         "Programming Language :: Python :: 3.3",
         "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
         "Framework :: Django",
         "Topic :: System :: Monitoring",
         "License :: OSI Approved :: Apache Software License",
