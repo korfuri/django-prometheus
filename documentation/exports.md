@@ -78,36 +78,45 @@ targets as you have workers, using each port separately.
 
 ## Exporting /metrics in a WSGI application with multiple processes globally
 
-In some WSGI application, worker are short lived (less than a minute) so some
-are never scrapped by prometheus by default. Prometheus client already provide
-a nice system to aggregate them using the env variable: ```prometheus_multiproc_dir```
-that will contain the directory where metrics will be stored.
+In some WSGI applications, workers are short lived (less than a minute), so some
+are never scraped by prometheus by default. Prometheus client already provides
+a nice system to aggregate them using the env variable: `prometheus_multiproc_dir`
+which will configure the directory where metrics will be stored as files per process.
 
-Configuration in uwsgi will look like:
-
+Configuration in uwsgi would look like:
 ```
 env = prometheus_multiproc_dir=/path/to/django_metrics
 ```
+You can also set this environment variable elsewhere such as in a kubernetes manifest.
+Note that the environment variable is lower_case.
 
-By default this will create four files (one for counters, one for summaries, ...etc)
+Setting this will create four files (one for counters, one for summaries, ...etc)
 for each pid used. In uwsgi, the number of different pids used can be quite large
 (the pid change every time a worker respawn). To prevent having thousand of files
 created, it's possible to create file using worker ids rather than pids.
 
-It should be in settings, before any metric are created:
-
+You can change the function used for identifying the process to use the uwsgi worker_id.
+Modify this in settings before any metrics are created:
 ```python
-from prometheus_client import core
-import uwsgi
-# Use uwsgi's worker_id rather than system pids
-core._ValueClass = core._MultiProcessValue(_pidFunc=uwsgi.worker_id)
+try:
+    import prometheus_client
+    import uwsgi
+    prometheus_client.values.ValueClass = prometheus_client.values.MultiProcessValue(
+        _pidFunc=uwsgi.worker_id)
+except ImportError:
+    pass  # not running in uwsgi
 ```
+Note that this code uses internal interfaces of prometheus_client.
+The underlying implementation may change.
 
 The number of resulting files will be:
 number of processes * 4 (counter, histogram, gauge, summary)
 
 Be aware that by default this will generate a large amount of file descriptors:
 Each worker will keep 3 file descriptors for each files it created.
+
+Since these files will be written often, you should consider mounting this directory
+as a `tmpfs` or using a subdir of an existing one such as `/run/` or `/var/run/`.
 
 If uwsgi is not using lazy-apps (lazy-apps = true), there will be a
 file descriptors leak (tens to hundreds of fds on a single file) due
