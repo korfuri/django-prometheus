@@ -124,6 +124,32 @@ are exported, `django_migrations_applied_by_connection` and
 `django_migrations_unapplied_by_connection`. You may want to alert if
 there are unapplied migrations.
 
+
+### Batch jobs
+
+You can write management commands that will push metrics to a
+[Pushgateway](https://github.com/prometheus/pushgateway):
+
+```python
+from django_prometheus.management import PushgatewayCommand
+
+class Command(PushgatewayCommand):
+
+    job_name = 'my-cron-job'
+    help = 'Does a long running job'
+
+    def handle(self, *args, **options):
+        self.gauge('my_gauge', 'My gauge', ['foo']).labels(foo='bar').set(42)
+        self.counter('my_counter', 'My counter description').inc(123)
+        self.push_metrics()
+```
+
+The following settings describe the Pushgateway:
+* `PUSHGATEWAY_URL`: URL of the Pushgateway, default `http://localhost:9091`
+* `PUSHGATEWAY_USER` (optional): basic auth user
+* `PUSHGATEWAY_PASSWORD` (optional): basic auth password
+
+
 ### Monitoring and aggregating the metrics
 
 Prometheus is quite easy to set up. An example prometheus.conf to
