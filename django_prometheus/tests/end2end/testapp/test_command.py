@@ -22,7 +22,10 @@ class PushgatewayCommandTest(TestCase):
     def test_command_full(self, basic_auth_handler):
         call_command('pushgateway_job')
         args, kwargs = basic_auth_handler.call_args
-        self.assertIn(kwargs['url'], self.GATEWAY_URL + '/metrics/job/my-cron-job')
+        self.assertIn(
+            kwargs['url'],
+            self.GATEWAY_URL + '/metrics/job/my-cron-job',
+        )
         self.assertIn('my_gauge{foo="bar"} 42.0', kwargs['data'])
         self.assertIn('my_counter_total 123.0', kwargs['data'])
         self.assertIn('job_last_duration_seconds', kwargs['data'])

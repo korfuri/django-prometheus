@@ -3,15 +3,27 @@ from datetime import datetime
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from prometheus_client import CollectorRegistry, Counter, Gauge, push_to_gateway
-from prometheus_client.exposition import default_handler, basic_auth_handler
+from prometheus_client import (
+    CollectorRegistry,
+    Counter,
+    Gauge,
+    push_to_gateway,
+)
+from prometheus_client.exposition import (
+    default_handler,
+    basic_auth_handler,
+)
 
 
 class PushgatewayCommand(BaseCommand):
 
     def __init__(self):
         assert self.job_name
-        self.gateway_url = getattr(settings, 'PUSHGATEWAY_URL', 'http://localhost:9091')
+        self.gateway_url = getattr(
+            settings,
+            'PUSHGATEWAY_URL',
+            'http://localhost:9091',
+        )
         self.gateway_user = getattr(settings, 'PUSHGATEWAY_USER', None)
         self.gateway_password = getattr(settings, 'PUSHGATEWAY_PASSWORD', None)
         if self.gateway_user and self.gateway_password:
@@ -40,6 +52,15 @@ class PushgatewayCommand(BaseCommand):
         return Counter(name, description, labels, registry=self.registry)
 
     def push_metrics(self):
-        duration = Gauge('job_last_duration_seconds', 'Last execution duration of a batch job', registry=self.registry)
+        duration = Gauge(
+            'job_last_duration_seconds',
+            'Last execution duration of a batch job',
+            registry=self.registry,
+        )
         duration.set((datetime.now() - self.start_datetime).total_seconds())
-        push_to_gateway(self.gateway_url, job=self.job_name, registry=self.registry, handler=self.handler)
+        push_to_gateway(
+            self.gateway_url,
+            job=self.job_name,
+            registry=self.registry,
+            handler=self.handler,
+        )
