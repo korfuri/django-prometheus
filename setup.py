@@ -11,7 +11,7 @@ See https://github.com/prezi/django-exporter for usage instructions.
 
 setup(
     name="django-exporter",
-    version="2.1.0",
+    version="2.1.1",
     author="David Guerrero",
     author_email="david.guerrero@prezi.com",
     description="Export Django metrics for Prometheus.",
