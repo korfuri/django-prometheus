@@ -8,6 +8,9 @@ if django.VERSION >= (1, 10, 0):
 else:
     MiddlewareMixin = object
 
+if django.VERSION < (1, 5, 0):
+    from django.core.urlresolvers import resolve
+
 
 ACCEPTABLE_HTTP_METHODS = (
     'connect',
@@ -74,6 +77,11 @@ def request_view_name(request):
         if request.resolver_match is not None:
             if request.resolver_match.view_name is not None:
                 view_name = request.resolver_match.view_name
+    elif django.VERSION < (1, 5, 0) and hasattr(request, 'path'):
+        try:
+            view_name = resolve(request.path).url_name
+        except:  # No view match
+            pass
     return view_name
 
 
