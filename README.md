@@ -11,6 +11,7 @@ django-exporter is a fork of [korfuri/django-prometheus](https://github.com/korf
 ### Requirements
 
 * Django >= 1.8
+* For middleware metrics only: Django >= 1.3
 
 ### Installation
 
