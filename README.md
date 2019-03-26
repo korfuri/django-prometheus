@@ -4,7 +4,10 @@ Export Django monitoring metrics for Prometheus
 [![PyPI version](https://badge.fury.io/py/django-exporter.svg)](http://badge.fury.io/py/django-exporter)
 [![Build Status](https://travis-ci.org/prezi/django-exporter.svg?branch=master)](https://travis-ci.org/prezi/django-exporter)
 
-django-exporter is a fork of [korfuri/django-prometheus](https://github.com/korfuri/django-prometheus).
+django-exporter is a fork of [korfuri/django-prometheus](https://github.com/korfuri/django-prometheus), adding the following features:
+* Better middleware metrics: metric names & label names follow current best practices
+* Compatibility with Django 1.3 and up for middleware metrics
+* Support for batch job with management commands that push metrics to a Pushgateway
 
 ## Usage
 
