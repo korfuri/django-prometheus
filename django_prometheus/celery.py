@@ -45,9 +45,9 @@ def on_after_task_publish(sender=None, headers=None, body=None, **kwargs):
     """Dispatched when a task has been sent to the broker.
     Note that this is executed in the process that sent the task.
     """
-    if 'task' in headers:
+    try:
         task_name = headers['task']
-    else:
+    except:  # headers['task'] is not always available
         task_name = 'UNKNOWN'
     tasks_published.labels(task=task_name).inc()
 
