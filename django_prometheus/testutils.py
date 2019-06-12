@@ -45,9 +45,9 @@ class PrometheusTestCaseMixin(object):
                                     **labels):
         """Gets a single metric from a frozen registry."""
         for metric in frozen_registry:
-            for n, l, value in metric.samples:
-                if n == metric_name and l == labels:
-                    return value
+            for sample in metric.samples:
+                if sample.name == metric_name and sample.labels == labels:
+                    return sample.value
 
     def getMetric(self, metric_name, registry=REGISTRY, **labels):
         """Gets a single metric."""
@@ -58,9 +58,9 @@ class PrometheusTestCaseMixin(object):
         """Like getMetricVector, but from a frozen registry."""
         output = []
         for metric in frozen_registry:
-            for n, l, value in metric.samples:
-                if n == metric_name:
-                    output.append((l, value))
+            for sample in metric.samples:
+                if sample.name == metric_name:
+                    output.append((sample.labels, sample.value))
         return output
 
     def getMetricVector(self, metric_name, registry=REGISTRY):
