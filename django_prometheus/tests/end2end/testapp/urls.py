@@ -1,6 +1,7 @@
 import django
 from django.conf.urls import include, url
 from django.contrib import admin
+
 from testapp import views
 
 if django.VERSION >= (1, 9, 0):

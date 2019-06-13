@@ -1,6 +1,10 @@
 from django_prometheus.db import (
-    connections_total, execute_total, execute_many_total, errors_total,
-    connection_errors_total)
+    connection_errors_total,
+    connections_total,
+    execute_total,
+    execute_many_total,
+    errors_total
+)
 
 
 class ExceptionCounterByType(object):
@@ -39,7 +43,7 @@ class DatabaseWrapperMixin(object):
         try:
             return super(DatabaseWrapperMixin, self).get_new_connection(
                 *args, **kwargs)
-        except:
+        except Exception:
             connection_errors_total.labels(self.alias, self.vendor).inc()
             raise
 

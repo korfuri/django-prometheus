@@ -14,6 +14,7 @@ job:django_http_requests_total_by_view:sum_rate30s = sum(rate(django_http_reques
 job:django_http_requests_total_by_view_transport_method:sum_rate30s = sum(rate(django_http_requests_total_by_view_transport_method[30s])) by (job,view,transport,method)
 job:django_http_responses_total_by_templatename:sum_rate30s = sum(rate(django_http_responses_total_by_templatename[30s])) by (job,templatename)
 job:django_http_responses_total_by_status:sum_rate30s = sum(rate(django_http_responses_total_by_status[30s])) by (job,status)
+job:django_http_responses_total_by_status_name_method:sum_rate30s = sum(rate(django_http_responses_total_by_status_name_method[30s])) by (job,status,name,method)
 job:django_http_responses_total_by_charset:sum_rate30s = sum(rate(django_http_responses_total_by_charset[30s])) by (job,charset)
 job:django_http_exceptions_total_by_type:sum_rate30s = sum(rate(django_http_exceptions_total_by_type[30s])) by (job,type)
 job:django_http_exceptions_total_by_view:sum_rate30s = sum(rate(django_http_exceptions_total_by_view[30s])) by (job,view)

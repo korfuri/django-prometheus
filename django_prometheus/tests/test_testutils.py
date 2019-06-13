@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-from django_prometheus.testutils import PrometheusTestCaseMixin
-import prometheus_client
-from operator import itemgetter
 import unittest
+from operator import itemgetter
+
+import prometheus_client
+from django_prometheus.testutils import PrometheusTestCaseMixin
 
 
 class SomeTestCase(PrometheusTestCaseMixin):
@@ -12,11 +13,11 @@ class SomeTestCase(PrometheusTestCaseMixin):
         self.passes = True
         super(SomeTestCase, self).__init__()
 
-    def assertEqual(self, l, r, *args, **kwargs):
-        self.passes = self.passes and (l == r)
+    def assertEqual(self, left, right, *args, **kwargs):
+        self.passes = self.passes and (left == right)
 
-    def assertFalse(self, e, *args, **kwargs):
-        self.passes = self.passes and (not e)
+    def assertFalse(self, expression, *args, **kwargs):
+        self.passes = self.passes and (not expression)
 
 
 class PrometheusTestCaseMixinTest(unittest.TestCase):

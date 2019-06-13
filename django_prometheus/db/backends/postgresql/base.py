@@ -1,8 +1,11 @@
 import django
-import psycopg2.extensions
 
-from django_prometheus.db.common import DatabaseWrapperMixin, \
+from django_prometheus.db.common import (
+    DatabaseWrapperMixin,
     ExportingCursorWrapper
+)
+
+import psycopg2.extensions
 
 if django.VERSION >= (1, 9):
     from django.db.backends.postgresql import base

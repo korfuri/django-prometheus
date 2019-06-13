@@ -1,11 +1,11 @@
-from django_redis import cache, exceptions
-
 from django_prometheus.cache.metrics import (
     django_cache_get_fail_total,
     django_cache_get_total,
     django_cache_hits_total,
     django_cache_misses_total,
 )
+
+from django_redis import cache, exceptions
 
 
 class RedisCache(cache.RedisCache):

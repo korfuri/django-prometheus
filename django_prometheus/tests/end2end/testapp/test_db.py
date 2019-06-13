@@ -1,8 +1,9 @@
 from unittest import skipUnless
 
-from django_prometheus.testutils import PrometheusTestCaseMixin
-from django.test import TestCase
 from django.db import connections
+from django.test import TestCase
+
+from django_prometheus.testutils import PrometheusTestCaseMixin
 
 
 @skipUnless(connections['test_db_1'].vendor == 'sqlite',
@@ -32,7 +33,7 @@ class TestDbMetrics(PrometheusTestCaseMixin, TestCase):
         cursor_db1.execute('SELECT 3')
         try:
             cursor_db1.execute('this is clearly not valid SQL')
-        except:
+        except Exception:
             pass
 
         self.assertMetricEquals(

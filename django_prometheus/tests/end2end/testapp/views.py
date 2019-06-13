@@ -1,11 +1,12 @@
-import django
-from django.db import connections
-from django.shortcuts import render
-from django.template.response import TemplateResponse
-from testapp.models import Lawn
 import os
 import time
+
+from django.db import connections
 from django.http import FileResponse
+from django.shortcuts import render
+from django.template.response import TemplateResponse
+
+from testapp.models import Lawn
 
 
 def index(request):
@@ -26,10 +27,10 @@ def slow(request):
 
 def newlawn(request, location):
     """This view creates a new Lawn instance in the database."""
-    l = Lawn()
-    l.location = location
-    l.save()
-    return TemplateResponse(request, 'lawn.html', {'lawn': l})
+    lawn = Lawn()
+    lawn.location = location
+    lawn.save()
+    return TemplateResponse(request, 'lawn.html', {'lawn': lawn})
 
 
 class ObjectionException(Exception):

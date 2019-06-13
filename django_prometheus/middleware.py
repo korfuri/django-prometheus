@@ -1,6 +1,8 @@
-from prometheus_client import Counter, Histogram
-from django_prometheus.utils import Time, TimeSince, PowersOf
 import django
+from prometheus_client import Counter, Histogram
+from prometheus_client.utils import INF
+
+from django_prometheus.utils import Time, TimeSince, PowersOf
 
 if django.VERSION >= (1, 10, 0):
     from django.utils.deprecation import MiddlewareMixin
@@ -43,7 +45,11 @@ class PrometheusBeforeMiddleware(MiddlewareMixin):
 requests_latency_by_view_method = Histogram(
     'django_http_requests_latency_seconds_by_view_method',
     'Histogram of request processing time labelled by view.',
-    ['view', 'method'])
+    ['view', 'method'],
+    buckets=(.01, .025, .05, .075,
+             .1, .25, .5, .75,
+             1.0, 2.5, 5.0, 7.5,
+             10.0, 25.0, 50.0, 75.0, INF))
 requests_unknown_latency = Counter(
     'django_http_requests_unknown_latency_total',
     'Count of requests for which the latency was unknown.')
@@ -78,6 +84,10 @@ responses_by_status = Counter(
     'django_http_responses_total_by_status',
     'Count of responses by status.',
     ['status'])
+responses_by_status_view_method = Counter(
+    'django_http_responses_total_by_status_view_method',
+    'Count of responses by status, view, method.',
+    ['status', 'view', 'method'])
 responses_body_bytes = Histogram(
     'django_http_responses_body_total_bytes',
     'Histogram of responses by body size.',
@@ -147,7 +157,12 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
         return response
 
     def process_response(self, request, response):
+        method = self._method(request)
+        name = self._get_view_name(request)
+
         responses_by_status.labels(str(response.status_code)).inc()
+        responses_by_status_view_method.labels(
+            response.status_code, name, method).inc()
         if hasattr(response, 'charset'):
             responses_by_charset.labels(str(response.charset)).inc()
         if hasattr(response, 'streaming') and response.streaming:
