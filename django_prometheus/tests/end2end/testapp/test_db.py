@@ -6,9 +6,14 @@ from django.test import TestCase
 from django_prometheus.testutils import PrometheusTestCaseMixin
 
 
+class BaseDbMetricTest(PrometheusTestCaseMixin, TestCase):
+    # https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.SimpleTestCase.databases
+    databases = '__all__'
+
+
 @skipUnless(connections['test_db_1'].vendor == 'sqlite',
             "Skipped unless test_db_1 uses sqlite")
-class TestDbMetrics(PrometheusTestCaseMixin, TestCase):
+class TestDbMetrics(BaseDbMetricTest):
     """Test django_prometheus.db metrics.
 
     Note regarding the values of metrics: many tests interact with the
@@ -59,7 +64,7 @@ class TestDbMetrics(PrometheusTestCaseMixin, TestCase):
 
 @skipUnless('postgresql' in connections,
             "Skipped unless postgresql database is enabled")
-class TestPostgresDbMetrics(PrometheusTestCaseMixin, TestCase):
+class TestPostgresDbMetrics(BaseDbMetricTest):
     """Test django_prometheus.db metrics for postgres backend.
 
     Note regarding the values of metrics: many tests interact with the
@@ -82,7 +87,7 @@ class TestPostgresDbMetrics(PrometheusTestCaseMixin, TestCase):
 
 @skipUnless('mysql' in connections,
             "Skipped unless mysql database is enabled")
-class TestMysDbMetrics(PrometheusTestCaseMixin, TestCase):
+class TestMysDbMetrics(BaseDbMetricTest):
     """Test django_prometheus.db metrics for mys backend.
 
     Note regarding the values of metrics: many tests interact with the
