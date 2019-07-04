@@ -53,27 +53,21 @@ INSTALLED_APPS = (
 
 
 def GetMiddlewareClasses():
-    classes = ['django_prometheus.middleware.PrometheusBeforeMiddleware']
-    classes.extend([
+    classes = [
+        'django_prometheus.middleware.PrometheusBeforeMiddleware',
         'django.contrib.sessions.middleware.SessionMiddleware',
         'django.middleware.common.CommonMiddleware',
         'django.middleware.csrf.CsrfViewMiddleware',
-        'django.contrib.auth.middleware.AuthenticationMiddleware'])
-    if django.VERSION < (1, 10):
-        classes.append(
-            'django.contrib.auth.middleware.SessionAuthenticationMiddleware')
-    classes.extend([
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
         'django.contrib.messages.middleware.MessageMiddleware',
-        'django.middleware.clickjacking.XFrameOptionsMiddleware'])
-    classes.append('django.middleware.security.SecurityMiddleware')
-    classes.append('django_prometheus.middleware.PrometheusAfterMiddleware')
+        'django.middleware.clickjacking.XFrameOptionsMiddleware',
+        'django.middleware.security.SecurityMiddleware',
+        'django_prometheus.middleware.PrometheusAfterMiddleware',
+    ]
     return classes
 
 
-# For Django 1.x
-MIDDLEWARE_CLASSES = GetMiddlewareClasses()
-# For Django 2.x
-MIDDLEWARE = MIDDLEWARE_CLASSES
+MIDDLEWARE = GetMiddlewareClasses()
 
 ROOT_URLCONF = 'testapp.urls'
 
