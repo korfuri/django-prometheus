@@ -57,9 +57,9 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
         vector = self.t.getMetricVector(
             "some_nonexistent_gauge", registry=self.registry
         )
-        self.assertEqual([], vector)
+        assert [] == vector
         vector = self.t.getMetricVector("some_gauge", registry=self.registry)
-        self.assertEqual([({}, 42)], vector)
+        assert [({}, 42)] == vector
         vector = self.t.getMetricVector("some_labelled_gauge", registry=self.registry)
         self.assertEqual(
             sorted(
@@ -78,9 +78,9 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
         """Tests assertMetricEquals."""
         # First we test that a scalar metric can be tested.
         self.t.assertMetricEquals(42, "some_gauge", registry=self.registry)
-        self.assertTrue(self.t.passes)
+        assert self.t.passes is True
         self.t.assertMetricEquals(43, "some_gauge", registry=self.registry)
-        self.assertFalse(self.t.passes)
+        assert self.t.passes is False
         self.t.passes = True
 
         # Here we test that assertMetricEquals fails on nonexistent gauges.
@@ -96,7 +96,7 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
             labelred="pink",
             labelblue="indigo",
         )
-        self.assertTrue(self.t.passes)
+        assert self.t.passes is True
         self.t.assertMetricEquals(
             1,
             "some_labelled_gauge",
@@ -104,49 +104,33 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
             labelred="tomato",
             labelblue="sky",
         )
-        self.assertFalse(self.t.passes)
+        assert self.t.passes is False
         self.t.passes = True
 
     def testRegistrySaving(self):
         """Tests saveRegistry and frozen registries operations."""
         frozen_registry = self.t.saveRegistry(registry=self.registry)
         # Test that we can manipulate a frozen scalar metric.
-        self.assertEqual(
-            42, self.t.getMetricFromFrozenRegistry("some_gauge", frozen_registry)
-        )
+        assert 42 == self.t.getMetricFromFrozenRegistry("some_gauge", frozen_registry)
         self.some_gauge.set(99)
-        self.assertEqual(
-            42, self.t.getMetricFromFrozenRegistry("some_gauge", frozen_registry)
-        )
+        assert 42 == self.t.getMetricFromFrozenRegistry("some_gauge", frozen_registry)
         self.t.assertMetricDiff(
             frozen_registry, 99 - 42, "some_gauge", registry=self.registry
         )
-        self.assertTrue(self.t.passes)
+        assert self.t.passes is True
         self.t.assertMetricDiff(
             frozen_registry, 1, "some_gauge", registry=self.registry
         )
-        self.assertFalse(self.t.passes)
+        assert self.t.passes is False
         self.t.passes = True
 
         # Now test the same thing with a labelled metric.
-        self.assertEqual(
-            1,
-            self.t.getMetricFromFrozenRegistry(
-                "some_labelled_gauge",
-                frozen_registry,
-                labelred="pink",
-                labelblue="indigo",
-            ),
+        assert 1 == self.t.getMetricFromFrozenRegistry(
+            "some_labelled_gauge", frozen_registry, labelred="pink", labelblue="indigo"
         )
         self.some_labelled_gauge.labels("pink", "indigo").set(5)
-        self.assertEqual(
-            1,
-            self.t.getMetricFromFrozenRegistry(
-                "some_labelled_gauge",
-                frozen_registry,
-                labelred="pink",
-                labelblue="indigo",
-            ),
+        assert 1 == self.t.getMetricFromFrozenRegistry(
+            "some_labelled_gauge", frozen_registry, labelred="pink", labelblue="indigo"
         )
         self.t.assertMetricDiff(
             frozen_registry,
@@ -156,7 +140,7 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
             labelred="pink",
             labelblue="indigo",
         )
-        self.assertTrue(self.t.passes)
+        assert self.t.passes is True
         self.t.assertMetricDiff(
             frozen_registry,
             1,
@@ -165,8 +149,4 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
             labelred="pink",
             labelblue="indigo",
         )
-        self.assertFalse(self.t.passes)
-
-
-if __name__ == "main":
-    unittest.main()
+        assert self.t.passes is False
