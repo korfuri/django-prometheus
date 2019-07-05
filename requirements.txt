@@ -1,9 +1,9 @@
 Django>=1.11
 django-redis>=4.8
-pep8>=1.6.2
+pep8
 prometheus-client>=0.7
 pip-prometheus>=1.2.1
-mock>=1.0.1
-mysqlclient<1.4
+mock
+mysqlclient
 psycopg2
 python-memcached
