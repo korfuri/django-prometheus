@@ -1,9 +1,10 @@
 from django.test import SimpleTestCase
-
+from django.conf import settings
 from django_prometheus.testutils import PrometheusTestCaseMixin
 
 from testapp.views import ObjectionException
 
+APP_NAME = getattr(settings, 'DJANGO_PROMETHEUS_NAME', 'django')
 
 def M(metric_name):
     """Makes a full metric name from a short metric name.
@@ -11,7 +12,7 @@ def M(metric_name):
     This is just intended to help keep the lines shorter in test
     cases.
     """
-    return 'django_http_%s' % metric_name
+    return '%s_http_%s' % (APP_NAME, metric_name)
 
 
 def T(metric_name):

@@ -1,4 +1,5 @@
 import django
+from django.conf import settings
 from prometheus_client import Counter, Histogram
 from prometheus_client.utils import INF
 
@@ -9,20 +10,22 @@ if django.VERSION >= (1, 10, 0):
 else:
     MiddlewareMixin = object
 
+APP_NAME = getattr(settings, 'DJANGO_PROMETHEUS_NAME', 'django')
+
 requests_total = Counter(
-    'django_http_requests_before_middlewares_total',
+    '%s_http_requests_before_middlewares_total' % APP_NAME,
     'Total count of requests before middlewares run.')
 responses_total = Counter(
-    'django_http_responses_before_middlewares_total',
+    '%s_http_responses_before_middlewares_total' % APP_NAME,
     'Total count of responses before middlewares run.')
 requests_latency_before = Histogram(
-    'django_http_requests_latency_including_middlewares_seconds',
+    '%s_http_requests_latency_including_middlewares_seconds' % APP_NAME,
     ('Histogram of requests processing time (including middleware '
      'processing time).'))
 requests_unknown_latency_before = Counter(
-    'django_http_requests_unknown_latency_including_middlewares_total',
+    '%s_http_requests_unknown_latency_including_middlewares_total' % APP_NAME,
     ('Count of requests for which the latency was unknown (when computing '
-     'django_http_requests_latency_including_middlewares_seconds).'))
+     '%s_http_requests_latency_including_middlewares_seconds).' % APP_NAME))
 
 
 class PrometheusBeforeMiddleware(MiddlewareMixin):
@@ -43,7 +46,7 @@ class PrometheusBeforeMiddleware(MiddlewareMixin):
 
 
 requests_latency_by_view_method = Histogram(
-    'django_http_requests_latency_seconds_by_view_method',
+    '%s_http_requests_latency_seconds_by_view_method' % APP_NAME,
     'Histogram of request processing time labelled by view.',
     ['view', 'method'],
     buckets=(.01, .025, .05, .075,
@@ -51,61 +54,61 @@ requests_latency_by_view_method = Histogram(
              1.0, 2.5, 5.0, 7.5,
              10.0, 25.0, 50.0, 75.0, INF))
 requests_unknown_latency = Counter(
-    'django_http_requests_unknown_latency_total',
+    '%s_http_requests_unknown_latency_total' % APP_NAME,
     'Count of requests for which the latency was unknown.')
 # Set in process_request
 ajax_requests = Counter(
-    'django_http_ajax_requests_total',
+    '%s_http_ajax_requests_total' % APP_NAME,
     'Count of AJAX requests.')
 requests_by_method = Counter(
-    'django_http_requests_total_by_method',
+    '%s_http_requests_total_by_method' % APP_NAME,
     'Count of requests by method.',
     ['method'])
 requests_by_transport = Counter(
-    'django_http_requests_total_by_transport',
+    '%s_http_requests_total_by_transport' % APP_NAME,
     'Count of requests by transport.',
     ['transport'])
 # Set in process_view
 requests_by_view_transport_method = Counter(
-    'django_http_requests_total_by_view_transport_method',
+    '%s_http_requests_total_by_view_transport_method' % APP_NAME,
     'Count of requests by view, transport, method.',
     ['view', 'transport', 'method'])
 requests_body_bytes = Histogram(
-    'django_http_requests_body_total_bytes',
+    '%s_http_requests_body_total_bytes' % APP_NAME,
     'Histogram of requests by body size.',
     buckets=PowersOf(2, 30))
 # Set in process_template_response
 responses_by_templatename = Counter(
-    'django_http_responses_total_by_templatename',
+    '%s_http_responses_total_by_templatename' % APP_NAME,
     'Count of responses by template name.',
     ['templatename'])
 # Set in process_response
 responses_by_status = Counter(
-    'django_http_responses_total_by_status',
+    '%s_http_responses_total_by_status' % APP_NAME,
     'Count of responses by status.',
     ['status'])
 responses_by_status_view_method = Counter(
-    'django_http_responses_total_by_status_view_method',
+    '%s_http_responses_total_by_status_view_method' % APP_NAME,
     'Count of responses by status, view, method.',
     ['status', 'view', 'method'])
 responses_body_bytes = Histogram(
-    'django_http_responses_body_total_bytes',
+    '%s_http_responses_body_total_bytes' % APP_NAME,
     'Histogram of responses by body size.',
     buckets=PowersOf(2, 30))
 responses_by_charset = Counter(
-    'django_http_responses_total_by_charset',
+    '%s_http_responses_total_by_charset' % APP_NAME,
     'Count of responses by charset.',
     ['charset'])
 responses_streaming = Counter(
-    'django_http_responses_streaming_total',
+    '%s_http_responses_streaming_total' % APP_NAME,
     'Count of streaming responses.')
 # Set in process_exception
 exceptions_by_type = Counter(
-    'django_http_exceptions_total_by_type',
+    '%s_http_exceptions_total_by_type' % APP_NAME,
     'Count of exceptions by object type.',
     ['type'])
 exceptions_by_view = Counter(
-    'django_http_exceptions_total_by_view',
+    '%s_http_exceptions_total_by_view' % APP_NAME,
     'Count of exceptions by view.',
     ['view_name'])
 
