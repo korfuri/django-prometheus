@@ -6,6 +6,7 @@ from testapp.views import ObjectionException
 
 APP_NAME = getattr(settings, 'DJANGO_PROMETHEUS_NAME', 'django')
 
+
 def M(metric_name):
     """Makes a full metric name from a short metric name.
 

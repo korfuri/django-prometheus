@@ -192,5 +192,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# django_prometheus name 
+# django_prometheus name
 DJANGO_PROMETHEUS_NAME = 'test_app'
