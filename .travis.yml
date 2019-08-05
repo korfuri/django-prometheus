@@ -6,6 +6,7 @@ env:
   - DJANGO_VERSION=2.0
   - DJANGO_VERSION=1.11
   - DJANGO_VERSION=1.8
+  - DJANGO_SETTINGS_MODULE=django_prometheus/tests/end2end/testapp.settings
 services:
   - memcached
   - redis
@@ -15,7 +16,6 @@ matrix:
   exclude:
     - python: "2.7"
       env: DJANGO_VERSION=2.0
-
 install:
   - pip install -r requirements.txt
   - pip install -q Django==$DJANGO_VERSION
