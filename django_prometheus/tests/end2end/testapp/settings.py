@@ -1,5 +1,8 @@
 import os
+import sys
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", __file__)
+sys.path.insert("..", 0)
+
 
 import django
 django.setup()
