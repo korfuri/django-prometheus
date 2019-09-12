@@ -2,7 +2,7 @@ global:
   scrape_interval: 10s
   evaluation_interval: 10s
 
-  labels:
+  external_labels:
     monitor: django-monitor
 
 rule_files:
@@ -10,5 +10,5 @@ rule_files:
 
 scrape_configs:
 - job_name: "django"
-  target_groups:
-  - targets: ["localhost:8000"]	
+  static_configs:
+  - targets: ["localhost:8000"]
