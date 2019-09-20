@@ -1,7 +1,7 @@
 Django>=1.8
 django-redis>=4.8
 pep8>=1.6.2
-prometheus-client>=0.0.21,<0.4.0
+prometheus-client>=0.7
 pip-prometheus>=1.1.0
 mock>=1.0.1
 mysqlclient<1.4

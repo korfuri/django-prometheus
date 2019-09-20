@@ -1,6 +1,5 @@
 import django
 from prometheus_client import Counter, Histogram
-from prometheus_client.utils import INF
 
 from django_prometheus.utils import Time, TimeSince, PowersOf
 
@@ -49,7 +48,7 @@ requests_latency_by_view_method = Histogram(
     buckets=(.01, .025, .05, .075,
              .1, .25, .5, .75,
              1.0, 2.5, 5.0, 7.5,
-             10.0, 25.0, 50.0, 75.0, INF))
+             10.0, 25.0, 50.0, 75.0, float("inf")))
 requests_unknown_latency = Counter(
     'django_http_requests_unknown_latency_total',
     'Count of requests for which the latency was unknown.')
