@@ -6,11 +6,7 @@ from django_prometheus.db.common import (
 )
 
 import psycopg2.extensions
-
-if django.VERSION >= (1, 9):
-    from django.db.backends.postgresql import base
-else:
-    from django.db.backends.postgresql_psycopg2 import base
+from django.db.backends.postgresql import base
 
 
 class DatabaseFeatures(base.DatabaseFeatures):
@@ -31,7 +27,4 @@ class DatabaseWrapper(DatabaseWrapperMixin, base.DatabaseWrapper):
     def create_cursor(self, name=None):
         # cursor_factory is a kwarg to connect() so restore create_cursor()'s
         # default behavior
-        if django.VERSION >= (1, 11, 0):
-            return base.DatabaseWrapper.create_cursor(self, name=name)
-        else:
-            return base.DatabaseWrapper.create_cursor(self)
+        return base.DatabaseWrapper.create_cursor(self, name=name)
