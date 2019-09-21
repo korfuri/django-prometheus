@@ -22,6 +22,8 @@ setup(
     packages=find_packages(),
     test_suite="django_prometheus.tests",
     long_description=LONG_DESCRIPTION,
+    tests_require=['pytest', 'pytest-django'],
+    setup_requires=["pytest-runner"],
     install_requires=[
         "prometheus-client>=0.7",
     ],
