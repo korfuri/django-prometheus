@@ -15,21 +15,21 @@ run automatically.
 
 Please write unit tests for your change. There are two kinds of tests:
 
-  * Regular unit tests that test the code directly, without loading
-    Django. This is limited to pieces of the code that don't depend on
-    Django, since a lot of the Django code will require a full Django
-    environment (anything that interacts with models, for instance,
-    needs a full database configuration).
-  * End-to-end tests are Django unit tests in a test application. The
-    test application doubles as an easy way to interactively test your
-    changes. It uses most of the basic Django features and a few
-    advanced features, so you can test things for yourself.
+* Regular unit tests that test the code directly, without loading
+  Django. This is limited to pieces of the code that don't depend on
+  Django, since a lot of the Django code will require a full Django
+  environment (anything that interacts with models, for instance,
+  needs a full database configuration).
+* End-to-end tests are Django unit tests in a test application. The
+  test application doubles as an easy way to interactively test your
+  changes. It uses most of the basic Django features and a few
+  advanced features, so you can test things for yourself.
 
 ### Running all tests
 
 ```shell
-$ python setup.py test
-$ (cd tests/end2end/; PYTHONPATH=../.. ./manage.py test)
+python setup.py test
+cd tests/end2end/ &&  PYTHONPATH=../.. ./manage.py test
 ```
 
 The former runs the regular unit tests, the latter runs the Django
@@ -41,7 +41,7 @@ setup.py install`.
 ### Running the test Django app
 
 ```shell
-$ (cd tests/end2end/; PYTHONPATH=../.. ./manage.py runserver)
+cd tests/end2end/ &&  PYTHONPATH=../.. ./manage.py runserver
 ```
 
 By default, this will start serving on http://localhost:8000/. Metrics
@@ -49,7 +49,7 @@ are available at `/metrics`.
 
 ## Running Prometheus
 
-See http://prometheus.io/docs/ for instructions on installing
+See <http://prometheus.io/docs/> for instructions on installing
 Prometheus. Once you have Prometheus installed, you can use the
 example rules and dashboard in `examples/prometheus/`. See
 `examples/prometheus/README.md` to run Prometheus and view the example
