@@ -29,8 +29,7 @@ install:
   - pip install -r requirements.txt
   - pip install -q Django==$DJANGO_VERSION
   - mysql -e 'create database django_prometheus_1;'
-before_script:
-  - pep8 .
 script:
+  - pycodestyle django_prometheus/.
   - python setup.py test
   - (cd django_prometheus/tests/end2end; PYTHONPATH=../../.. python manage.py test)
