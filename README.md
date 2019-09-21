@@ -5,7 +5,6 @@ Export Django monitoring metrics for Prometheus.io
 [![Build Status](https://travis-ci.org/korfuri/django-prometheus.svg?branch=master)](https://travis-ci.org/korfuri/django-prometheus)
 [![PyPi page link -- Python versions](https://img.shields.io/pypi/pyversions/django-prometheus.svg)](https://pypi.python.org/pypi/django-prometheus)
 
-
 ## Usage
 
 ### Requirements
@@ -15,11 +14,13 @@ Export Django monitoring metrics for Prometheus.io
 ### Installation
 
 Install with:
+
 ```shell
 pip install django-prometheus
 ```
 
 Or, if you're using a development version cloned from this repository:
+
 ```shell
 python path-to-where-you-cloned-django-prometheus/setup.py install
 ```
@@ -127,7 +128,6 @@ there are unapplied migrations.
 If you want to disable the Django migration metrics, set the
 `PROMETHEUS_EXPORT_MIGRATIONS` setting to False.
 
-
 ### Monitoring and aggregating the metrics
 
 Prometheus is quite easy to set up. An example prometheus.conf to
@@ -173,7 +173,6 @@ INSTALLED_APPS = INSTALLED_APPS + ('django_prometheus',)
 Second step is to create the /metrics end point, for that we need
 another file (called urls_prometheus_wrapper.py in this example) that
 will wraps the apps URLs and add one on top:
-
 
 ```python
 from django.conf.urls import include, url

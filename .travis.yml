@@ -32,4 +32,4 @@ install:
 script:
   - pycodestyle django_prometheus/.
   - python setup.py test
-  - (cd django_prometheus/tests/end2end; PYTHONPATH=../../.. python manage.py test)
+  - cd django_prometheus/tests/end2end && PYTHONPATH=../../.. python manage.py test
