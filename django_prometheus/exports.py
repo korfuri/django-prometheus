@@ -64,7 +64,7 @@ def SetupPrometheusEndpointOnPortRange(port_range, addr=''):
     to aggregate across workers.
 
     port_range may be any iterable object that contains a list of
-    ports. Typically this would be an xrange of contiguous ports.
+    ports. Typically this would be a `range` of contiguous ports.
 
     As soon as one port is found that can serve, use this one and stop
     trying.
