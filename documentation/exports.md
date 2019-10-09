@@ -66,7 +66,7 @@ time, and exporting on a single port doesn't work.
 The following settings can be used instead:
 
 ```python
-PROMETHEUS_METRICS_EXPORT_PORT_RANGE = xrange(8001, 8050)
+PROMETHEUS_METRICS_EXPORT_PORT_RANGE = range(8001, 8050)
 ```
 
 This will make Django-Prometheus try to export /metrics on port
