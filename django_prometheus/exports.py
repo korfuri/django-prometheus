@@ -69,9 +69,11 @@ def SetupPrometheusEndpointOnPortRange(port_range, addr=''):
     As soon as one port is found that can serve, use this one and stop
     trying.
 
+    Returns the port chosen (an `int`), or `None` if no port in the
+    supplied range was available.
+
     The same caveats regarding autoreload apply. Do not use this when
     Django's autoreloader is active.
-
     """
     assert os.environ.get('RUN_MAIN') != 'true', (
         'The thread-based exporter can\'t be safely used when django\'s '
@@ -88,7 +90,10 @@ def SetupPrometheusEndpointOnPortRange(port_range, addr=''):
         thread.daemon = True
         thread.start()
         logger.info('Exporting Prometheus /metrics/ on port %s' % port)
-        return  # Stop trying ports at this point
+        return port  # Stop trying ports at this point
+    logger.warning('Cannot export Prometheus /metrics/ - '
+                   'no available ports in supplied range')
+    return None
 
 
 def SetupPrometheusExportsFromConfig():
