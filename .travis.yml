@@ -4,6 +4,7 @@ python:
   - "3.5"
   - "3.6"
   - "3.7"
+  - "3.8"
   - "2.7"
 env:
   - DJANGO_VERSION=2.1
@@ -20,6 +21,8 @@ matrix:
       env: DJANGO_VERSION=2.1
     - python: "2.7"
       env: DJANGO_VERSION=2.2
+    - python: "3.8"
+      env: DJANGO_VERSION=1.11
     - python: "3.7"
       env: DJANGO_VERSION=1.11
     - python: "3.6"
