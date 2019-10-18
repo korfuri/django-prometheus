@@ -206,20 +206,20 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
             responses_body_bytes.observe(len(response.content))
         if hasattr(request, "prometheus_after_middleware_event"):
             requests_latency_by_view_method.labels(
-                view=self._get_view_name(request), method=request.method
+                view=name, method=request.method
             ).observe(TimeSince(request.prometheus_after_middleware_event))
         else:
             requests_unknown_latency.inc()
         return response
 
     def process_exception(self, request, exception):
+        name = self._get_view_name(request)
         exceptions_by_type.labels(type(exception).__name__).inc()
         if hasattr(request, "resolver_match"):
-            name = request.resolver_match.view_name or "<unnamed view>"
             exceptions_by_view.labels(name).inc()
         if hasattr(request, "prometheus_after_middleware_event"):
             requests_latency_by_view_method.labels(
-                view=self._get_view_name(request), method=request.method
+                view=name, method=request.method
             ).observe(TimeSince(request.prometheus_after_middleware_event))
         else:
             requests_unknown_latency.inc()
