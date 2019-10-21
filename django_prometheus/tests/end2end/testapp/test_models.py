@@ -18,35 +18,35 @@ class TestModelMetrics(PrometheusTestCaseMixin, TestCase):
     """Test django_prometheus.models."""
 
     def test_counters(self):
-        r = self.saveRegistry()
+        registry = self.saveRegistry()
         cool = Dog()
         cool.name = "Cool"
         cool.save()
-        self.assertMetricDiff(r, 1, M("inserts_total"), model="dog")
+        self.assertMetricDiff(registry, 1, M("inserts_total"), model="dog")
 
         elysees = Lawn()
         elysees.location = "Champs Elysees, Paris"
         elysees.save()
-        self.assertMetricDiff(r, 1, M("inserts_total"), model="lawn")
-        self.assertMetricDiff(r, 1, M("inserts_total"), model="dog")
+        self.assertMetricDiff(registry, 1, M("inserts_total"), model="lawn")
+        self.assertMetricDiff(registry, 1, M("inserts_total"), model="dog")
 
         galli = Dog()
         galli.name = "Galli"
         galli.save()
-        self.assertMetricDiff(r, 2, M("inserts_total"), model="dog")
+        self.assertMetricDiff(registry, 2, M("inserts_total"), model="dog")
 
         cool.breed = "Wolfhound"
-        self.assertMetricDiff(r, 2, M("inserts_total"), model="dog")
+        self.assertMetricDiff(registry, 2, M("inserts_total"), model="dog")
 
         cool.save()
-        self.assertMetricDiff(r, 2, M("inserts_total"), model="dog")
-        self.assertMetricDiff(r, 1, M("updates_total"), model="dog")
+        self.assertMetricDiff(registry, 2, M("inserts_total"), model="dog")
+        self.assertMetricDiff(registry, 1, M("updates_total"), model="dog")
 
         cool.age = 9
         cool.save()
-        self.assertMetricDiff(r, 2, M("updates_total"), model="dog")
+        self.assertMetricDiff(registry, 2, M("updates_total"), model="dog")
 
         cool.delete()  # :(
-        self.assertMetricDiff(r, 2, M("inserts_total"), model="dog")
-        self.assertMetricDiff(r, 2, M("updates_total"), model="dog")
-        self.assertMetricDiff(r, 1, M("deletes_total"), model="dog")
+        self.assertMetricDiff(registry, 2, M("inserts_total"), model="dog")
+        self.assertMetricDiff(registry, 2, M("updates_total"), model="dog")
+        self.assertMetricDiff(registry, 1, M("deletes_total"), model="dog")
