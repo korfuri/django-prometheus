@@ -4,21 +4,22 @@ from django.db.backends.dummy.base import DatabaseWrapper
 from prometheus_client import Gauge
 
 unapplied_migrations = Gauge(
-    'django_migrations_unapplied_total',
-    'Count of unapplied migrations by database connection',
-    ['connection'])
+    "django_migrations_unapplied_total",
+    "Count of unapplied migrations by database connection",
+    ["connection"],
+)
 
 applied_migrations = Gauge(
-    'django_migrations_applied_total',
-    'Count of applied migrations by database connection',
-    ['connection'])
+    "django_migrations_applied_total",
+    "Count of applied migrations by database connection",
+    ["connection"],
+)
 
 
 def ExportMigrationsForDatabase(alias, executor):
     plan = executor.migration_plan(executor.loader.graph.leaf_nodes())
     unapplied_migrations.labels(alias).set(len(plan))
-    applied_migrations.labels(alias).set(len(
-        executor.loader.applied_migrations))
+    applied_migrations.labels(alias).set(len(executor.loader.applied_migrations))
 
 
 def ExportMigrations():
@@ -35,8 +36,9 @@ def ExportMigrations():
     # ready.
     from django.db.migrations.executor import MigrationExecutor
 
-    if 'default' in connections and (
-            isinstance(connections['default'], DatabaseWrapper)):
+    if "default" in connections and (
+        isinstance(connections["default"], DatabaseWrapper)
+    ):
         # This is the case where DATABASES = {} in the configuration,
         # i.e. the user is not using any databases. Django "helpfully"
         # adds a dummy database and then throws when you try to

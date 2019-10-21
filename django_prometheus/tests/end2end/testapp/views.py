@@ -10,19 +10,19 @@ from testapp.models import Lawn
 
 
 def index(request):
-    return TemplateResponse(request, 'index.html', {})
+    return TemplateResponse(request, "index.html", {})
 
 
 def help(request):
     # render does not instanciate a TemplateResponse, so it does not
     # increment the "by_templatename" counters.
-    return render(request, 'help.html', {})
+    return render(request, "help.html", {})
 
 
 def slow(request):
     """This view takes .1s to load, on purpose."""
-    time.sleep(.1)
-    return TemplateResponse(request, 'slow.html', {})
+    time.sleep(0.1)
+    return TemplateResponse(request, "slow.html", {})
 
 
 def newlawn(request, location):
@@ -30,7 +30,7 @@ def newlawn(request, location):
     lawn = Lawn()
     lawn.location = location
     lawn.save()
-    return TemplateResponse(request, 'lawn.html', {'lawn': lawn})
+    return TemplateResponse(request, "lawn.html", {"lawn": lawn})
 
 
 class ObjectionException(Exception):
@@ -38,29 +38,27 @@ class ObjectionException(Exception):
 
 
 def objection(request):
-    raise ObjectionException('Objection!')
+    raise ObjectionException("Objection!")
 
 
 def sql(request):
     databases = connections.databases.keys()
-    query = request.GET.get('query')
-    db = request.GET.get('database')
+    query = request.GET.get("query")
+    db = request.GET.get("database")
     if query and db:
         cursor = connections[db].cursor()
         cursor.execute(query, [])
         results = cursor.fetchall()
-        return TemplateResponse(request, 'sql.html', {
-            'query': query,
-            'rows': results,
-            'databases': databases,
-        })
+        return TemplateResponse(
+            request,
+            "sql.html",
+            {"query": query, "rows": results, "databases": databases},
+        )
     else:
-        return TemplateResponse(request, 'sql.html', {
-            'query': None,
-            'rows': None,
-            'databases': databases,
-        })
+        return TemplateResponse(
+            request, "sql.html", {"query": None, "rows": None, "databases": databases}
+        )
 
 
 def file(request):
-    return FileResponse(open(os.devnull, 'rb'))
+    return FileResponse(open(os.devnull, "rb"))

@@ -33,6 +33,6 @@ install:
   - pip install -q Django==$DJANGO_VERSION
   - mysql -e 'create database django_prometheus_1;'
 script:
-  - pycodestyle django_prometheus/.
+  - if [[ $TRAVIS_PYTHON_VERSION == "3.7" ]]; then black --check django_prometheus/; fi
   - python setup.py test
   - cd django_prometheus/tests/end2end && PYTHONPATH=../../.. python manage.py test

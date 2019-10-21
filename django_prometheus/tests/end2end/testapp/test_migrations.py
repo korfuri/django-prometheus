@@ -16,7 +16,7 @@ def M(metric_name):
     This is just intended to help keep the lines shorter in test
     cases.
     """
-    return 'django_migrations_%s' % metric_name
+    return "django_migrations_%s" % metric_name
 
 
 class TestMigrations(PrometheusTestCaseMixin, SimpleTestCase):
@@ -28,19 +28,15 @@ class TestMigrations(PrometheusTestCaseMixin, SimpleTestCase):
         executor = MagicMock()
         executor.migration_plan = MagicMock()
         executor.migration_plan.return_value = set()
-        executor.loader.applied_migrations = set(['a', 'b', 'c'])
-        ExportMigrationsForDatabase('fakedb1', executor)
+        executor.loader.applied_migrations = set(["a", "b", "c"])
+        ExportMigrationsForDatabase("fakedb1", executor)
         self.assertEquals(executor.migration_plan.call_count, 1)
         executor.migration_plan = MagicMock()
-        executor.migration_plan.return_value = set(['a'])
-        executor.loader.applied_migrations = set(['b', 'c'])
-        ExportMigrationsForDatabase('fakedb2', executor)
+        executor.migration_plan.return_value = set(["a"])
+        executor.loader.applied_migrations = set(["b", "c"])
+        ExportMigrationsForDatabase("fakedb2", executor)
 
-        self.assertMetricEquals(
-            3, M('applied_total'), connection='fakedb1')
-        self.assertMetricEquals(
-            0, M('unapplied_total'), connection='fakedb1')
-        self.assertMetricEquals(
-            2, M('applied_total'), connection='fakedb2')
-        self.assertMetricEquals(
-            1, M('unapplied_total'), connection='fakedb2')
+        self.assertMetricEquals(3, M("applied_total"), connection="fakedb1")
+        self.assertMetricEquals(0, M("unapplied_total"), connection="fakedb1")
+        self.assertMetricEquals(2, M("applied_total"), connection="fakedb2")
+        self.assertMetricEquals(1, M("unapplied_total"), connection="fakedb2")
