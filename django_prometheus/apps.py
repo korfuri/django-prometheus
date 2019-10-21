@@ -8,7 +8,7 @@ from django_prometheus.migrations import ExportMigrations
 
 class DjangoPrometheusConfig(AppConfig):
     name = django_prometheus.__name__
-    verbose_name = 'Django-Prometheus'
+    verbose_name = "Django-Prometheus"
 
     def ready(self):
         """Initializes the Prometheus exports if they are enabled in the config.
@@ -20,5 +20,5 @@ class DjangoPrometheusConfig(AppConfig):
         are usually short-lived), but can be useful for debugging.
         """
         SetupPrometheusExportsFromConfig()
-        if getattr(settings, 'PROMETHEUS_EXPORT_MIGRATIONS', True):
+        if getattr(settings, "PROMETHEUS_EXPORT_MIGRATIONS", True):
             ExportMigrations()

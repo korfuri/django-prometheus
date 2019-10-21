@@ -8,7 +8,7 @@ https://github.com/korfuri/django-prometheus
 from django_prometheus import middleware
 from django_prometheus import models
 
-__all__ = ['middleware', 'models', 'pip_prometheus']
+__all__ = ["middleware", "models", "pip_prometheus"]
 
 # Import pip_prometheus to export the pip metrics automatically.
 try:
@@ -17,4 +17,4 @@ except ImportError:
     # If people don't have pip, don't export anything.
     pass
 
-default_app_config = 'django_prometheus.apps.DjangoPrometheusConfig'
+default_app_config = "django_prometheus.apps.DjangoPrometheusConfig"

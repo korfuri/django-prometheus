@@ -19,7 +19,7 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 
-def SetupPrometheusEndpointOnPort(port, addr=''):
+def SetupPrometheusEndpointOnPort(port, addr=""):
     """Exports Prometheus metrics on an HTTPServer running in its own thread.
 
     The server runs on the given port and is by default listenning on
@@ -38,15 +38,17 @@ def SetupPrometheusEndpointOnPort(port, addr=''):
     the RUN_MAIN environment variable, so we abort if we're trying to
     export under an autoreloader and trying to open a port.
     """
-    assert os.environ.get('RUN_MAIN') != 'true', (
-        'The thread-based exporter can\'t be safely used when django\'s '
-        'autoreloader is active. Use the URL exporter, or start django '
-        'with --noreload. See documentation/exports.md.')
+    assert os.environ.get("RUN_MAIN") != "true", (
+        "The thread-based exporter can't be safely used when django's "
+        "autoreloader is active. Use the URL exporter, or start django "
+        "with --noreload. See documentation/exports.md."
+    )
     prometheus_client.start_http_server(port, addr=addr)
 
 
 class PrometheusEndpointServer(threading.Thread):
     """A thread class that holds an http and makes it serve_forever()."""
+
     def __init__(self, httpd, *args, **kwargs):
         self.httpd = httpd
         super(PrometheusEndpointServer, self).__init__(*args, **kwargs)
@@ -55,7 +57,7 @@ class PrometheusEndpointServer(threading.Thread):
         self.httpd.serve_forever()
 
 
-def SetupPrometheusEndpointOnPortRange(port_range, addr=''):
+def SetupPrometheusEndpointOnPortRange(port_range, addr=""):
     """Like SetupPrometheusEndpointOnPort, but tries several ports.
 
     This is useful when you're running Django as a WSGI application
@@ -75,10 +77,11 @@ def SetupPrometheusEndpointOnPortRange(port_range, addr=''):
     The same caveats regarding autoreload apply. Do not use this when
     Django's autoreloader is active.
     """
-    assert os.environ.get('RUN_MAIN') != 'true', (
-        'The thread-based exporter can\'t be safely used when django\'s '
-        'autoreloader is active. Use the URL exporter, or start django '
-        'with --noreload. See documentation/exports.md.')
+    assert os.environ.get("RUN_MAIN") != "true", (
+        "The thread-based exporter can't be safely used when django's "
+        "autoreloader is active. Use the URL exporter, or start django "
+        "with --noreload. See documentation/exports.md."
+    )
     for port in port_range:
         try:
             httpd = HTTPServer((addr, port), prometheus_client.MetricsHandler)
@@ -89,19 +92,19 @@ def SetupPrometheusEndpointOnPortRange(port_range, addr=''):
         thread = PrometheusEndpointServer(httpd)
         thread.daemon = True
         thread.start()
-        logger.info('Exporting Prometheus /metrics/ on port %s' % port)
+        logger.info("Exporting Prometheus /metrics/ on port %s" % port)
         return port  # Stop trying ports at this point
-    logger.warning('Cannot export Prometheus /metrics/ - '
-                   'no available ports in supplied range')
+    logger.warning(
+        "Cannot export Prometheus /metrics/ - " "no available ports in supplied range"
+    )
     return None
 
 
 def SetupPrometheusExportsFromConfig():
     """Exports metrics so Prometheus can collect them."""
-    port = getattr(settings, 'PROMETHEUS_METRICS_EXPORT_PORT', None)
-    port_range = getattr(
-        settings, 'PROMETHEUS_METRICS_EXPORT_PORT_RANGE', None)
-    addr = getattr(settings, 'PROMETHEUS_METRICS_EXPORT_ADDRESS', '')
+    port = getattr(settings, "PROMETHEUS_METRICS_EXPORT_PORT", None)
+    port_range = getattr(settings, "PROMETHEUS_METRICS_EXPORT_PORT_RANGE", None)
+    addr = getattr(settings, "PROMETHEUS_METRICS_EXPORT_ADDRESS", "")
     if port_range:
         SetupPrometheusEndpointOnPortRange(port_range, addr)
     elif port:
@@ -113,12 +116,12 @@ def ExportToDjangoView(request):
 
     You can use django_prometheus.urls to map /metrics to this view.
     """
-    if 'prometheus_multiproc_dir' in os.environ:
+    if "prometheus_multiproc_dir" in os.environ:
         registry = prometheus_client.CollectorRegistry()
         multiprocess.MultiProcessCollector(registry)
     else:
         registry = prometheus_client.REGISTRY
     metrics_page = prometheus_client.generate_latest(registry)
     return HttpResponse(
-        metrics_page,
-        content_type=prometheus_client.CONTENT_TYPE_LATEST)
+        metrics_page, content_type=prometheus_client.CONTENT_TYPE_LATEST
+    )

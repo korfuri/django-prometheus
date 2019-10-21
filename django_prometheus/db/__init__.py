@@ -5,11 +5,14 @@ from django_prometheus.db.metrics import (
     connections_total,
     errors_total,
     execute_many_total,
-    execute_total)
+    execute_total,
+)
+
 __all__ = [
-    'Counter',
-    'connection_errors_total',
-    'connections_total',
-    'errors_total',
-    'execute_many_total',
-    'execute_total']
+    "Counter",
+    "connection_errors_total",
+    "connections_total",
+    "errors_total",
+    "execute_many_total",
+    "execute_total",
+]

@@ -1,19 +1,16 @@
 from prometheus_client import Counter
 
 model_inserts = Counter(
-    'django_model_inserts_total',
-    'Number of insert operations by model.',
-    ['model'])
+    "django_model_inserts_total", "Number of insert operations by model.", ["model"]
+)
 
 model_updates = Counter(
-    'django_model_updates_total',
-    'Number of update operations by model.',
-    ['model'])
+    "django_model_updates_total", "Number of update operations by model.", ["model"]
+)
 
 model_deletes = Counter(
-    'django_model_deletes_total',
-    'Number of delete operations by model.',
-    ['model'])
+    "django_model_deletes_total", "Number of delete operations by model.", ["model"]
+)
 
 
 def ExportModelOperationsMixin(model_name):
@@ -41,4 +38,5 @@ def ExportModelOperationsMixin(model_name):
         def delete(self, *args, **kwargs):
             model_deletes.labels(model_name).inc()
             return super(Mixin, self).delete(*args, **kwargs)
+
     return Mixin

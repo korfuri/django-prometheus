@@ -41,8 +41,7 @@ class PrometheusTestCaseMixin(object):
         """
         return copy.deepcopy(list(registry.collect()))
 
-    def getMetricFromFrozenRegistry(self, metric_name, frozen_registry,
-                                    **labels):
+    def getMetricFromFrozenRegistry(self, metric_name, frozen_registry, **labels):
         """Gets a single metric from a frozen registry."""
         for metric in frozen_registry:
             for sample in metric.samples:
@@ -52,7 +51,8 @@ class PrometheusTestCaseMixin(object):
     def getMetric(self, metric_name, registry=REGISTRY, **labels):
         """Gets a single metric."""
         return self.getMetricFromFrozenRegistry(
-            metric_name, registry.collect(), **labels)
+            metric_name, registry.collect(), **labels
+        )
 
     def getMetricVectorFromFrozenRegistry(self, metric_name, frozen_registry):
         """Like getMetricVector, but from a frozen registry."""
@@ -73,8 +73,7 @@ class PrometheusTestCaseMixin(object):
         representation of the prometheus_client, and it should
         probably be provided as a function there instead.
         """
-        return self.getMetricVectorFromFrozenRegistry(
-            metric_name, registry.collect())
+        return self.getMetricVectorFromFrozenRegistry(metric_name, registry.collect())
 
     def formatLabels(self, labels):
         """Format a set of labels to Prometheus representation.
@@ -85,72 +84,86 @@ class PrometheusTestCaseMixin(object):
         Out:
           '{method="GET",port="80"}'
         """
-        return '{%s}' % ','.join([
-            '%s="%s"' % (k, v) for k, v in labels.items()])
+        return "{%s}" % ",".join(['%s="%s"' % (k, v) for k, v in labels.items()])
 
     def formatVector(self, vector):
         """Formats a list of (labels, value) where labels is a dict into a
         human-readable representation.
         """
-        return '\n'.join([
-            '%s = %s' % (self.formatLabels(labels), value)
-            for labels, value in vector])
+        return "\n".join(
+            ["%s = %s" % (self.formatLabels(labels), value) for labels, value in vector]
+        )
 
-    def assertMetricEquals(self, expected_value, metric_name,
-                           registry=REGISTRY, **labels):
+    def assertMetricEquals(
+        self, expected_value, metric_name, registry=REGISTRY, **labels
+    ):
         """Asserts that metric_name{**labels} == expected_value."""
         value = self.getMetric(metric_name, registry=registry, **labels)
         self.assertEqual(
-            expected_value, value, METRIC_EQUALS_ERR_EXPLANATION % (
-                metric_name, self.formatLabels(labels), value,
-                expected_value, metric_name,
-                self.formatVector(self.getMetricVector(metric_name))))
+            expected_value,
+            value,
+            METRIC_EQUALS_ERR_EXPLANATION
+            % (
+                metric_name,
+                self.formatLabels(labels),
+                value,
+                expected_value,
+                metric_name,
+                self.formatVector(self.getMetricVector(metric_name)),
+            ),
+        )
 
-    def assertMetricDiff(self, frozen_registry, expected_diff,
-                         metric_name, registry=REGISTRY, **labels):
+    def assertMetricDiff(
+        self, frozen_registry, expected_diff, metric_name, registry=REGISTRY, **labels
+    ):
         """Asserts that metric_name{**labels} changed by expected_diff between
         the frozen registry and now. A frozen registry can be obtained
         by calling saveRegistry, typically at the beginning of a test
         case.
         """
         saved_value = self.getMetricFromFrozenRegistry(
-            metric_name, frozen_registry, **labels)
-        current_value = self.getMetric(metric_name, registry=registry,
-                                       **labels)
+            metric_name, frozen_registry, **labels
+        )
+        current_value = self.getMetric(metric_name, registry=registry, **labels)
         self.assertFalse(
             current_value is None,
-            METRIC_DIFF_ERR_NONE_EXPLANATION % (
-                metric_name, self.formatLabels(labels),
-                saved_value,
-                current_value))
+            METRIC_DIFF_ERR_NONE_EXPLANATION
+            % (metric_name, self.formatLabels(labels), saved_value, current_value),
+        )
         diff = current_value - (saved_value or 0.0)
         self.assertEqual(
-            expected_diff, diff,
-            METRIC_DIFF_ERR_EXPLANATION % (
-                metric_name, self.formatLabels(labels), diff, expected_diff,
+            expected_diff,
+            diff,
+            METRIC_DIFF_ERR_EXPLANATION
+            % (
+                metric_name,
+                self.formatLabels(labels),
+                diff,
+                expected_diff,
                 saved_value,
-                current_value))
+                current_value,
+            ),
+        )
 
-    def assertMetricCompare(self, frozen_registry, predicate,
-                            metric_name, registry=REGISTRY, **labels):
+    def assertMetricCompare(
+        self, frozen_registry, predicate, metric_name, registry=REGISTRY, **labels
+    ):
         """Asserts that metric_name{**labels} changed according to a provided
         predicate function between the frozen registry and now. A
         frozen registry can be obtained by calling saveRegistry,
         typically at the beginning of a test case.
         """
         saved_value = self.getMetricFromFrozenRegistry(
-            metric_name, frozen_registry, **labels)
-        current_value = self.getMetric(metric_name, registry=registry,
-                                       **labels)
+            metric_name, frozen_registry, **labels
+        )
+        current_value = self.getMetric(metric_name, registry=registry, **labels)
         self.assertFalse(
             current_value is None,
-            METRIC_DIFF_ERR_NONE_EXPLANATION % (
-                metric_name, self.formatLabels(labels),
-                saved_value,
-                current_value))
+            METRIC_DIFF_ERR_NONE_EXPLANATION
+            % (metric_name, self.formatLabels(labels), saved_value, current_value),
+        )
         self.assertTrue(
             predicate(saved_value, current_value),
-            METRIC_COMPARE_ERR_EXPLANATION % (
-                metric_name, self.formatLabels(labels),
-                saved_value,
-                current_value))
+            METRIC_COMPARE_ERR_EXPLANATION
+            % (metric_name, self.formatLabels(labels), saved_value, current_value),
+        )

@@ -1,9 +1,6 @@
 import django
 
-from django_prometheus.db.common import (
-    DatabaseWrapperMixin,
-    ExportingCursorWrapper
-)
+from django_prometheus.db.common import DatabaseWrapperMixin, ExportingCursorWrapper
 
 import psycopg2.extensions
 from django.db.backends.postgresql import base
@@ -11,16 +8,15 @@ from django.db.backends.postgresql import base
 
 class DatabaseFeatures(base.DatabaseFeatures):
     """Our database has the exact same features as the base one."""
+
     pass
 
 
 class DatabaseWrapper(DatabaseWrapperMixin, base.DatabaseWrapper):
     def get_connection_params(self):
         conn_params = super(DatabaseWrapper, self).get_connection_params()
-        conn_params['cursor_factory'] = ExportingCursorWrapper(
-            psycopg2.extensions.cursor,
-            self.alias,
-            self.vendor,
+        conn_params["cursor_factory"] = ExportingCursorWrapper(
+            psycopg2.extensions.cursor, self.alias, self.vendor
         )
         return conn_params
 
