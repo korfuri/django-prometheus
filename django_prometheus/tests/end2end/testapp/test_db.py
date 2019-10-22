@@ -27,9 +27,9 @@ class TestDbMetrics(BaseDbMetricTest):
     def testConfigHasExpectedDatabases(self):
         """Not a real unit test: ensures that testapp.settings contains the
         databases this test expects."""
-        self.assertTrue("default" in connections.databases.keys())
-        self.assertTrue("test_db_1" in connections.databases.keys())
-        self.assertTrue("test_db_2" in connections.databases.keys())
+        assert "default" in connections.databases.keys()
+        assert "test_db_1" in connections.databases.keys()
+        assert "test_db_2" in connections.databases.keys()
 
     def testCounters(self):
         cursor_db1 = connections["test_db_1"].cursor()
@@ -50,14 +50,13 @@ class TestDbMetrics(BaseDbMetricTest):
             vendor="sqlite",
             type="OperationalError",
         )
-
-        self.assertTrue(
+        assert (
             self.getMetric(
                 "django_db_execute_total", alias="test_db_1", vendor="sqlite"
             )
             > 0
         )
-        self.assertTrue(
+        assert (
             self.getMetric(
                 "django_db_execute_total", alias="test_db_2", vendor="sqlite"
             )
