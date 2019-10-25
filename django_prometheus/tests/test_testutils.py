@@ -41,15 +41,12 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
 
     def testGetMetrics(self):
         """Tests getMetric."""
-        self.assertEqual(42, self.t.getMetric("some_gauge", registry=self.registry))
-        self.assertEqual(
-            1,
-            self.t.getMetric(
-                "some_labelled_gauge",
-                registry=self.registry,
-                labelred="pink",
-                labelblue="indigo",
-            ),
+        assert 42 == self.t.getMetric("some_gauge", registry=self.registry)
+        assert 1 == self.t.getMetric(
+            "some_labelled_gauge",
+            registry=self.registry,
+            labelred="pink",
+            labelblue="indigo",
         )
 
     def testGetMetricVector(self):
@@ -61,18 +58,15 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
         vector = self.t.getMetricVector("some_gauge", registry=self.registry)
         assert [({}, 42)] == vector
         vector = self.t.getMetricVector("some_labelled_gauge", registry=self.registry)
-        self.assertEqual(
-            sorted(
-                [
-                    ({"labelred": u"pink", "labelblue": u"indigo"}, 1),
-                    ({"labelred": u"pink", "labelblue": u"royal"}, 2),
-                    ({"labelred": u"carmin", "labelblue": u"indigo"}, 3),
-                    ({"labelred": u"carmin", "labelblue": u"royal"}, 4),
-                ],
-                key=itemgetter(1),
-            ),
-            sorted(vector, key=itemgetter(1)),
-        )
+        assert sorted(
+            [
+                ({"labelred": u"pink", "labelblue": u"indigo"}, 1),
+                ({"labelred": u"pink", "labelblue": u"royal"}, 2),
+                ({"labelred": u"carmin", "labelblue": u"indigo"}, 3),
+                ({"labelred": u"carmin", "labelblue": u"royal"}, 4),
+            ],
+            key=itemgetter(1),
+        ) == sorted(vector, key=itemgetter(1))
 
     def testAssertMetricEquals(self):
         """Tests assertMetricEquals."""
@@ -85,7 +79,7 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
 
         # Here we test that assertMetricEquals fails on nonexistent gauges.
         self.t.assertMetricEquals(42, "some_nonexistent_gauge", registry=self.registry)
-        self.assertFalse(self.t.passes)
+        assert not self.t.passes
         self.t.passes = True
 
         # Here we test that labelled metrics can be tested.
