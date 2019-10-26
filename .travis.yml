@@ -15,6 +15,12 @@ services:
   - redis
   - mysql
   - postgresql
+addons:
+  postgresql: 9.5
+  apt:
+    packages:
+      - postgresql-9.5-postgis-2.2
+      - gdal-bin
 matrix:
   exclude:
     - python: "2.7"
@@ -32,6 +38,8 @@ install:
   - pip install -r requirements.txt
   - pip install -q Django==$DJANGO_VERSION
   - mysql -e 'create database django_prometheus_1;'
+  - psql -U postgres -c "create database postgis"
+  - psql -U postgres postgis -c "ALTER EXTENSION postgis UPDATE;"
 script:
   - if [[ $TRAVIS_PYTHON_VERSION == "3.7" ]]; then black --check django_prometheus/; fi
   - python setup.py test
