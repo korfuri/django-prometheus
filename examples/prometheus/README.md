@@ -9,10 +9,12 @@ To run a demo Prometheus, you'll need to follow these steps:
   instructions](http://prometheus.io/docs/introduction/install/).
   Let's assume you cloned it to `~/prometheus`.
 * Run prometheus like this:
+
   ```shell
   ~/prometheus/prometheus \
     --config.file=prometheus.yml \
     --web.console.templates consoles/ \
     --web.console.libraries ~/prometheus/console_libraries/
   ```
-* Navigate to [http://localhost:9090].
+
+* Navigate to `http://localhost:9090`.
