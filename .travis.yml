@@ -31,8 +31,10 @@ matrix:
 install:
   - pip install -r requirements.txt
   - pip install -q Django==$DJANGO_VERSION
+  - pip install --upgrade setuptools wheel
   - mysql -e 'create database django_prometheus_1;'
 script:
   - if [[ $TRAVIS_PYTHON_VERSION == "3.7" ]]; then black --check django_prometheus/; fi
   - python setup.py test
+  - python setup.py sdist bdist_wheel
   - cd django_prometheus/tests/end2end && PYTHONPATH=../../.. python manage.py test
