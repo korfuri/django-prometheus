@@ -1,144 +1,192 @@
+from django.conf import settings
 from django.utils.deprecation import MiddlewareMixin
 from prometheus_client import Counter, Histogram
 
 from django_prometheus.utils import PowersOf, Time, TimeSince
 
-requests_total = Counter(
-    "django_http_requests_before_middlewares_total",
-    "Total count of requests before middlewares run.",
-)
-responses_total = Counter(
-    "django_http_responses_before_middlewares_total",
-    "Total count of responses before middlewares run.",
-)
-requests_latency_before = Histogram(
-    "django_http_requests_latency_including_middlewares_seconds",
-    (
-        "Histogram of requests processing time (including middleware "
-        "processing time)."
-    ),
-)
-requests_unknown_latency_before = Counter(
-    "django_http_requests_unknown_latency_including_middlewares_total",
-    (
-        "Count of requests for which the latency was unknown (when computing "
-        "django_http_requests_latency_including_middlewares_seconds)."
-    ),
-)
+def _register_metric(cls, name, documentation, labelnames=tuple(), **kwargs):
+    return cls(name, documentation, labelnames=labelnames, **kwargs)
+
+
+class Metrics:
+    _instance = None
+
+    @classmethod
+    def get_instance(cls):
+        if not cls._instance:
+            cls._instance = cls()
+        return cls._instance
+
+    def __init__(self, *args, **kwargs):
+        self.register()
+
+    def register(self):
+        self.requests_total = _register_metric(
+            Counter,
+            "django_http_requests_before_middlewares_total",
+            "Total count of requests before middlewares run.",
+        )
+        self.responses_total = _register_metric(
+            Counter,
+            "django_http_responses_before_middlewares_total",
+            "Total count of responses before middlewares run.",
+        )
+        self.requests_latency_before = _register_metric(
+            Histogram,
+            "django_http_requests_latency_including_middlewares_seconds",
+            (
+                "Histogram of requests processing time (including middleware "
+                "processing time)."
+            ),
+        )
+        self.requests_unknown_latency_before = _register_metric(
+            Counter,
+            "django_http_requests_unknown_latency_including_middlewares_total",
+            (
+                "Count of requests for which the latency was unknown (when computing "
+                "django_http_requests_latency_including_middlewares_seconds)."
+            ),
+        )
+        self.requests_latency_by_view_method = _register_metric(
+            Histogram,
+            "django_http_requests_latency_seconds_by_view_method",
+            "Histogram of request processing time labelled by view.",
+            ["view", "method"],
+            buckets=(
+                0.01,
+                0.025,
+                0.05,
+                0.075,
+                0.1,
+                0.25,
+                0.5,
+                0.75,
+                1.0,
+                2.5,
+                5.0,
+                7.5,
+                10.0,
+                25.0,
+                50.0,
+                75.0,
+                float("inf"),
+            ),
+        )
+        self.requests_unknown_latency = _register_metric(
+            Counter,
+            "django_http_requests_unknown_latency_total",
+            "Count of requests for which the latency was unknown.",
+        )
+        # Set in process_request
+        self.requests_ajax = _register_metric(
+            Counter, "django_http_ajax_requests_total", "Count of AJAX requests."
+        )
+        self.requests_by_method = _register_metric(
+            Counter,
+            "django_http_requests_total_by_method",
+            "Count of requests by method.",
+            ["method"],
+        )
+        self.requests_by_transport = _register_metric(
+            Counter,
+            "django_http_requests_total_by_transport",
+            "Count of requests by transport.",
+            ["transport"],
+        )
+        # Set in process_view
+        self.requests_by_view_transport_method = _register_metric(
+            Counter,
+            "django_http_requests_total_by_view_transport_method",
+            "Count of requests by view, transport, method.",
+            ["view", "transport", "method"],
+        )
+        self.requests_body_bytes = _register_metric(
+            Histogram,
+            "django_http_requests_body_total_bytes",
+            "Histogram of requests by body size.",
+            buckets=PowersOf(2, 30),
+        )
+        # Set in process_template_response
+        self.responses_by_templatename = _register_metric(
+            Counter,
+            "django_http_responses_total_by_templatename",
+            "Count of responses by template name.",
+            ["templatename"],
+        )
+        # Set in process_response
+        self.responses_by_status = _register_metric(
+            Counter,
+            "django_http_responses_total_by_status",
+            "Count of responses by status.",
+            ["status"],
+        )
+        self.responses_by_status_view_method = _register_metric(
+            Counter,
+            "django_http_responses_total_by_status_view_method",
+            "Count of responses by status, view, method.",
+            ["status", "view", "method"],
+        )
+        self.responses_body_bytes = _register_metric(
+            Histogram,
+            "django_http_responses_body_total_bytes",
+            "Histogram of responses by body size.",
+            buckets=PowersOf(2, 30),
+        )
+        self.responses_by_charset = _register_metric(
+            Counter,
+            "django_http_responses_total_by_charset",
+            "Count of responses by charset.",
+            ["charset"],
+        )
+        self.responses_streaming = _register_metric(
+            Counter,
+            "django_http_responses_streaming_total",
+            "Count of streaming responses.",
+        )
+        # Set in process_exception
+        self.exceptions_by_type = _register_metric(
+            Counter,
+            "django_http_exceptions_total_by_type",
+            "Count of exceptions by object type.",
+            ["type"],
+        )
+        self.exceptions_by_view = _register_metric(
+            Counter,
+            "django_http_exceptions_total_by_view",
+            "Count of exceptions by view.",
+            ["view_name"],
+        )
 
 
 class PrometheusBeforeMiddleware(MiddlewareMixin):
-
     """Monitoring middleware that should run before other middlewares."""
 
+    def __init__(self, get_response=None):
+        super().__init__(get_response)
+        self.metrics = Metrics.get_instance()
+
     def process_request(self, request):
-        requests_total.inc()
+        self.metrics.requests_total.inc()
         request.prometheus_before_middleware_event = Time()
 
     def process_response(self, request, response):
-        responses_total.inc()
+        self.metrics.responses_total.inc()
         if hasattr(request, "prometheus_before_middleware_event"):
-            requests_latency_before.observe(
+            self.metrics.requests_latency_before.observe(
                 TimeSince(request.prometheus_before_middleware_event)
             )
         else:
-            requests_unknown_latency_before.inc()
+            self.metrics.requests_unknown_latency_before.inc()
         return response
-
-
-requests_latency_by_view_method = Histogram(
-    "django_http_requests_latency_seconds_by_view_method",
-    "Histogram of request processing time labelled by view.",
-    ["view", "method"],
-    buckets=(
-        0.01,
-        0.025,
-        0.05,
-        0.075,
-        0.1,
-        0.25,
-        0.5,
-        0.75,
-        1.0,
-        2.5,
-        5.0,
-        7.5,
-        10.0,
-        25.0,
-        50.0,
-        75.0,
-        float("inf"),
-    ),
-)
-requests_unknown_latency = Counter(
-    "django_http_requests_unknown_latency_total",
-    "Count of requests for which the latency was unknown.",
-)
-# Set in process_request
-ajax_requests = Counter("django_http_ajax_requests_total", "Count of AJAX requests.")
-requests_by_method = Counter(
-    "django_http_requests_total_by_method", "Count of requests by method.", ["method"]
-)
-requests_by_transport = Counter(
-    "django_http_requests_total_by_transport",
-    "Count of requests by transport.",
-    ["transport"],
-)
-# Set in process_view
-requests_by_view_transport_method = Counter(
-    "django_http_requests_total_by_view_transport_method",
-    "Count of requests by view, transport, method.",
-    ["view", "transport", "method"],
-)
-requests_body_bytes = Histogram(
-    "django_http_requests_body_total_bytes",
-    "Histogram of requests by body size.",
-    buckets=PowersOf(2, 30),
-)
-# Set in process_template_response
-responses_by_templatename = Counter(
-    "django_http_responses_total_by_templatename",
-    "Count of responses by template name.",
-    ["templatename"],
-)
-# Set in process_response
-responses_by_status = Counter(
-    "django_http_responses_total_by_status", "Count of responses by status.", ["status"]
-)
-responses_by_status_view_method = Counter(
-    "django_http_responses_total_by_status_view_method",
-    "Count of responses by status, view, method.",
-    ["status", "view", "method"],
-)
-responses_body_bytes = Histogram(
-    "django_http_responses_body_total_bytes",
-    "Histogram of responses by body size.",
-    buckets=PowersOf(2, 30),
-)
-responses_by_charset = Counter(
-    "django_http_responses_total_by_charset",
-    "Count of responses by charset.",
-    ["charset"],
-)
-responses_streaming = Counter(
-    "django_http_responses_streaming_total", "Count of streaming responses."
-)
-# Set in process_exception
-exceptions_by_type = Counter(
-    "django_http_exceptions_total_by_type",
-    "Count of exceptions by object type.",
-    ["type"],
-)
-exceptions_by_view = Counter(
-    "django_http_exceptions_total_by_view",
-    "Count of exceptions by view.",
-    ["view_name"],
-)
 
 
 class PrometheusAfterMiddleware(MiddlewareMixin):
 
     """Monitoring middleware that should run after other middlewares."""
+
+    def __init__(self, get_response=None):
+        super().__init__(get_response)
+        self.metrics = Metrics.get_instance()
 
     def _transport(self, request):
         return "https" if request.is_secure() else "http"
@@ -162,12 +210,12 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
     def process_request(self, request):
         transport = self._transport(request)
         method = self._method(request)
-        requests_by_method.labels(method).inc()
-        requests_by_transport.labels(transport).inc()
+        self.metrics.requests_by_method.labels(method=method).inc()
+        self.metrics.requests_by_transport(transport=transport ).inc()
         if request.is_ajax():
-            ajax_requests.inc()
+            self.metrics.requests_ajax.inc()
         content_length = int(request.META.get("CONTENT_LENGTH") or 0)
-        requests_body_bytes.observe(content_length)
+        self.metrics.requests_body_bytes.observe(content_length)
         request.prometheus_after_middleware_event = Time()
 
     def _get_view_name(self, request):
@@ -183,41 +231,79 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
         method = self._method(request)
         if hasattr(request, "resolver_match"):
             name = request.resolver_match.view_name or "<unnamed view>"
-            requests_by_view_transport_method.labels(name, transport, method).inc()
+            self.label_metric(
+                self.metrics.requests_by_view_transport_method,
+                request,
+                view=name,
+                transport=transport,
+                method=method,
+            )
 
     def process_template_response(self, request, response):
         if hasattr(response, "template_name"):
-            responses_by_templatename.labels(str(response.template_name)).inc()
+            self.label_metric(
+                self.metrics.responses_by_templatename,
+                request,
+                response=response,
+                templatename=str(response.template_name),
+            ).inc()
         return response
 
     def process_response(self, request, response):
         method = self._method(request)
         name = self._get_view_name(request)
-
-        responses_by_status.labels(str(response.status_code)).inc()
-        responses_by_status_view_method.labels(response.status_code, name, method).inc()
+        status = str(response.status_code)
+        self.label_metric(
+            self.metrics.responses_by_status, request, response, status=status
+        ).inc()
+        self.label_metric(
+            self.metrics.responses_by_status_view_method,
+            request,
+            response,
+            status=status,
+            view=name,
+            method=method,
+        ).inc()
         if hasattr(response, "charset"):
-            responses_by_charset.labels(str(response.charset)).inc()
+            self.label_metric(
+                self.metrics.responses_by_charset,
+                request,
+                response,
+                charset=str(response.charset),
+            ).inc()
         if hasattr(response, "streaming") and response.streaming:
-            responses_streaming.inc()
+            self.metrics.responses_streaming.inc()
         if hasattr(response, "content"):
-            responses_body_bytes.observe(len(response.content))
+            self.metrics.responses_body_bytes.observe(len(response.content))
         if hasattr(request, "prometheus_after_middleware_event"):
-            requests_latency_by_view_method.labels(
-                view=name, method=request.method
+            self.label_metric(
+                self.metrics.requests_latency_by_view_method,
+                request,
+                response,
+                view=self._get_view_name(request),
+                method=request.method,
             ).observe(TimeSince(request.prometheus_after_middleware_event))
         else:
-            requests_unknown_latency.inc()
+            self.label_metric(
+                self.metrics.requests_unknown_latency, request, response
+            ).inc()
         return response
 
     def process_exception(self, request, exception):
-        name = self._get_view_name(request)
-        exceptions_by_type.labels(type(exception).__name__).inc()
+        self.label_metric(
+            self.metrics.exceptions_by_type, request, type=type(exception).__name__
+        ).inc()
         if hasattr(request, "resolver_match"):
-            exceptions_by_view.labels(name).inc()
+            name = request.resolver_match.view_name or "<unnamed view>"
+            self.label_metric(
+                self.metrics.exceptions_by_view, request, view_name=name
+            ).inc()
         if hasattr(request, "prometheus_after_middleware_event"):
-            requests_latency_by_view_method.labels(
-                view=name, method=request.method
+            self.label_metric(
+                self.metrics.requests_latency_by_view_method,
+                request,
+                view=self._get_view_name(request),
+                method=request.method,
             ).observe(TimeSince(request.prometheus_after_middleware_event))
         else:
-            requests_unknown_latency.inc()
+            self.label_metric..inc()
