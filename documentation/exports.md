@@ -84,9 +84,11 @@ a nice system to aggregate them using the env variable: `prometheus_multiproc_di
 which will configure the directory where metrics will be stored as files per process.
 
 Configuration in uwsgi would look like:
-```
+
+```ini
 env = prometheus_multiproc_dir=/path/to/django_metrics
 ```
+
 You can also set this environment variable elsewhere such as in a kubernetes manifest.
 Note that the environment variable is lower_case.
 
@@ -97,6 +99,7 @@ created, it's possible to create file using worker ids rather than pids.
 
 You can change the function used for identifying the process to use the uwsgi worker_id.
 Modify this in settings before any metrics are created:
+
 ```python
 try:
     import prometheus_client
@@ -106,6 +109,7 @@ try:
 except ImportError:
     pass  # not running in uwsgi
 ```
+
 Note that this code uses internal interfaces of prometheus_client.
 The underlying implementation may change.
 
