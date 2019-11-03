@@ -1,3 +1,4 @@
+import re
 from setuptools import find_packages, setup
 
 LONG_DESCRIPTION = """Django-Prometheus
@@ -9,9 +10,16 @@ See https://github.com/korfuri/django-prometheus for usage
 instructions.
 """
 
+def get_version():
+    version_file = open('django_prometheus/__init__.py', 'r').read()
+    version_match = re.search(r'^__version__ = [\'"]([^\'"]*)[\'"]', version_file, re.MULTILINE)
+    if version_match:
+        return version_match.group(1)
+    raise RuntimeError('Unable to find version string.')
+
 setup(
     name="django-prometheus",
-    version="1.1.0",
+    version=get_version(),
     author="Uriel Corfa",
     author_email="uriel@corfa.fr",
     description=(

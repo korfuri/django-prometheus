@@ -10,6 +10,8 @@ from django_prometheus import models
 
 __all__ = ["middleware", "models", "pip_prometheus"]
 
+__version__ = "1.2.0.dev"
+
 # Import pip_prometheus to export the pip metrics automatically.
 try:
     import pip_prometheus
