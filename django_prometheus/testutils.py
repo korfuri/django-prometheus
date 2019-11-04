@@ -35,9 +35,9 @@ class PrometheusTestCaseMixin(object):
         """Freezes a registry. This lets a user test changes to a metric
         instead of testing the absolute value. A typical use case looks like:
 
-          r = self.saveRegistry()
+          registry = self.saveRegistry()
           doStuff()
-          self.assertMetricDiff(r, 1, 'stuff_done_total')
+          self.assertMetricDiff(registry, 1, 'stuff_done_total')
         """
         return copy.deepcopy(list(registry.collect()))
 

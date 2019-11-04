@@ -64,14 +64,18 @@ class TestDbMetrics(BaseDbMetricTest):
         )
 
     def testExecuteMany(self):
-        r = self.saveRegistry()
+        registry = self.saveRegistry()
         cursor_db1 = connections["test_db_1"].cursor()
         cursor_db1.executemany(
             "INSERT INTO testapp_lawn(location) VALUES (?)",
             [("Paris",), ("New York",), ("Berlin",), ("San Francisco",)],
         )
         self.assertMetricDiff(
-            r, 4, "django_db_execute_many_total", alias="test_db_1", vendor="sqlite"
+            registry,
+            4,
+            "django_db_execute_many_total",
+            alias="test_db_1",
+            vendor="sqlite",
         )
 
 
@@ -89,14 +93,14 @@ class TestPostgresDbMetrics(BaseDbMetricTest):
     """
 
     def testCounters(self):
-        r = self.saveRegistry()
+        registry = self.saveRegistry()
         cursor = connections["postgresql"].cursor()
 
         for _ in range(20):
             cursor.execute("SELECT 1")
 
         self.assertMetricCompare(
-            r,
+            registry,
             lambda a, b: a + 20 <= b < a + 25,
             "django_db_execute_total",
             alias="postgresql",
@@ -116,14 +120,14 @@ class TestMysDbMetrics(BaseDbMetricTest):
     """
 
     def testCounters(self):
-        r = self.saveRegistry()
+        registry = self.saveRegistry()
         cursor = connections["mysql"].cursor()
 
         for _ in range(20):
             cursor.execute("SELECT 1")
 
         self.assertMetricCompare(
-            r,
+            registry,
             lambda a, b: a + 20 <= b < a + 25,
             "django_db_execute_total",
             alias="mysql",
