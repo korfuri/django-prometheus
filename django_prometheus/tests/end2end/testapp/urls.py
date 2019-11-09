@@ -3,7 +3,6 @@ from django.contrib import admin
 
 from testapp import views
 
-
 urlpatterns = [
     url(r"^$", views.index),
     url(r"^help$", views.help),

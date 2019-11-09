@@ -1,9 +1,9 @@
-import socket
 import logging
 import os
-import prometheus_client
+import socket
 import threading
 
+import prometheus_client
 from django.conf import settings
 from django.http import HttpResponse
 from prometheus_client import multiprocess

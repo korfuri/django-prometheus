@@ -1,8 +1,7 @@
 from django.utils.deprecation import MiddlewareMixin
 from prometheus_client import Counter, Histogram
 
-from django_prometheus.utils import Time, TimeSince, PowersOf
-
+from django_prometheus.utils import PowersOf, Time, TimeSince
 
 requests_total = Counter(
     "django_http_requests_before_middlewares_total",
