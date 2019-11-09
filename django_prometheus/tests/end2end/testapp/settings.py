@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-
+import tempfile
 import django
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -128,6 +128,7 @@ DATABASES = {
 }
 
 # Caches
+_tmp_cache_dir = tempfile.mkdtemp()
 
 CACHES = {
     "default": {
@@ -140,11 +141,11 @@ CACHES = {
     },
     "filebased": {
         "BACKEND": "django_prometheus.cache.backends.filebased.FileBasedCache",
-        "LOCATION": "/var/tmp/django_cache",
+        "LOCATION": os.path.join(_tmp_cache_dir, "django_cache"),
     },
     "locmem": {
         "BACKEND": "django_prometheus.cache.backends.locmem.LocMemCache",
-        "LOCATION": "/var/tmp/locmem_cache",
+        "LOCATION": os.path.join(_tmp_cache_dir, "locmem_cache"),
     },
     "redis": {
         "BACKEND": "django_prometheus.cache.backends.redis.RedisCache",
