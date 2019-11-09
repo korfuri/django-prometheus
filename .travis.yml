@@ -39,8 +39,8 @@ script:
   - flake8 django_prometheus
   - isort -rc django_prometheus/ 
   - coverage run --source=django_prometheus setup.py test
-  - python setup.py sdist bdist_wheel
   - pushd  django_prometheus/tests/end2end && PYTHONPATH=../../.. coverage run --source=django_prometheus manage.py test &&  popd
+  - python setup.py sdist bdist_wheel
 after_success:
   - coverage combine .coverage django_prometheus/tests/end2end/.coverage
   - coveralls
