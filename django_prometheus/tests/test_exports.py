@@ -11,6 +11,7 @@ def test_port_range_available(httpserver_mock):
     httpserver_mock.side_effect = [socket.error, MagicMock()]
     port_range = [8000, 8001]
     port_chosen = SetupPrometheusEndpointOnPortRange(port_range)
+    assert port_chosen in port_range
 
     expected_calls = [call(("", 8000), ANY), call(("", 8001), ANY)]
     assert httpserver_mock.mock_calls == expected_calls
