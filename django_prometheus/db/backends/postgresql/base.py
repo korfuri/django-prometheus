@@ -1,5 +1,3 @@
-import django
-
 from django_prometheus.db.common import DatabaseWrapperMixin, ExportingCursorWrapper
 
 import psycopg2.extensions
