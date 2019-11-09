@@ -29,7 +29,7 @@ matrix:
       env: DJANGO_VERSION=1.11
 
 install:
-  - pip install coveralls
+  - pip install coveralls codacy-coverage
   - pip install -r requirements.txt
   - pip install -q Django==$DJANGO_VERSION
   - pip install --upgrade setuptools wheel
@@ -42,6 +42,8 @@ script:
 after_success:
   - coverage combine .coverage django_prometheus/tests/end2end/.coverage
   - coveralls
+  - coverage xml
+  - python-codacy-coverage -r coverage.xml
 before_deploy:
   - git checkout $TRAVIS_BRANCH
   - git fetch --unshallow
