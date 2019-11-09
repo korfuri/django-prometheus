@@ -1,4 +1,3 @@
-import django
 from django.utils.deprecation import MiddlewareMixin
 from prometheus_client import Counter, Histogram
 
