@@ -1,0 +1,21 @@
+name: django-prometheus
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+    - name: Formatting [Black]
+      run: |
+        black --check django_prometheus
+    - name: Lint
+      run: |
+        flake8 django_prometheus
+        isort -rc django_prometheus/ 
