@@ -1,9 +1,9 @@
 from django_prometheus.db import (
     connection_errors_total,
     connections_total,
-    execute_total,
-    execute_many_total,
     errors_total,
+    execute_many_total,
+    execute_total,
 )
 
 

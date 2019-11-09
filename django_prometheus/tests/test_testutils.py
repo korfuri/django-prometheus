@@ -3,6 +3,7 @@ import unittest
 from operator import itemgetter
 
 import prometheus_client
+
 from django_prometheus.testutils import PrometheusTestCaseMixin
 
 
