@@ -37,6 +37,7 @@ install:
 script:
   - if [[ $TRAVIS_PYTHON_VERSION == "3.7" ]]; then black --check django_prometheus/; fi
   - flake8 django_prometheus
+  - isort -rc django_prometheus/ 
   - coverage run --source=django_prometheus setup.py test
   - python setup.py sdist bdist_wheel
   - pushd  django_prometheus/tests/end2end && PYTHONPATH=../../.. coverage run --source=django_prometheus manage.py test &&  popd
