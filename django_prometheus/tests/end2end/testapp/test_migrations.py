@@ -2,6 +2,7 @@ import sys
 
 from django.test import SimpleTestCase
 
+from django_prometheus.migrations import ExportMigrationsForDatabase
 from django_prometheus.testutils import PrometheusTestCaseMixin
 
 if sys.version_info[:2] >= (3, 0):
@@ -23,8 +24,6 @@ class TestMigrations(PrometheusTestCaseMixin, SimpleTestCase):
     """Test migration counters."""
 
     def test_counters(self):
-        from django_prometheus.migrations import ExportMigrationsForDatabase
-
         executor = MagicMock()
         executor.migration_plan = MagicMock()
         executor.migration_plan.return_value = set()
