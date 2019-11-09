@@ -52,6 +52,7 @@ def migrate_version(target_file, new_version):
         target_file,
         regex,
     )
+    print("Updating to version: {}".format(new_version))
 
 
 def is_master_branch():
