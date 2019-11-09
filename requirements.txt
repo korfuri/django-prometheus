@@ -1,6 +1,7 @@
 Django>=1.11
 django-redis>=4.8
 black; python_version >= '3.6'
+flake8
 prometheus-client>=0.7
 pip-prometheus>=1.2.1
 mock
