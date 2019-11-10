@@ -55,8 +55,6 @@ deploy:
     distributions: sdist bdist_wheel
     skip_cleanup: true
     skip_existing: true
-    # Testing with test pypi first
-    server: https://test.pypi.org/legacy/ 
     user: __token__
     on:
       branch:
