@@ -5,7 +5,6 @@ from django.utils.deprecation import MiddlewareMixin
 from django_prometheus.utils import PowersOf, Time, TimeSince
 
 DEFAULT_LATENCY_BUCKETS = (
-    0.005,
     0.01,
     0.025,
     0.05,
@@ -19,6 +18,9 @@ DEFAULT_LATENCY_BUCKETS = (
     5.0,
     7.5,
     10.0,
+    25.0,
+    50.0,
+    75.0,
     float("inf"),
 )
 
