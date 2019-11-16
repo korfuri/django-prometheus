@@ -1,5 +1,4 @@
 from django.db.backends.mysql import base
-
 from django_prometheus.db.common import DatabaseWrapperMixin, ExportingCursorWrapper
 
 
