@@ -57,6 +57,9 @@ docs/_build/
 # PyBuilder
 target/
 
+# VSCode
+.vscode/
+
 ### Emacs ###
 # -*- mode: gitignore; -*-
 *~
