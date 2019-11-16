@@ -13,7 +13,7 @@ def index(request):
 
 
 def help(request):
-    # render does not instanciate a TemplateResponse, so it does not
+    # render does not instantiate a TemplateResponse, so it does not
     # increment the "by_templatename" counters.
     return render(request, "help.html", {})
 
