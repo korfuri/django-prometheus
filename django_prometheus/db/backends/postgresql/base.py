@@ -1,6 +1,5 @@
 import psycopg2.extensions
 from django.db.backends.postgresql import base
-
 from django_prometheus.db.common import DatabaseWrapperMixin, ExportingCursorWrapper
 
 

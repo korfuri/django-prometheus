@@ -1,6 +1,6 @@
-from django.utils.deprecation import MiddlewareMixin
 from prometheus_client import Counter, Histogram
 
+from django.utils.deprecation import MiddlewareMixin
 from django_prometheus.utils import PowersOf, Time, TimeSince
 
 requests_total = Counter(

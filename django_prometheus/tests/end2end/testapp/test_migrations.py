@@ -1,7 +1,6 @@
 import sys
 
 from django.test import SimpleTestCase
-
 from django_prometheus.migrations import ExportMigrationsForDatabase
 from django_prometheus.testutils import PrometheusTestCaseMixin
 

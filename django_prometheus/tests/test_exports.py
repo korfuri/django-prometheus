@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 import socket
 
-from mock import ANY, MagicMock, call, patch
-
 from django_prometheus.exports import SetupPrometheusEndpointOnPortRange
+from mock import ANY, MagicMock, call, patch
 
 
 @patch("django_prometheus.exports.HTTPServer")

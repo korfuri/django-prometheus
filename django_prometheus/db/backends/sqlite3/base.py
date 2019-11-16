@@ -1,5 +1,4 @@
 from django.db.backends.sqlite3 import base
-
 from django_prometheus.db.common import DatabaseWrapperMixin
 
 

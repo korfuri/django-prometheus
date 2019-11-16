@@ -5,7 +5,6 @@ from django.db import connections
 from django.http import FileResponse
 from django.shortcuts import render
 from django.template.response import TemplateResponse
-
 from testapp.models import Lawn
 
 
