@@ -1,28 +1,13 @@
 import os
 import tempfile
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = ")0-t%mc5y1^fn8e7i**^^v166@5iu(&-2%9#kxud0&4ap#k!_k"
-
-# SECURITY WARNING: don't run with debug turned on in production!
-#
-# BIGGER SECURITY WARNING: if you're trying to disable DEBUG, you're
-# probably trying to run the testapp in production. DO NOT RUN THE
-# TESTAPP IN PRODUCTION. It contains several features that are
-# horrible hacks or even intentional security holes, to facilitate
-# automated or manual testing (like /sql which lets you, or anyone,
-# execute arbitrary SQL queries). DO NOT RUN THE TESTAPP IN
-# PRODUCTION.
 DEBUG = True
-
 ALLOWED_HOSTS = []
 
 
 # Application definition
-
 INSTALLED_APPS = (
     "django.contrib.admin",
     "django.contrib.auth",
@@ -35,22 +20,17 @@ INSTALLED_APPS = (
 )
 
 
-def GetMiddlewareClasses():
-    classes = [
-        "django_prometheus.middleware.PrometheusBeforeMiddleware",
-        "django.contrib.sessions.middleware.SessionMiddleware",
-        "django.middleware.common.CommonMiddleware",
-        "django.middleware.csrf.CsrfViewMiddleware",
-        "django.contrib.auth.middleware.AuthenticationMiddleware",
-        "django.contrib.messages.middleware.MessageMiddleware",
-        "django.middleware.clickjacking.XFrameOptionsMiddleware",
-        "django.middleware.security.SecurityMiddleware",
-        "django_prometheus.middleware.PrometheusAfterMiddleware",
-    ]
-    return classes
-
-
-MIDDLEWARE = GetMiddlewareClasses()
+MIDDLEWARE = [
+    "django_prometheus.middleware.PrometheusBeforeMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.middleware.security.SecurityMiddleware",
+    "django_prometheus.middleware.PrometheusAfterMiddleware",
+]
 
 ROOT_URLCONF = "testapp.urls"
 
@@ -72,9 +52,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "testapp.wsgi.application"
 
-
-# Database
-# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 DATABASES = {
     "default": {
@@ -147,22 +124,14 @@ CACHES = {
 }
 
 # Internationalization
-# https://docs.djangoproject.com/en/1.8/topics/i18n/
-
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.8/howto/static-files/
-
 STATIC_URL = "/static/"
 
 LOGGING = {
