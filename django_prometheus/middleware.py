@@ -25,10 +25,6 @@ DEFAULT_LATENCY_BUCKETS = (
 )
 
 
-def _register_metric(cls, name, documentation, labelnames=tuple(), **kwargs):
-    return cls(name, documentation, labelnames=labelnames, **kwargs)
-
-
 class Metrics:
     _instance = None
 
@@ -38,21 +34,26 @@ class Metrics:
             cls._instance = cls()
         return cls._instance
 
+    def register_metric(
+        self, metric_cls, name, documentation, labelnames=tuple(), **kwargs
+    ):
+        return metric_cls(name, documentation, labelnames=labelnames, **kwargs)
+
     def __init__(self, *args, **kwargs):
         self.register()
 
     def register(self):
-        self.requests_total = _register_metric(
+        self.requests_total = self.register_metric(
             Counter,
             "django_http_requests_before_middlewares_total",
             "Total count of requests before middlewares run.",
         )
-        self.responses_total = _register_metric(
+        self.responses_total = self.register_metric(
             Counter,
             "django_http_responses_before_middlewares_total",
             "Total count of responses before middlewares run.",
         )
-        self.requests_latency_before = _register_metric(
+        self.requests_latency_before = self.register_metric(
             Histogram,
             "django_http_requests_latency_including_middlewares_seconds",
             (
@@ -60,7 +61,7 @@ class Metrics:
                 "processing time)."
             ),
         )
-        self.requests_unknown_latency_before = _register_metric(
+        self.requests_unknown_latency_before = self.register_metric(
             Counter,
             "django_http_requests_unknown_latency_including_middlewares_total",
             (
@@ -68,7 +69,7 @@ class Metrics:
                 "django_http_requests_latency_including_middlewares_seconds)."
             ),
         )
-        self.requests_latency_by_view_method = _register_metric(
+        self.requests_latency_by_view_method = self.register_metric(
             Histogram,
             "django_http_requests_latency_seconds_by_view_method",
             "Histogram of request processing time labelled by view.",
@@ -77,85 +78,85 @@ class Metrics:
                 settings, "PROMETHEUS_LATENCY_BUCKETS", DEFAULT_LATENCY_BUCKETS
             ),
         )
-        self.requests_unknown_latency = _register_metric(
+        self.requests_unknown_latency = self.register_metric(
             Counter,
             "django_http_requests_unknown_latency_total",
             "Count of requests for which the latency was unknown.",
         )
         # Set in process_request
-        self.requests_ajax = _register_metric(
+        self.requests_ajax = self.register_metric(
             Counter, "django_http_ajax_requests_total", "Count of AJAX requests."
         )
-        self.requests_by_method = _register_metric(
+        self.requests_by_method = self.register_metric(
             Counter,
             "django_http_requests_total_by_method",
             "Count of requests by method.",
             ["method"],
         )
-        self.requests_by_transport = _register_metric(
+        self.requests_by_transport = self.register_metric(
             Counter,
             "django_http_requests_total_by_transport",
             "Count of requests by transport.",
             ["transport"],
         )
         # Set in process_view
-        self.requests_by_view_transport_method = _register_metric(
+        self.requests_by_view_transport_method = self.register_metric(
             Counter,
             "django_http_requests_total_by_view_transport_method",
             "Count of requests by view, transport, method.",
             ["view", "transport", "method"],
         )
-        self.requests_body_bytes = _register_metric(
+        self.requests_body_bytes = self.register_metric(
             Histogram,
             "django_http_requests_body_total_bytes",
             "Histogram of requests by body size.",
             buckets=PowersOf(2, 30),
         )
         # Set in process_template_response
-        self.responses_by_templatename = _register_metric(
+        self.responses_by_templatename = self.register_metric(
             Counter,
             "django_http_responses_total_by_templatename",
             "Count of responses by template name.",
             ["templatename"],
         )
         # Set in process_response
-        self.responses_by_status = _register_metric(
+        self.responses_by_status = self.register_metric(
             Counter,
             "django_http_responses_total_by_status",
             "Count of responses by status.",
             ["status"],
         )
-        self.responses_by_status_view_method = _register_metric(
+        self.responses_by_status_view_method = self.register_metric(
             Counter,
             "django_http_responses_total_by_status_view_method",
             "Count of responses by status, view, method.",
             ["status", "view", "method"],
         )
-        self.responses_body_bytes = _register_metric(
+        self.responses_body_bytes = self.register_metric(
             Histogram,
             "django_http_responses_body_total_bytes",
             "Histogram of responses by body size.",
             buckets=PowersOf(2, 30),
         )
-        self.responses_by_charset = _register_metric(
+        self.responses_by_charset = self.register_metric(
             Counter,
             "django_http_responses_total_by_charset",
             "Count of responses by charset.",
             ["charset"],
         )
-        self.responses_streaming = _register_metric(
+        self.responses_streaming = self.register_metric(
             Counter,
             "django_http_responses_streaming_total",
             "Count of streaming responses.",
         )
         # Set in process_exception
-        self.exceptions_by_type = _register_metric(
+        self.exceptions_by_type = self.register_metric(
             Counter,
             "django_http_exceptions_total_by_type",
             "Count of exceptions by object type.",
             ["type"],
         )
-        self.exceptions_by_view = _register_metric(
+        self.exceptions_by_view = self.register_metric(
             Counter,
             "django_http_exceptions_total_by_view",
             "Count of exceptions by view.",
