@@ -32,6 +32,7 @@ setup(
     long_description=LONG_DESCRIPTION,
     tests_require=['pytest', 'pytest-django'],
     setup_requires=["pytest-runner"],
+    options={"bdist_wheel": {"universal": "1"}},
     install_requires=[
         "prometheus-client>=0.7",
     ],
