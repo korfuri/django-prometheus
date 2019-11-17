@@ -1,7 +1,28 @@
 from prometheus_client import Counter, Histogram
 
+from django.conf import settings
 from django.utils.deprecation import MiddlewareMixin
 from django_prometheus.utils import PowersOf, Time, TimeSince
+
+DEFAULT_LATENCY_BUCKETS = (
+    0.01,
+    0.025,
+    0.05,
+    0.075,
+    0.1,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    2.5,
+    5.0,
+    7.5,
+    10.0,
+    25.0,
+    50.0,
+    75.0,
+    float("inf"),
+)
 
 
 def _register_metric(cls, name, documentation, labelnames=tuple(), **kwargs):
@@ -52,24 +73,8 @@ class Metrics:
             "django_http_requests_latency_seconds_by_view_method",
             "Histogram of request processing time labelled by view.",
             ["view", "method"],
-            buckets=(
-                0.01,
-                0.025,
-                0.05,
-                0.075,
-                0.1,
-                0.25,
-                0.5,
-                0.75,
-                1.0,
-                2.5,
-                5.0,
-                7.5,
-                10.0,
-                25.0,
-                50.0,
-                75.0,
-                float("inf"),
+            buckets=getattr(
+                settings, "PROMETHEUS_LATENCY_BUCKETS", DEFAULT_LATENCY_BUCKETS
             ),
         )
         self.requests_unknown_latency = _register_metric(

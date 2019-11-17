@@ -60,6 +60,17 @@ urlpatterns = [
 ]
 ```
 
+### Configuration
+Prometheus uses Histogram based grouping for monitoring latencies. The default
+buckets are here: https://github.com/prometheus/client_python/blob/master/prometheus_client/core.py
+
+You can define custom buckets for latency, adding more buckets decreases performance but
+increases accuracy: https://prometheus.io/docs/practices/histograms/
+
+```
+PROMETHEUS_LATENCY_BUCKETS = (.1, .2, .5, .6, .8, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.5, 9.0, 12.0, 15.0, 20.0, 30.0, float("inf"))
+```
+
 ### Monitoring your databases
 
 SQLite, MySQL, and PostgreSQL databases can be monitored. Just
