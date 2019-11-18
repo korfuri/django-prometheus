@@ -128,10 +128,11 @@ class PrometheusTestCaseMixin:
             metric_name, frozen_registry, **labels
         )
         current_value = self.getMetric(metric_name, registry=registry, **labels)
-        self.assertFalse(
-            current_value is None,
-            METRIC_DIFF_ERR_NONE_EXPLANATION
-            % (metric_name, self.formatLabels(labels), saved_value, current_value),
+        assert current_value is not None, METRIC_DIFF_ERR_NONE_EXPLANATION % (
+            metric_name,
+            self.formatLabels(labels),
+            saved_value,
+            current_value,
         )
         diff = current_value - (saved_value or 0.0)
         self.assertEqual(
@@ -160,13 +161,13 @@ class PrometheusTestCaseMixin:
             metric_name, frozen_registry, **labels
         )
         current_value = self.getMetric(metric_name, registry=registry, **labels)
-        self.assertFalse(
-            current_value is None,
-            METRIC_DIFF_ERR_NONE_EXPLANATION
-            % (metric_name, self.formatLabels(labels), saved_value, current_value),
+        assert current_value is not None, METRIC_DIFF_ERR_NONE_EXPLANATION % (
+            metric_name,
+            self.formatLabels(labels),
+            saved_value,
+            current_value,
         )
-        self.assertTrue(
-            predicate(saved_value, current_value),
+        assert predicate(saved_value, current_value) is True, (
             METRIC_COMPARE_ERR_EXPLANATION
-            % (metric_name, self.formatLabels(labels), saved_value, current_value),
+            % (metric_name, self.formatLabels(labels), saved_value, current_value)
         )
