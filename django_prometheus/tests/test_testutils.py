@@ -38,12 +38,12 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
         self.some_labelled_gauge.labels("pink", "royal").set(2)
         self.some_labelled_gauge.labels("carmin", "indigo").set(3)
         self.some_labelled_gauge.labels("carmin", "royal").set(4)
-        self.t = SomeTestCase()
+        self.test_case = SomeTestCase()
 
     def testGetMetrics(self):
         """Tests getMetric."""
-        assert 42 == self.t.getMetric("some_gauge", registry=self.registry)
-        assert 1 == self.t.getMetric(
+        assert 42 == self.test_case.getMetric("some_gauge", registry=self.registry)
+        assert 1 == self.test_case.getMetric(
             "some_labelled_gauge",
             registry=self.registry,
             labelred="pink",
@@ -52,13 +52,15 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
 
     def testGetMetricVector(self):
         """Tests getMetricVector."""
-        vector = self.t.getMetricVector(
+        vector = self.test_case.getMetricVector(
             "some_nonexistent_gauge", registry=self.registry
         )
         assert [] == vector
-        vector = self.t.getMetricVector("some_gauge", registry=self.registry)
+        vector = self.test_case.getMetricVector("some_gauge", registry=self.registry)
         assert [({}, 42)] == vector
-        vector = self.t.getMetricVector("some_labelled_gauge", registry=self.registry)
+        vector = self.test_case.getMetricVector(
+            "some_labelled_gauge", registry=self.registry
+        )
         assert sorted(
             [
                 ({"labelred": u"pink", "labelblue": u"indigo"}, 1),
@@ -72,62 +74,68 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
     def testAssertMetricEquals(self):
         """Tests assertMetricEquals."""
         # First we test that a scalar metric can be tested.
-        self.t.assertMetricEquals(42, "some_gauge", registry=self.registry)
-        assert self.t.passes is True
-        self.t.assertMetricEquals(43, "some_gauge", registry=self.registry)
-        assert self.t.passes is False
-        self.t.passes = True
+        self.test_case.assertMetricEquals(42, "some_gauge", registry=self.registry)
+        assert self.test_case.passes is True
+        self.test_case.assertMetricEquals(43, "some_gauge", registry=self.registry)
+        assert self.test_case.passes is False
+        self.test_case.passes = True
 
         # Here we test that assertMetricEquals fails on nonexistent gauges.
-        self.t.assertMetricEquals(42, "some_nonexistent_gauge", registry=self.registry)
-        assert not self.t.passes
-        self.t.passes = True
+        self.test_case.assertMetricEquals(
+            42, "some_nonexistent_gauge", registry=self.registry
+        )
+        assert not self.test_case.passes
+        self.test_case.passes = True
 
         # Here we test that labelled metrics can be tested.
-        self.t.assertMetricEquals(
+        self.test_case.assertMetricEquals(
             1,
             "some_labelled_gauge",
             registry=self.registry,
             labelred="pink",
             labelblue="indigo",
         )
-        assert self.t.passes is True
-        self.t.assertMetricEquals(
+        assert self.test_case.passes is True
+        self.test_case.assertMetricEquals(
             1,
             "some_labelled_gauge",
             registry=self.registry,
             labelred="tomato",
             labelblue="sky",
         )
-        assert self.t.passes is False
-        self.t.passes = True
+        assert self.test_case.passes is False
+        self.test_case.passes = True
 
     def testRegistrySaving(self):
         """Tests saveRegistry and frozen registries operations."""
-        frozen_registry = self.t.saveRegistry(registry=self.registry)
+        frozen_registry = self.test_case.saveRegistry(registry=self.registry)
         # Test that we can manipulate a frozen scalar metric.
-        assert 42 == self.t.getMetricFromFrozenRegistry("some_gauge", frozen_registry)
+        assert 42 == self.test_case.getMetricFromFrozenRegistry(
+            "some_gauge", frozen_registry
+        )
         self.some_gauge.set(99)
-        assert 42 == self.t.getMetricFromFrozenRegistry("some_gauge", frozen_registry)
-        self.t.assertMetricDiff(
+        assert 42 == self.test_case.getMetricFromFrozenRegistry(
+            "some_gauge", frozen_registry
+        )
+        self.test_case.assertMetricDiff(
             frozen_registry, 99 - 42, "some_gauge", registry=self.registry
         )
-        assert self.t.passes is True
-        self.t.assertMetricDiff(
+        assert self.test_case.passes is True
+        self.test_case.assertMetricDiff(
             frozen_registry, 1, "some_gauge", registry=self.registry
         )
-        assert self.t.passes is False
-        self.t.passes = True
+        assert self.test_case.passes is False
+        self.test_case.passes = True
 
         # Now test the same thing with a labelled metric.
-        assert 1 == self.t.getMetricFromFrozenRegistry(
+        assert 1 == self.test_case.getMetricFromFrozenRegistry(
             "some_labelled_gauge", frozen_registry, labelred="pink", labelblue="indigo"
         )
         self.some_labelled_gauge.labels("pink", "indigo").set(5)
-        assert 1 == self.t.getMetricFromFrozenRegistry(
+        assert 1 == self.test_case.getMetricFromFrozenRegistry(
             "some_labelled_gauge", frozen_registry, labelred="pink", labelblue="indigo"
         )
-        self.t.assertMetricDiff(
+        self.test_case.assertMetricDiff(
             frozen_registry,
             5 - 1,
             "some_labelled_gauge",
@@ -135,8 +143,8 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
             labelred="pink",
             labelblue="indigo",
         )
-        assert self.t.passes is True
-        self.t.assertMetricDiff(
+        assert self.test_case.passes is True
+        self.test_case.assertMetricDiff(
             frozen_registry,
             1,
             "some_labelled_gauge",
@@ -144,4 +152,4 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
             labelred="pink",
             labelblue="indigo",
         )
-        assert self.t.passes is False
+        assert self.test_case.passes is False
