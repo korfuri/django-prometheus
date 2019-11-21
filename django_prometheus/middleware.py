@@ -160,7 +160,7 @@ class Metrics:
             Counter,
             "django_http_exceptions_total_by_view",
             "Count of exceptions by view.",
-            ["view_name"],
+            ["view"],
         )
 
 
@@ -276,7 +276,7 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
         self.metrics.exceptions_by_type.labels(type=type(exception).__name__).inc()
         if hasattr(request, "resolver_match"):
             name = request.resolver_match.view_name or "<unnamed view>"
-            self.metrics.exceptions_by_view.labels(view_name=name).inc()
+            self.metrics.exceptions_by_view.labels(view=name).inc()
         if hasattr(request, "prometheus_after_middleware_event"):
             self.metrics.requests_latency_by_view_method.labels(
                 view=self._get_view_name(request), method=request.method
