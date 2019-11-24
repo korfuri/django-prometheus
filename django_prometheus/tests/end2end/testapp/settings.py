@@ -1,6 +1,8 @@
 import os
 import tempfile
 
+from testapp.helpers import get_middleware
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = ")0-t%mc5y1^fn8e7i**^^v166@5iu(&-2%9#kxud0&4ap#k!_k"
 DEBUG = True
@@ -20,17 +22,10 @@ INSTALLED_APPS = (
 )
 
 
-MIDDLEWARE = [
+MIDDLEWARE = get_middleware(
     "django_prometheus.middleware.PrometheusBeforeMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django.middleware.security.SecurityMiddleware",
     "django_prometheus.middleware.PrometheusAfterMiddleware",
-]
+)
 
 ROOT_URLCONF = "testapp.urls"
 
