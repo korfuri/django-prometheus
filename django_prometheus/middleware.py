@@ -25,7 +25,7 @@ DEFAULT_LATENCY_BUCKETS = (
 )
 
 
-class Metrics:
+class Metrics(object):
     _instance = None
 
     @classmethod
