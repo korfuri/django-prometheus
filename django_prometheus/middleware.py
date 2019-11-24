@@ -167,9 +167,11 @@ class Metrics:
 class PrometheusBeforeMiddleware(MiddlewareMixin):
     """Monitoring middleware that should run before other middlewares."""
 
+    metrics_cls = Metrics
+
     def __init__(self, get_response=None):
         super(PrometheusBeforeMiddleware, self).__init__(get_response)
-        self.metrics = Metrics.get_instance()
+        self.metrics = self.metrics_cls.get_instance()
 
     def process_request(self, request):
         self.metrics.requests_total.inc()
@@ -187,12 +189,13 @@ class PrometheusBeforeMiddleware(MiddlewareMixin):
 
 
 class PrometheusAfterMiddleware(MiddlewareMixin):
-
     """Monitoring middleware that should run after other middlewares."""
+
+    metrics_cls = Metrics
 
     def __init__(self, get_response=None):
         super(PrometheusAfterMiddleware, self).__init__(get_response)
-        self.metrics = Metrics.get_instance()
+        self.metrics = self.metrics_cls.get_instance()
 
     def _transport(self, request):
         return "https" if request.is_secure() else "http"
