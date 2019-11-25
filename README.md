@@ -204,6 +204,16 @@ that will export the metrics (replace myapp by your project name).
 
 Then we inject the wrapper in settings:
 
-```python 
+```python
 ROOT_URLCONF = "graphite.urls_prometheus_wrapper"
 ```
+
+## Adding custom labels to middleware (request/response) metrics
+
+You can add application specific labels to metrics reported by the django-prometheus middleware.
+This involves extending the classes defined in middleware.py.
+
+* Extend the Metrics class and override the `register_metric` method to add the application specific labels.
+* Extend middleware classes, set the metrics_cls class attribute to the the extended metric class and override the label_metric method to attach custom metrics.
+
+See implementation example in [the test app](django_prometheus/tests/end2end/testapp/test_middleware_custom_labels.py#L19-L46)

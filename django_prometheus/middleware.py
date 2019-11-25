@@ -25,7 +25,7 @@ DEFAULT_LATENCY_BUCKETS = (
 )
 
 
-class Metrics:
+class Metrics(object):
     _instance = None
 
     @classmethod
@@ -216,15 +216,22 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
             return "<invalid method>"
         return m
 
+    def label_metric(self, metric, request, response=None, **labels):
+        return metric.labels(**labels) if labels else metric
+
     def process_request(self, request):
         transport = self._transport(request)
         method = self._method(request)
-        self.metrics.requests_by_method.labels(method=method).inc()
-        self.metrics.requests_by_transport.labels(transport=transport).inc()
+        self.label_metric(self.metrics.requests_by_method, request, method=method).inc()
+        self.label_metric(
+            self.metrics.requests_by_transport, request, transport=transport
+        ).inc()
         if request.is_ajax():
-            self.metrics.requests_ajax.inc()
+            self.label_metric(self.metrics.requests_ajax, request).inc()
         content_length = int(request.META.get("CONTENT_LENGTH") or 0)
-        self.metrics.requests_body_bytes.observe(content_length)
+        self.label_metric(self.metrics.requests_body_bytes, request).observe(
+            content_length
+        )
         request.prometheus_after_middleware_event = Time()
 
     def _get_view_name(self, request):
@@ -240,14 +247,21 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
         method = self._method(request)
         if hasattr(request, "resolver_match"):
             name = request.resolver_match.view_name or "<unnamed view>"
-            self.metrics.requests_by_view_transport_method.labels(
-                view=name, transport=transport, method=method
+            self.label_metric(
+                self.metrics.requests_by_view_transport_method,
+                request,
+                view=name,
+                transport=transport,
+                method=method,
             ).inc()
 
     def process_template_response(self, request, response):
         if hasattr(response, "template_name"):
-            self.metrics.responses_by_templatename.labels(
-                templatename=str(response.template_name)
+            self.label_metric(
+                self.metrics.responses_by_templatename,
+                request,
+                response=response,
+                templatename=str(response.template_name),
             ).inc()
         return response
 
@@ -255,34 +269,57 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
         method = self._method(request)
         name = self._get_view_name(request)
         status = str(response.status_code)
-        self.metrics.responses_by_status.labels(status=status).inc()
-        self.metrics.responses_by_status_view_method.labels(
-            status=status, view=name, method=method
+        self.label_metric(
+            self.metrics.responses_by_status, request, response, status=status
+        ).inc()
+        self.label_metric(
+            self.metrics.responses_by_status_view_method,
+            request,
+            response,
+            status=status,
+            view=name,
+            method=method,
         ).inc()
         if hasattr(response, "charset"):
-            self.metrics.responses_by_charset.labels(
-                charset=str(response.charset)
+            self.label_metric(
+                self.metrics.responses_by_charset,
+                request,
+                response,
+                charset=str(response.charset),
             ).inc()
         if hasattr(response, "streaming") and response.streaming:
-            self.metrics.responses_streaming.inc()
+            self.label_metric(self.metrics.responses_streaming, request, response).inc()
         if hasattr(response, "content"):
-            self.metrics.responses_body_bytes.observe(len(response.content))
+            self.label_metric(
+                self.metrics.responses_body_bytes, request, response
+            ).observe(len(response.content))
         if hasattr(request, "prometheus_after_middleware_event"):
-            self.metrics.requests_latency_by_view_method.labels(
-                view=self._get_view_name(request), method=request.method
+            self.label_metric(
+                self.metrics.requests_latency_by_view_method,
+                request,
+                response,
+                view=self._get_view_name(request),
+                method=request.method,
             ).observe(TimeSince(request.prometheus_after_middleware_event))
         else:
-            self.metrics.requests_unknown_latency.inc()
+            self.label_metric(
+                self.metrics.requests_unknown_latency, request, response
+            ).inc()
         return response
 
     def process_exception(self, request, exception):
-        self.metrics.exceptions_by_type.labels(type=type(exception).__name__).inc()
+        self.label_metric(
+            self.metrics.exceptions_by_type, request, type=type(exception).__name__
+        ).inc()
         if hasattr(request, "resolver_match"):
             name = request.resolver_match.view_name or "<unnamed view>"
-            self.metrics.exceptions_by_view.labels(view=name).inc()
+            self.label_metric(self.metrics.exceptions_by_view, request, view=name).inc()
         if hasattr(request, "prometheus_after_middleware_event"):
-            self.metrics.requests_latency_by_view_method.labels(
-                view=self._get_view_name(request), method=request.method
+            self.label_metric(
+                self.metrics.requests_latency_by_view_method,
+                request,
+                view=self._get_view_name(request),
+                method=request.method,
             ).observe(TimeSince(request.prometheus_after_middleware_event))
         else:
-            self.metrics.requests_unknown_latency.inc()
+            self.label_metric(self.metrics.requests_unknown_latency, request).inc()
