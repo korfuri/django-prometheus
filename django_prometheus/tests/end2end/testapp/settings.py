@@ -116,6 +116,16 @@ CACHES = {
         "LOCATION": "redis://127.0.0.1:6666/1",
         "OPTIONS": {"IGNORE_EXCEPTIONS": True},
     },
+    # Redis 2
+    "redis_2": {
+        "BACKEND": "django_prometheus.cache.backends.redis2.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/2",
+    },
+    # Fake redis config emulated stopped service
+    "stopped_redis_2": {
+        "BACKEND": "django_prometheus.cache.backends.redis2.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6666/2",
+    },
 }
 
 # Internationalization
