@@ -25,6 +25,7 @@ class RedisCache(cache.RedisCache):
         else:
             if cached is not None:
                 django_cache_hits_total.labels(backend="redis").inc()
+                return cached
             else:
                 django_cache_misses_total.labels(backend="redis").inc()
-            return cached or default
+                return default
