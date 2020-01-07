@@ -57,7 +57,9 @@ class PushgatewayCommand(BaseCommand):
         return Counter(name, description, labels, registry=self.registry)
 
     def push_metrics(self):
-        self.duration.set((datetime.now() - self.start_datetime).total_seconds())
+        self.duration.set(
+            (datetime.now() - self.start_datetime).total_seconds()
+        )
         push_to_gateway(
             self.gateway_url,
             job=self.job_name,
