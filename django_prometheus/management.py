@@ -31,6 +31,11 @@ class PushgatewayCommand(BaseCommand):
         else:
             self.handler = default_handler
         self.registry = CollectorRegistry()
+        self.duration = Gauge(
+            'job_last_duration_seconds',
+            'Last execution duration of a batch job',
+            registry=self.registry,
+        )
         self.start_datetime = datetime.now()
         super(PushgatewayCommand, self).__init__()
 
@@ -52,12 +57,7 @@ class PushgatewayCommand(BaseCommand):
         return Counter(name, description, labels, registry=self.registry)
 
     def push_metrics(self):
-        duration = Gauge(
-            'job_last_duration_seconds',
-            'Last execution duration of a batch job',
-            registry=self.registry,
-        )
-        duration.set((datetime.now() - self.start_datetime).total_seconds())
+        self.duration.set((datetime.now() - self.start_datetime).total_seconds())
         push_to_gateway(
             self.gateway_url,
             job=self.job_name,
