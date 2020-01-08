@@ -29,6 +29,10 @@ http_request_duration = Histogram(
     'django_http_request_duration_seconds',
     ('Histogram of requests processing time (including middlewares).'),
     ['handler'],
+    buckets=(
+        .005, .01, .025, .05, .075, .1, .25, .5, .75, 1.0,
+        2.5, 5.0, 7.5, 10.0, 15.0, 30.0, 60.0, 120.0, 300.0
+    ),
 )
 http_request_size = Histogram(
     'django_http_request_size_bytes',
