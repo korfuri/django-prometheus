@@ -24,7 +24,7 @@ setup(
     license="Apache",
     keywords="django monitoring prometheus",
     url="http://github.com/korfuri/django-prometheus",
-    packages=find_packages(),
+    packages=find_packages(exclude=["tests",]),
     test_suite="django_prometheus.tests",
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
