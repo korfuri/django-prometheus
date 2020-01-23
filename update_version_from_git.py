@@ -117,6 +117,8 @@ def release_version_correct():
         initpy = os.path.abspath("django_prometheus/__init__.py")
 
         new_version = prerelease_version()
+        if ".dev" not in new_version:
+            assert False, "Automation used only for pre-releases"
         print(
             "updating version in __init__.py to {new_version}".format(
                 new_version=new_version
