@@ -42,7 +42,7 @@ INSTALLED_APPS = (
    ...
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django_prometheus.middleware.PrometheusBeforeMiddleware',
     # All your other middlewares go here, including the default
     # middlewares like SessionMiddleware, CommonMiddleware,
