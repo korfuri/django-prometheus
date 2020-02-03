@@ -36,19 +36,19 @@ This will install [prometheus_client](https://github.com/prometheus/client_pytho
 In your settings.py:
 
 ```python
-INSTALLED_APPS = (
+INSTALLED_APPS = [
    ...
    'django_prometheus',
    ...
-)
+]
 
-MIDDLEWARE = (
+MIDDLEWARE = [
     'django_prometheus.middleware.PrometheusBeforeMiddleware',
     # All your other middlewares go here, including the default
     # middlewares like SessionMiddleware, CommonMiddleware,
     # CsrfViewmiddleware, SecurityMiddleware, etc.
     'django_prometheus.middleware.PrometheusAfterMiddleware',
-)
+]
 ```
 
 In your urls.py:
@@ -176,13 +176,12 @@ First step is to inject prometheus' middlewares and to add
 django_prometheus in INSTALLED_APPS
 
 ```python
-MIDDLEWARE = (
-        ('django_prometheus.middleware.PrometheusBeforeMiddleware',) +
-       MIDDLEWARE +
-        ('django_prometheus.middleware.PrometheusAfterMiddleware',)
-    )
+MIDDLEWARE = \
+    ['django_prometheus.middleware.PrometheusBeforeMiddleware'] + \
+    MIDDLEWARE + \
+    ['django_prometheus.middleware.PrometheusAfterMiddleware']
 
-INSTALLED_APPS = INSTALLED_APPS + ('django_prometheus',)
+INSTALLED_APPS += ['django_prometheus']
 ```
 
 Second step is to create the /metrics end point, for that we need
@@ -195,7 +194,7 @@ from django.conf.urls import include, url
 
 urlpatterns = []
 
-urlpatterns.append(url('^prometheus/', include('django_prometheus.urls')))
+urlpatterns.append(url('prometheus/', include('django_prometheus.urls')))
 urlpatterns.append(url('', include('myapp.urls')))
 ```
 
