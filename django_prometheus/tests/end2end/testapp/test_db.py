@@ -16,6 +16,9 @@ class TestDbMetrics(PrometheusTestCaseMixin, TestCase):
     fragile. Consider asserting that the value exceeds a certain
     threshold, or check by how much it increased during the test.
     """
+
+    databases = {'test_db_1', 'test_db_2'}
+
     def testConfigHasExpectedDatabases(self):
         """Not a real unit test: ensures that testapp.settings contains the
         databases this test expects."""
@@ -67,6 +70,9 @@ class TestPostgresDbMetrics(PrometheusTestCaseMixin, TestCase):
     fragile. Consider asserting that the value exceeds a certain
     threshold, or check by how much it increased during the test.
     """
+
+    databases = {'postgresql'}
+
     def testCounters(self):
         r = self.saveRegistry()
         cursor = connections['postgresql'].cursor()
@@ -90,6 +96,9 @@ class TestMysDbMetrics(PrometheusTestCaseMixin, TestCase):
     fragile. Consider asserting that the value exceeds a certain
     threshold, or check by how much it increased during the test.
     """
+
+    databases = {'mysql'}
+
     def testCounters(self):
         r = self.saveRegistry()
         cursor = connections['mysql'].cursor()
