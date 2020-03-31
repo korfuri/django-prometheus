@@ -166,6 +166,19 @@ practices on
 [instrumentation](http://prometheus.io/docs/practices/instrumentation/)
 and [naming](http://prometheus.io/docs/practices/naming/).
 
+## Customizing the metrics name to your own app name
+You can change the metrics name in compliance of the name of your application
+by using the `APP_NAME` variable in your settings.py or environment.
+
+Example:
+
+`APP_NAME = 'my_application'`
+
+All your metrics will be exported like the example below:
+
+`my_application_http_requests_latency_seconds_by_view_method`
+
+
 ## Importing Django Prometheus using only local settings
 
 If you wish to use Django Prometheus but are not able to change

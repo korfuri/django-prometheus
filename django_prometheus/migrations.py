@@ -2,15 +2,16 @@ from prometheus_client import Gauge
 
 from django.db import connections
 from django.db.backends.dummy.base import DatabaseWrapper
+from django_prometheus.conf import APP_NAME
 
 unapplied_migrations = Gauge(
-    "django_migrations_unapplied_total",
+    "{0}_migrations_unapplied_total".format(APP_NAME),
     "Count of unapplied migrations by database connection",
     ["connection"],
 )
 
 applied_migrations = Gauge(
-    "django_migrations_applied_total",
+    "{0}_migrations_applied_total".format(APP_NAME),
     "Count of applied migrations by database connection",
     ["connection"],
 )
