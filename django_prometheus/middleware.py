@@ -2,8 +2,8 @@ from prometheus_client import Counter, Histogram
 
 from django.conf import settings
 from django.utils.deprecation import MiddlewareMixin
-from django_prometheus.utils import PowersOf, Time, TimeSince
 from django_prometheus.conf import APP_NAME
+from django_prometheus.utils import PowersOf, Time, TimeSince
 
 DEFAULT_LATENCY_BUCKETS = (
     0.01,

@@ -1,4 +1,5 @@
 from prometheus_client import Counter
+
 from django_prometheus.conf import APP_NAME
 
 model_inserts = Counter(
