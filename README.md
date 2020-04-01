@@ -168,11 +168,11 @@ and [naming](http://prometheus.io/docs/practices/naming/).
 
 ## Customizing the metrics name to your own app name
 You can change the metrics name in compliance of the name of your application
-by using the `APP_NAME` variable in your settings.py or environment.
+by using the `METRICS_APP_NAME` variable in your settings.py or environment.
 
 Example:
 
-`APP_NAME = 'my_application'`
+`METRICS_APP_NAME = 'my_application'`
 
 All your metrics will be exported like the example below:
 
