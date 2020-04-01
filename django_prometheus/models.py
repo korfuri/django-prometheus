@@ -4,19 +4,19 @@ from django_prometheus.conf import APP_NAME
 model_inserts = Counter(
     "{0}_model_inserts_total".format(APP_NAME),
     "Number of insert operations by model.",
-    ["model"]
+    ["model"],
 )
 
 model_updates = Counter(
     "{0}_model_updates_total".format(APP_NAME),
     "Number of update operations by model.",
-    ["model"]
+    ["model"],
 )
 
 model_deletes = Counter(
     "{0}_model_deletes_total".format(APP_NAME),
     "Number of delete operations by model.",
-    ["model"]
+    ["model"],
 )
 
 

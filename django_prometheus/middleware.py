@@ -64,10 +64,14 @@ class Metrics(object):
         )
         self.requests_unknown_latency_before = self.register_metric(
             Counter,
-            "{0}_http_requests_unknown_latency_including_middlewares_total".format(APP_NAME),
+            "{0}_http_requests_unknown_latency_including_middlewares_total".format(
+                APP_NAME
+            ),
             (
                 "Count of requests for which the latency was unknown (when computing "
-                "{0}_http_requests_latency_including_middlewares_seconds).".format(APP_NAME)
+                "{0}_http_requests_latency_including_middlewares_seconds).".format(
+                    APP_NAME
+                )
             ),
         )
         self.requests_latency_by_view_method = self.register_metric(
@@ -88,7 +92,7 @@ class Metrics(object):
         self.requests_ajax = self.register_metric(
             Counter,
             "{0}_http_ajax_requests_total".format(APP_NAME),
-            "Count of AJAX requests."
+            "Count of AJAX requests.",
         )
         self.requests_by_method = self.register_metric(
             Counter,
