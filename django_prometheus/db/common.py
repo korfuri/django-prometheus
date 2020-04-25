@@ -4,6 +4,7 @@ from django_prometheus.db import (
     errors_total,
     execute_many_total,
     execute_total,
+    query_duration_seconds,
 )
 
 
@@ -57,21 +58,23 @@ def ExportingCursorWrapper(cursor_class, alias, vendor):
     vendor name.
     """
 
+    labels = {"alias": alias, "vendor": vendor}
+
     class CursorWrapper(cursor_class):
         """Extends the base CursorWrapper to count events."""
 
         def execute(self, *args, **kwargs):
             execute_total.labels(alias, vendor).inc()
-            with ExceptionCounterByType(
-                errors_total, extra_labels={"alias": alias, "vendor": vendor}
+            with query_duration_seconds.labels(**labels).time(), (
+                ExceptionCounterByType(errors_total, extra_labels=labels)
             ):
                 return super(CursorWrapper, self).execute(*args, **kwargs)
 
         def executemany(self, query, param_list, *args, **kwargs):
             execute_total.labels(alias, vendor).inc(len(param_list))
             execute_many_total.labels(alias, vendor).inc(len(param_list))
-            with ExceptionCounterByType(
-                errors_total, extra_labels={"alias": alias, "vendor": vendor}
+            with query_duration_seconds.labels(**labels).time(), (
+                ExceptionCounterByType(errors_total, extra_labels=labels)
             ):
                 return super(CursorWrapper, self).executemany(
                     query, param_list, *args, **kwargs

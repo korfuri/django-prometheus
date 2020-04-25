@@ -6,6 +6,7 @@ from django_prometheus.db.metrics import (
     errors_total,
     execute_many_total,
     execute_total,
+    query_duration_seconds,
 )
 
 __all__ = [
@@ -15,4 +16,5 @@ __all__ = [
     "errors_total",
     "execute_many_total",
     "execute_total",
+    "query_duration_seconds",
 ]
