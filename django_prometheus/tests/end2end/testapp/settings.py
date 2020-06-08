@@ -62,6 +62,15 @@ DATABASES = {
         "HOST": "localhost",
         "PORT": "5432",
     },
+    # Comment this to not test django_prometheus.db.backends.postgis.
+    "postgis": {
+        "ENGINE": "django_prometheus.db.backends.postgis",
+        "NAME": "postgis",
+        "USER": "postgres",
+        "PASSWORD": "",
+        "HOST": "localhost",
+        "PORT": "5432",
+    },
     # Comment this to not test django_prometheus.db.backends.mysql.
     "mysql": {
         "ENGINE": "django_prometheus.db.backends.mysql",

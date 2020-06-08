@@ -155,3 +155,30 @@ class TestMysDbMetrics(BaseDbMetricTest):
             alias="mysql",
             vendor="mysql",
         )
+
+
+@skipUnless("postgis" in connections, "Skipped unless postgis database is enabled")
+class TestPostgisDbMetrics(BaseDbMetricTest):
+    """Test django_prometheus.db metrics for postgis backend.
+
+    Note regarding the values of metrics: many tests interact with the
+    database, and the test runner itself does. As such, tests that
+    require that a metric has a specific value are at best very
+    fragile. Consider asserting that the value exceeds a certain
+    threshold, or check by how much it increased during the test.
+    """
+
+    def testCounters(self):
+        r = self.saveRegistry()
+        cursor = connections["postgis"].cursor()
+
+        for _ in range(20):
+            cursor.execute("SELECT 1")
+
+        self.assertMetricCompare(
+            r,
+            lambda a, b: a + 20 <= b < a + 25,
+            "django_db_execute_total",
+            alias="postgis",
+            vendor="postgresql",
+        )
