@@ -1,5 +1,9 @@
 # Changelog
 
+## DEV
+
+* Remove support for older django and python versions
+
 ## v2.0.0 - Jan 20, 2020
 
 * Added support for newer Django and Python versions
