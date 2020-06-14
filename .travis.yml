@@ -1,4 +1,4 @@
-dist: xenial
+dist: bionic
 language: python
 python:
   - "3.5"
@@ -7,7 +7,7 @@ python:
   - "3.8"
 services:
   - memcached
-  - redis
+  - redis-server
   - mysql
   - postgresql
 
