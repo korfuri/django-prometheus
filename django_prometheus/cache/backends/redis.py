@@ -17,8 +17,8 @@ class RedisCache(cache.RedisCache):
             cached = self.client.get(key, default=None, version=version, client=client)
         except exceptions.ConnectionInterrupted as e:
             django_cache_get_fail_total.labels(backend="redis").inc()
-            if cache.DJANGO_REDIS_IGNORE_EXCEPTIONS or self._ignore_exceptions:
-                if cache.DJANGO_REDIS_LOG_IGNORED_EXCEPTIONS:
+            if self._ignore_exceptions:
+                if self._log_ignored_exceptions:
                     cache.logger.error(str(e))
                 return default
             raise

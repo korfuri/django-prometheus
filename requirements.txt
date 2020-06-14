@@ -1,4 +1,4 @@
-django-redis==4.11
+django-redis>=4.12.1
 black; python_version >= '3.6'
 flake8
 isort
