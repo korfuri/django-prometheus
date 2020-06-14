@@ -1,4 +1,4 @@
-from prometheus_client import Counter
+from prometheus_client import Counter, Histogram
 
 from django_prometheus.conf import NAMESPACE
 
@@ -39,5 +39,12 @@ errors_total = Counter(
     "django_db_errors_total",
     ("Counter of execution errors by database, vendor and exception type."),
     ["alias", "vendor", "type"],
+    namespace=NAMESPACE,
+)
+
+query_duration_seconds = Histogram(
+    "django_db_query_duration_seconds",
+    ("Histogram of query duration by database and vendor."),
+    ["alias", "vendor"],
     namespace=NAMESPACE,
 )

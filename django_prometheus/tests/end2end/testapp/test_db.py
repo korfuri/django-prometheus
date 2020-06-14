@@ -62,6 +62,29 @@ class TestDbMetrics(BaseDbMetricTest):
             >= 200
         )
 
+    def testHistograms(self):
+        cursor_db1 = connections["test_db_1"].cursor()
+        cursor_db2 = connections["test_db_2"].cursor()
+        cursor_db1.execute("SELECT 1")
+        for _ in range(200):
+            cursor_db2.execute("SELECT 2")
+        assert (
+            self.getMetric(
+                "django_db_query_duration_seconds_count",
+                alias="test_db_1",
+                vendor="sqlite",
+            )
+            > 0
+        )
+        assert (
+            self.getMetric(
+                "django_db_query_duration_seconds_count",
+                alias="test_db_2",
+                vendor="sqlite",
+            )
+            >= 200
+        )
+
     def testExecuteMany(self):
         registry = self.saveRegistry()
         cursor_db1 = connections["test_db_1"].cursor()
