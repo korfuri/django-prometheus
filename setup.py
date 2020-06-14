@@ -42,6 +42,7 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Framework :: Django :: 2.2",
+        "Framework :: Django :: 3.0",
         "Topic :: System :: Monitoring",
         "License :: OSI Approved :: Apache Software License",
     ],
