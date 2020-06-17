@@ -9,10 +9,18 @@ services:
   - redis-server
   - mysql
   - postgresql
+addons:
+  postgresql: 9.5
+  apt:
+    packages:
+      - postgresql-9.5-postgis-2.4
+      - gdal-bin
 
 install:
   - pip install tox-travis coverage coveralls codacy-coverage
   - mysql -e 'create database django_prometheus_1;'
+  - psql -U postgres -c 'CREATE DATABASE postgis'
+  - psql -U postgres postgis -c 'CREATE EXTENSION IF NOT EXISTS postgis;'
 script:
   - tox
 after_success:
