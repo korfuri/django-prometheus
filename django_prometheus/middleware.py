@@ -35,9 +35,7 @@ class Metrics(object):
             cls._instance = cls()
         return cls._instance
 
-    def register_metric(
-        self, metric_cls, name, documentation, labelnames=tuple(), **kwargs
-    ):
+    def register_metric(self, metric_cls, name, documentation, labelnames=(), **kwargs):
         return metric_cls(name, documentation, labelnames=labelnames, **kwargs)
 
     def __init__(self, *args, **kwargs):

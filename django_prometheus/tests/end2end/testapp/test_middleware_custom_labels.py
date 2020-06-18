@@ -18,9 +18,7 @@ EXTENDED_METRICS = [
 
 
 class CustomMetrics(Metrics):
-    def register_metric(
-        self, metric_cls, name, documentation, labelnames=tuple(), **kwargs
-    ):
+    def register_metric(self, metric_cls, name, documentation, labelnames=(), **kwargs):
         if name in EXTENDED_METRICS:
             labelnames.extend(("view_type", "user_agent_type"))
         return super(CustomMetrics, self).register_metric(
