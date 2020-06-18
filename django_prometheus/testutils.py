@@ -26,7 +26,7 @@ Value after: %s
 """
 
 
-class PrometheusTestCaseMixin(object):
+class PrometheusTestCaseMixin:
     """A collection of utilities that make it easier to write test cases
     that interact with metrics.
     """
@@ -84,14 +84,17 @@ class PrometheusTestCaseMixin(object):
         Out:
           '{method="GET",port="80"}'
         """
-        return "{%s}" % ",".join(['%s="%s"' % (k, v) for k, v in labels.items()])
+        return "{%s}" % ",".join([f'{k}="{v}"' for k, v in labels.items()])
 
     def formatVector(self, vector):
         """Formats a list of (labels, value) where labels is a dict into a
         human-readable representation.
         """
         return "\n".join(
-            ["%s = %s" % (self.formatLabels(labels), value) for labels, value in vector]
+            [
+                "{} = {}".format(self.formatLabels(labels), value)
+                for labels, value in vector
+            ]
         )
 
     def assertMetricEquals(

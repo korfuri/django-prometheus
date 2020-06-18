@@ -12,7 +12,7 @@ class SomeTestCase(PrometheusTestCaseMixin):
 
     def __init__(self):
         self.passes = True
-        super(SomeTestCase, self).__init__()
+        super().__init__()
 
     def assertEqual(self, left, right, *args, **kwargs):
         self.passes = self.passes and (left == right)
@@ -63,10 +63,10 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
         )
         assert sorted(
             [
-                ({"labelred": u"pink", "labelblue": u"indigo"}, 1),
-                ({"labelred": u"pink", "labelblue": u"royal"}, 2),
-                ({"labelred": u"carmin", "labelblue": u"indigo"}, 3),
-                ({"labelred": u"carmin", "labelblue": u"royal"}, 4),
+                ({"labelred": "pink", "labelblue": "indigo"}, 1),
+                ({"labelred": "pink", "labelblue": "royal"}, 2),
+                ({"labelred": "carmin", "labelblue": "indigo"}, 3),
+                ({"labelred": "carmin", "labelblue": "royal"}, 4),
             ],
             key=itemgetter(1),
         ) == sorted(vector, key=itemgetter(1))

@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 from django_memcached_consul import memcached
 from django_prometheus.cache.metrics import (
     django_cache_get_total,
@@ -13,7 +11,7 @@ class MemcachedCache(memcached.MemcachedCache):
 
     def get(self, key, default=None, version=None):
         django_cache_get_total.labels(backend="django_memcached_consul").inc()
-        cached = super(MemcachedCache, self).get(key, default=None, version=version)
+        cached = super().get(key, default=None, version=version)
         if cached is not None:
             django_cache_hits_total.labels(backend="django_memcached_consul").inc()
         else:

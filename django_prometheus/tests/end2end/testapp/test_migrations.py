@@ -1,13 +1,8 @@
-import sys
+from unittest.mock import MagicMock
 
 from django.test import SimpleTestCase
 from django_prometheus.migrations import ExportMigrationsForDatabase
 from django_prometheus.testutils import PrometheusTestCaseMixin
-
-if sys.version_info[:2] >= (3, 0):
-    from unittest.mock import MagicMock
-else:
-    from mock import MagicMock
 
 
 def M(metric_name):

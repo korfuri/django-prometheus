@@ -1,6 +1,5 @@
 import logging
 import os
-import socket
 import threading
 
 import prometheus_client
@@ -52,7 +51,7 @@ class PrometheusEndpointServer(threading.Thread):
 
     def __init__(self, httpd, *args, **kwargs):
         self.httpd = httpd
-        super(PrometheusEndpointServer, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def run(self):
         self.httpd.serve_forever()
@@ -86,7 +85,7 @@ def SetupPrometheusEndpointOnPortRange(port_range, addr=""):
     for port in port_range:
         try:
             httpd = HTTPServer((addr, port), prometheus_client.MetricsHandler)
-        except (OSError, socket.error):
+        except OSError:
             # Python 2 raises socket.error, in Python 3 socket.error is an
             # alias for OSError
             continue  # Try next port
