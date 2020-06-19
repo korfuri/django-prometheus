@@ -26,7 +26,7 @@ DEFAULT_LATENCY_BUCKETS = (
 )
 
 
-class Metrics(object):
+class Metrics:
     _instance = None
 
     @classmethod
@@ -190,7 +190,7 @@ class PrometheusBeforeMiddleware(MiddlewareMixin):
     metrics_cls = Metrics
 
     def __init__(self, get_response=None):
-        super(PrometheusBeforeMiddleware, self).__init__(get_response)
+        super().__init__(get_response)
         self.metrics = self.metrics_cls.get_instance()
 
     def process_request(self, request):
@@ -214,7 +214,7 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
     metrics_cls = Metrics
 
     def __init__(self, get_response=None):
-        super(PrometheusAfterMiddleware, self).__init__(get_response)
+        super().__init__(get_response)
         self.metrics = self.metrics_cls.get_instance()
 
     def _transport(self, request):

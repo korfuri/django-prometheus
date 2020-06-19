@@ -21,7 +21,7 @@ class CustomMetrics(Metrics):
     def register_metric(self, metric_cls, name, documentation, labelnames=(), **kwargs):
         if name in EXTENDED_METRICS:
             labelnames.extend(("view_type", "user_agent_type"))
-        return super(CustomMetrics, self).register_metric(
+        return super().register_metric(
             metric_cls, name, documentation, labelnames=labelnames, **kwargs
         )
 
@@ -38,9 +38,7 @@ class AppMetricsAfterMiddleware(PrometheusAfterMiddleware):
         if metric._name in EXTENDED_METRICS:
             new_labels = {"view_type": "foo", "user_agent_type": "browser"}
             new_labels.update(labels)
-        return super(AppMetricsAfterMiddleware, self).label_metric(
-            metric, request, response=response, **new_labels
-        )
+        return super().label_metric(metric, request, response=response, **new_labels)
 
 
 @override_settings(
@@ -52,7 +50,7 @@ class AppMetricsAfterMiddleware(PrometheusAfterMiddleware):
 class TestMiddlewareMetricsWithCustomLabels(PrometheusTestCaseMixin, SimpleTestCase):
     @classmethod
     def setUpClass(cls):
-        super(TestMiddlewareMetricsWithCustomLabels, cls).setUpClass()
+        super().setUpClass()
         # Allow CustomMetrics to be used
         for metric in Metrics._instance.__dict__.values():
             if isinstance(metric, MetricWrapperBase):

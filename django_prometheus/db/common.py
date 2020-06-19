@@ -8,7 +8,7 @@ from django_prometheus.db import (
 )
 
 
-class ExceptionCounterByType(object):
+class ExceptionCounterByType:
     """A context manager that counts exceptions by type.
 
     Exceptions increment the provided counter, whose last label's name
@@ -36,13 +36,13 @@ class ExceptionCounterByType(object):
             self._counter.labels(**self._labels).inc()
 
 
-class DatabaseWrapperMixin(object):
+class DatabaseWrapperMixin:
     """Extends the DatabaseWrapper to count connections and cursors."""
 
     def get_new_connection(self, *args, **kwargs):
         connections_total.labels(self.alias, self.vendor).inc()
         try:
-            return super(DatabaseWrapperMixin, self).get_new_connection(*args, **kwargs)
+            return super().get_new_connection(*args, **kwargs)
         except Exception:
             connection_errors_total.labels(self.alias, self.vendor).inc()
             raise
@@ -68,7 +68,7 @@ def ExportingCursorWrapper(cursor_class, alias, vendor):
             with query_duration_seconds.labels(**labels).time(), (
                 ExceptionCounterByType(errors_total, extra_labels=labels)
             ):
-                return super(CursorWrapper, self).execute(*args, **kwargs)
+                return super().execute(*args, **kwargs)
 
         def executemany(self, query, param_list, *args, **kwargs):
             execute_total.labels(alias, vendor).inc(len(param_list))
@@ -76,8 +76,6 @@ def ExportingCursorWrapper(cursor_class, alias, vendor):
             with query_duration_seconds.labels(**labels).time(), (
                 ExceptionCounterByType(errors_total, extra_labels=labels)
             ):
-                return super(CursorWrapper, self).executemany(
-                    query, param_list, *args, **kwargs
-                )
+                return super().executemany(query, param_list, *args, **kwargs)
 
     return CursorWrapper

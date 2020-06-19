@@ -11,7 +11,7 @@ class LocMemCache(locmem.LocMemCache):
 
     def get(self, key, default=None, version=None):
         django_cache_get_total.labels(backend="locmem").inc()
-        cached = super(LocMemCache, self).get(key, default=None, version=version)
+        cached = super().get(key, default=None, version=version)
         if cached is not None:
             django_cache_hits_total.labels(backend="locmem").inc()
         else:
