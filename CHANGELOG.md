@@ -1,6 +1,6 @@
 # Changelog
 
-## DEV
+## v2.1.0 - Jul 2, 2020
 
 * Remove support for older django and python versions
 * Add support for Django 3.0
