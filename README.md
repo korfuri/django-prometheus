@@ -10,6 +10,14 @@ Export Django monitoring metrics for Prometheus.io
 [![PyPi page link -- Python versions](https://img.shields.io/pypi/pyversions/django-prometheus.svg)](https://pypi.python.org/pypi/django-prometheus)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
+## Features
+
+This library provides Prometheus metrics for Django related operations:
+
+* Requests & Responses
+* Database access done via [Django ORM](https://docs.djangoproject.com/en/3.0/topics/db/)
+* Cache access done via [Django Cache framework](https://docs.djangoproject.com/en/3.0/topics/cache/)
+
 ## Usage
 
 ### Requirements
