@@ -25,7 +25,7 @@ class ExceptionCounterByType:
     def __init__(self, counter, type_label="type", extra_labels=None):
         self._counter = counter
         self._type_label = type_label
-        self._labels = extra_labels
+        self._labels = dict(extra_labels)  # Copy labels since we modify them.
 
     def __enter__(self):
         pass
