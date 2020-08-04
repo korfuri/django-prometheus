@@ -7,6 +7,6 @@ pip-prometheus>=1.2.1
 mock
 mysqlclient
 psycopg2
-pytest==5.4.3
+pytest==6.0.1
 pytest-django
 python-memcached
