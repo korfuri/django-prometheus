@@ -3,7 +3,7 @@
 ## DEV
 
 * Remove support for older django and python versions
-* Add support for Django 3.0
+* Add support for Django 3.0 and Django 3.1
 * Add support for [PostGIS](https://github.com/korfuri/django-prometheus/pull/221), Thanks [@EverWinter23](https://github.com/EverWinter23)
 
 ## v2.0.0 - Jan 20, 2020
