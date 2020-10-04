@@ -167,7 +167,11 @@ class PrometheusTestCaseMixin:
             saved_value,
             current_value,
         )
-        assert predicate(saved_value, current_value) is True, (
-            METRIC_COMPARE_ERR_EXPLANATION
-            % (metric_name, self.formatLabels(labels), saved_value, current_value)
+        assert (
+            predicate(saved_value, current_value) is True
+        ), METRIC_COMPARE_ERR_EXPLANATION % (
+            metric_name,
+            self.formatLabels(labels),
+            saved_value,
+            current_value,
         )

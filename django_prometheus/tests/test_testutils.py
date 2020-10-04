@@ -61,15 +61,18 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
         vector = self.test_case.getMetricVector(
             "some_labelled_gauge", registry=self.registry
         )
-        assert sorted(
-            [
-                ({"labelred": "pink", "labelblue": "indigo"}, 1),
-                ({"labelred": "pink", "labelblue": "royal"}, 2),
-                ({"labelred": "carmin", "labelblue": "indigo"}, 3),
-                ({"labelred": "carmin", "labelblue": "royal"}, 4),
-            ],
-            key=itemgetter(1),
-        ) == sorted(vector, key=itemgetter(1))
+        assert (
+            sorted(
+                [
+                    ({"labelred": "pink", "labelblue": "indigo"}, 1),
+                    ({"labelred": "pink", "labelblue": "royal"}, 2),
+                    ({"labelred": "carmin", "labelblue": "indigo"}, 3),
+                    ({"labelred": "carmin", "labelblue": "royal"}, 4),
+                ],
+                key=itemgetter(1),
+            )
+            == sorted(vector, key=itemgetter(1))
+        )
 
     def testAssertMetricEquals(self):
         """Tests assertMetricEquals."""
