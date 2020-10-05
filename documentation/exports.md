@@ -105,7 +105,7 @@ try:
     import prometheus_client
     import uwsgi
     prometheus_client.values.ValueClass = prometheus_client.values.MultiProcessValue(
-        _pidFunc=uwsgi.worker_id)
+        process_identifier=uwsgi.worker_id)
 except ImportError:
     pass  # not running in uwsgi
 ```
