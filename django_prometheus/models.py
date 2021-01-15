@@ -1,4 +1,5 @@
 from prometheus_client import Counter
+from functools import wraps
 
 from django_prometheus.conf import NAMESPACE
 
@@ -37,7 +38,7 @@ def ExportModelOperationsMixin(model_name):
     model_updates.labels(model_name)
     model_deletes.labels(model_name)
 
-    class Mixin:
+    class Mixin(object):
         def _do_insert(self, *args, **kwargs):
             model_inserts.labels(model_name).inc()
             return super()._do_insert(*args, **kwargs)
@@ -50,4 +51,5 @@ def ExportModelOperationsMixin(model_name):
             model_deletes.labels(model_name).inc()
             return super().delete(*args, **kwargs)
 
+    Mixin.__qualname__ = "ExportModelOperationsMixin('{}')".format(model_name)
     return Mixin
