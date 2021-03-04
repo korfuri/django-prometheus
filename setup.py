@@ -22,7 +22,7 @@ setup(
     test_suite="django_prometheus.tests",
     long_description=LONG_DESCRIPTION,
     install_requires=[
-        "prometheus_client==0.5.0",
+        "prometheus_client==0.9.0",
     ],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
@@ -35,6 +35,8 @@ setup(
         "Programming Language :: Python :: 3.3",
         "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.9",
         "Framework :: Django",
         "Topic :: System :: Monitoring",
         "License :: OSI Approved :: Apache Software License",
