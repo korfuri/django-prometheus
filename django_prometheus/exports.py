@@ -122,6 +122,15 @@ def ExportToDjangoView(request):
     else:
         registry = prometheus_client.REGISTRY
     metrics_page = prometheus_client.generate_latest(registry)
+    expected_token = getattr(settings, "DJANGO_PROMETHEUS_AUTHORIZATION_TOKEN", None)
+    if expected_token is not None:
+        auth_header = request.META.get("HTTP_AUTHORIZATION", "")
+        token_type, _, received_token = auth_header.partition(" ")
+        if token_type.lower() not in ["bearer", "token"]:
+            return HttpResponse("Invalid authorization token type", status=400)
+
+        if received_token != expected_token:
+            return HttpResponse("", status=401)
     return HttpResponse(
         metrics_page, content_type=prometheus_client.CONTENT_TYPE_LATEST
     )
