@@ -1,6 +1,7 @@
 import logging
 import os
 import threading
+import base64
 
 import prometheus_client
 from prometheus_client import multiprocess
@@ -122,15 +123,27 @@ def ExportToDjangoView(request):
     else:
         registry = prometheus_client.REGISTRY
     metrics_page = prometheus_client.generate_latest(registry)
-    expected_token = getattr(settings, "DJANGO_PROMETHEUS_AUTHORIZATION_TOKEN", None)
-    if expected_token is not None:
+    expected_username = getattr(settings, "DJANGO_PROMETHEUS_AUTHORIZATION_USERNAME", None)
+    expected_password = getattr(settings, "DJANGO_PROMETHEUS_AUTHORIZATION_PASSWORD", None)
+    if expected_password is not None and expected_username is not None:
         auth_header = request.META.get("HTTP_AUTHORIZATION", "")
-        token_type, _, received_token = auth_header.partition(" ")
-        if token_type.lower() not in ["bearer", "token"]:
-            return HttpResponse("Invalid authorization token type", status=400)
+        token_type, _, credentials = auth_header.partition(" ")
+        if credentials == '':
+            return HttpResponse("", status=400)
 
-        if received_token != expected_token:
+        received_auth_string = base64.b64decode(credentials).decode()
+        if ':' not in received_auth_string:
+            return HttpResponse("", status=400)
+
+        received_username = received_auth_string.split(':')[0]
+        received_password = received_auth_string.split(':')[1]
+
+        valid_username = received_username == expected_username
+        valid_password = received_password == expected_password
+
+        if token_type != 'Basic' or not valid_username or not valid_password:
             return HttpResponse("", status=401)
+
     return HttpResponse(
         metrics_page, content_type=prometheus_client.CONTENT_TYPE_LATEST
     )
