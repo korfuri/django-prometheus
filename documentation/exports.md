@@ -78,22 +78,22 @@ targets as you have workers, using each port separately.
 
 This approach requires the application to be loaded into each child process.
 uWSGI and Gunicorn typically load the application into the master process before forking the child processes.
-Set the [lazy-apps option](https://uwsgi-docs.readthedocs.io/en/latest/Options.html#lazy-apps) to `true` (uWSGI) 
+Set the [lazy-apps option](https://uwsgi-docs.readthedocs.io/en/latest/Options.html#lazy-apps) to `true` (uWSGI)
 or the [preload-app option](https://docs.gunicorn.org/en/stable/settings.html#preload-app) to `false` (Gunicorn)
-to change this behaviour.  
+to change this behaviour.
 
 
 ## Exporting /metrics in a WSGI application with multiple processes globally
 
 In some WSGI applications, workers are short lived (less than a minute), so some
 are never scraped by prometheus by default. Prometheus client already provides
-a nice system to aggregate them using the env variable: `prometheus_multiproc_dir`
+a nice system to aggregate them using the env variable: `PROMETHEUS_MULTIPROC_DIR`
 which will configure the directory where metrics will be stored as files per process.
 
 Configuration in uwsgi would look like:
 
 ```ini
-env = prometheus_multiproc_dir=/path/to/django_metrics
+env = PROMETHEUS_MULTIPROC_DIR=/path/to/django_metrics
 ```
 
 You can also set this environment variable elsewhere such as in a kubernetes manifest.
