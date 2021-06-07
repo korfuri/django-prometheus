@@ -18,3 +18,6 @@ try:
 except ImportError:
     # If people don't have pip, don't export anything.
     pass
+
+if django.VERSION < (3, 2):
+    default_app_config = "django_prometheus.apps.DjangoPrometheusConfig"
