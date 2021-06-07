@@ -18,5 +18,3 @@ try:
 except ImportError:
     # If people don't have pip, don't export anything.
     pass
-
-default_app_config = "django_prometheus.apps.DjangoPrometheusConfig"
