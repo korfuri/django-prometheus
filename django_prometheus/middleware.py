@@ -62,6 +62,9 @@ class Metrics:
                 "processing time)."
             ),
             namespace=NAMESPACE,
+            buckets=getattr(
+                settings, "PROMETHEUS_LATENCY_BUCKETS", DEFAULT_LATENCY_BUCKETS
+            ),
         )
         self.requests_unknown_latency_before = self.register_metric(
             Counter,
