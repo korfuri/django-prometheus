@@ -2,10 +2,10 @@ django-redis>=4.12.1
 black; python_version >= '3.6'
 flake8
 isort>=5.5.4,<6
-prometheus-client>=0.7
+prometheus-client>=0.9.0
 pip-prometheus>=1.2.1
 mysqlclient
 psycopg2
-pytest>=6.1.1,<7
+pytest==6.2.3
 pytest-django
 python-memcached

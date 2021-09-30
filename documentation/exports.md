@@ -76,6 +76,13 @@ This will make Django-Prometheus try to export /metrics on port
 You can then configure Prometheus to collect metrics on as many
 targets as you have workers, using each port separately.
 
+This approach requires the application to be loaded into each child process.
+uWSGI and Gunicorn typically load the application into the master process before forking the child processes.
+Set the [lazy-apps option](https://uwsgi-docs.readthedocs.io/en/latest/Options.html#lazy-apps) to `true` (uWSGI) 
+or the [preload-app option](https://docs.gunicorn.org/en/stable/settings.html#preload-app) to `false` (Gunicorn)
+to change this behaviour.  
+
+
 ## Exporting /metrics in a WSGI application with multiple processes globally
 
 In some WSGI applications, workers are short lived (less than a minute), so some
