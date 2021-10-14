@@ -1,5 +1,4 @@
 from prometheus_client import Counter
-from functools import wraps
 
 from django_prometheus.conf import NAMESPACE
 
