@@ -37,7 +37,7 @@ def ExportModelOperationsMixin(model_name):
     model_updates.labels(model_name)
     model_deletes.labels(model_name)
 
-    class Mixin(object):
+    class Mixin:
         def _do_insert(self, *args, **kwargs):
             model_inserts.labels(model_name).inc()
             return super()._do_insert(*args, **kwargs)
