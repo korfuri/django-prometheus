@@ -50,4 +50,5 @@ def ExportModelOperationsMixin(model_name):
             model_deletes.labels(model_name).inc()
             return super().delete(*args, **kwargs)
 
+    Mixin.__qualname__ = f"ExportModelOperationsMixin('{model_name}')"
     return Mixin
