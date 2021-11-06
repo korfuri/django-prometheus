@@ -2,6 +2,8 @@
 
 ## Dev
 
+* Switch to Github Actions CI, remove travis-ci.
+
 ## v2.1.0 - August 22, 2020
 
 * Remove support for older django and python versions

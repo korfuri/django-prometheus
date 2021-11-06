@@ -75,9 +75,9 @@ DATABASES = {
     "mysql": {
         "ENGINE": "django_prometheus.db.backends.mysql",
         "NAME": "django_prometheus_1",
-        "USER": "travis",
+        "USER": "root",
         "PASSWORD": "",
-        "HOST": "localhost",
+        "HOST": "127.0.0.1",
         "PORT": "3306",
     },
     # The following databases are used by test_db.py only
@@ -132,7 +132,7 @@ LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_L10N = True
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
