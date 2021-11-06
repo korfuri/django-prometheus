@@ -1,0 +1,75 @@
+name: CI
+on:
+  push:
+    branches:
+      - "*"
+  pull_request:
+    branches:
+      - master
+jobs:
+  test:
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.6", "3.7", "3.8", "3.9"]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    name: "${{ matrix.os }} Python: ${{ matrix.python-version }}"
+    services:
+      redis:
+        image: redis:6.2.6
+        ports:
+          - 6379:6379
+      memcached:
+        image: memcached:1.6.12
+        ports:
+          - 11211:11211
+      mysql:
+        image: mysql:8.0.27
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        ports:
+          - 3306:3306
+      postgresql:
+        image: postgis/postgis:14-master
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        pip install -U "pip>=21.1"
+        pip install -U setuptools "tox>=3.23.0,<4" codecov tox-gh-actions coverage
+        sudo apt-get update
+        sudo apt-get install binutils libproj-dev gdal-bin
+    - name: Log versions
+      run: |
+        python --version
+        pip --version
+        psql -V
+        mysql -V
+    - name: prep DB
+      env:
+        MYSQL_TCP_PORT: 3306
+        MYSQL_HOST: localhost
+        PGHOST: localhost
+        PGPORT: 5432
+      run: |
+        psql -U postgres -c 'CREATE DATABASE postgis'
+        psql -U postgres postgis -c 'CREATE EXTENSION IF NOT EXISTS postgis;'
+        mysql --protocol=TCP --user=root -e 'create database django_prometheus_1;'
+    - name: Run test and linters via Tox
+      run: tox
+    - name: Process code coverage
+      run: |
+        coverage combine .coverage django_prometheus/tests/end2end/.coverage
+        coverage xml
