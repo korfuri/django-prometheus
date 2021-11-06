@@ -1,6 +1,7 @@
-import django_prometheus
 from django.apps import AppConfig
 from django.conf import settings
+
+import django_prometheus
 from django_prometheus.exports import SetupPrometheusExportsFromConfig
 from django_prometheus.migrations import ExportMigrations
 

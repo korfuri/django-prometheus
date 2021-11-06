@@ -1,6 +1,7 @@
 from django.test import SimpleTestCase, override_settings
-from django_prometheus.testutils import PrometheusTestCaseMixin
 from testapp.views import ObjectionException
+
+from django_prometheus.testutils import PrometheusTestCaseMixin
 
 
 def M(metric_name):

@@ -1,4 +1,5 @@
 from django.db.models import CharField, Model, PositiveIntegerField
+
 from django_prometheus.models import ExportModelOperationsMixin
 
 

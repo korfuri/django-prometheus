@@ -3,10 +3,9 @@ import os
 import threading
 
 import prometheus_client
-from prometheus_client import multiprocess
-
 from django.conf import settings
 from django.http import HttpResponse
+from prometheus_client import multiprocess
 
 try:
     # Python 2

@@ -1,7 +1,7 @@
-from prometheus_client import Gauge
-
 from django.db import connections
 from django.db.backends.dummy.base import DatabaseWrapper
+from prometheus_client import Gauge
+
 from django_prometheus.conf import NAMESPACE
 
 unapplied_migrations = Gauge(

@@ -1,7 +1,7 @@
-from prometheus_client import Counter, Histogram
-
 from django.conf import settings
 from django.utils.deprecation import MiddlewareMixin
+from prometheus_client import Counter, Histogram
+
 from django_prometheus.conf import NAMESPACE
 from django_prometheus.utils import PowersOf, Time, TimeSince
 

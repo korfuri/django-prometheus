@@ -1,5 +1,6 @@
 import psycopg2.extensions
 from django.contrib.gis.db.backends.postgis import base
+
 from django_prometheus.db.common import DatabaseWrapperMixin, ExportingCursorWrapper
 
 

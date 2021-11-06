@@ -1,4 +1,5 @@
 from django_memcached_consul import memcached
+
 from django_prometheus.cache.metrics import (
     django_cache_get_total,
     django_cache_hits_total,

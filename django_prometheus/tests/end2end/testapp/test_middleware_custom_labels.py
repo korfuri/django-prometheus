@@ -1,15 +1,15 @@
+from django.test import SimpleTestCase, override_settings
 from prometheus_client import REGISTRY
 from prometheus_client.metrics import MetricWrapperBase
+from testapp.helpers import get_middleware
+from testapp.test_middleware import M, T
 
-from django.test import SimpleTestCase, override_settings
 from django_prometheus.middleware import (
     Metrics,
     PrometheusAfterMiddleware,
     PrometheusBeforeMiddleware,
 )
 from django_prometheus.testutils import PrometheusTestCaseMixin
-from testapp.helpers import get_middleware
-from testapp.test_middleware import M, T
 
 EXTENDED_METRICS = [
     M("requests_latency_seconds_by_view_method"),

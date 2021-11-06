@@ -2,6 +2,7 @@ from unittest import skipUnless
 
 from django.db import connections
 from django.test import TestCase
+
 from django_prometheus.testutils import PrometheusTestCaseMixin
 
 
