@@ -3,6 +3,7 @@
 ## Dev
 
 * Switch to Github Actions CI, remove travis-ci.
+* Add Support for Python 3.9
 
 ## v2.1.0 - August 22, 2020
 
