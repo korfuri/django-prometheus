@@ -29,8 +29,6 @@ setup(
     test_suite="django_prometheus.tests",
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
-    tests_require=["pytest", "pytest-django"],
-    setup_requires=["pytest-runner"],
     options={"bdist_wheel": {"universal": "1"}},
     install_requires=["prometheus-client>=0.7",],
     classifiers=[
