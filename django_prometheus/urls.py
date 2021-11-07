@@ -1,4 +1,5 @@
 from django.urls import path
+
 from django_prometheus import exports
 
 urlpatterns = [

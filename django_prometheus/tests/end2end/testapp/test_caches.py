@@ -1,7 +1,8 @@
 from django.core.cache import caches
 from django.test import TestCase
-from django_prometheus.testutils import PrometheusTestCaseMixin
 from redis import RedisError
+
+from django_prometheus.testutils import PrometheusTestCaseMixin
 
 
 class TestCachesMetrics(PrometheusTestCaseMixin, TestCase):

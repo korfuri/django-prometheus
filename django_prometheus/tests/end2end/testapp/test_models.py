@@ -1,6 +1,7 @@
 from django.test import TestCase
-from django_prometheus.testutils import PrometheusTestCaseMixin
 from testapp.models import Dog, Lawn
+
+from django_prometheus.testutils import PrometheusTestCaseMixin
 
 
 def M(metric_name):
