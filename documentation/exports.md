@@ -8,7 +8,7 @@ include('django_prometheus.urls') with no prefix like so:
 ```python
 urlpatterns = [
     ...
-    url('', include('django_prometheus.urls')),
+    path('', include('django_prometheus.urls')),
 ]
 ```
 
@@ -20,7 +20,7 @@ need to configure Prometheus to use that path instead of the default.
 ```python
 urlpatterns = [
     ...
-    url('^monitoring/', include('django_prometheus.urls')),
+    path('monitoring/', include('django_prometheus.urls')),
 ]
 ```
 

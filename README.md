@@ -65,7 +65,7 @@ In your urls.py:
 ```python
 urlpatterns = [
     ...
-    url('', include('django_prometheus.urls')),
+    path('', include('django_prometheus.urls')),
 ]
 ```
 
