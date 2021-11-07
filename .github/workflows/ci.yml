@@ -50,7 +50,7 @@ jobs:
         pip install -U "pip>=21.1"
         pip install -U setuptools "tox>=3.23.0,<4" codecov tox-gh-actions coverage
         sudo apt-get update
-        sudo apt-get install binutils libproj-dev gdal-bin
+        sudo apt-get install binutils libproj-dev gdal-bin libmemcached-dev
     - name: Log versions
       run: |
         python --version

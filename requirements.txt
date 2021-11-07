@@ -8,4 +8,4 @@ mysqlclient
 psycopg2
 pytest==6.2.5
 pytest-django
-python-memcached
+pylibmc
