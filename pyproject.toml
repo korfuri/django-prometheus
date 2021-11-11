@@ -1,3 +1,19 @@
+[build-system]
+requires = [ "setuptools >= 35.0.2", "wheel >= 0.29.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+addopts = " --ignore django_prometheus/tests/end2end"
+
+[tool.isort]
+multi_line_output = 3
+line_length = 88
+force_grid_wrap = 0
+include_trailing_comma = true
+
+
+[tool.tox]
+legacy_tox_ini = """
 [tox]
 envlist = {py36,py37,py38,py39}-django{220,300,310,320}-{end2end,unittests},py38-lint
 
@@ -42,11 +58,4 @@ commands =
     flake8 django_prometheus
     isort --check-only django_prometheus/
 
-[flake8]
-ignore = E501,W503
-
-[isort]
-multi_line_output=3
-line_length=88
-force_grid_wrap=0
-include_trailing_comma=True
+"""
