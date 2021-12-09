@@ -3,7 +3,7 @@
 ## Dev
 
 * Switch to Github Actions CI, remove travis-ci.
-* Add support for Django 3.2 and Python 3.9 & 3.10
+* Add support for Django 3.2 & 4.0 and Python 3.9 & 3.10
 
 ## v2.1.0 - August 22, 2020
 
