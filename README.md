@@ -199,13 +199,13 @@ another file (called urls_prometheus_wrapper.py in this example) that
 will wraps the apps URLs and add one on top:
 
 ```python
-from django.conf.urls import include, url
+from django.urls import include, path
 
 
 urlpatterns = []
 
-urlpatterns.append(url('prometheus/', include('django_prometheus.urls')))
-urlpatterns.append(url('', include('myapp.urls')))
+urlpatterns.append(path('prometheus/', include('django_prometheus.urls')))
+urlpatterns.append(path('', include('myapp.urls')))
 ```
 
 This file will add a "/prometheus/metrics" end point to the URLs of django
