@@ -12,7 +12,7 @@ from django_prometheus import middleware, models
 
 __all__ = ["middleware", "models", "pip_prometheus"]
 
-__version__ = "2.2.0.dev19"
+__version__ = "2.2.0"
 
 # Import pip_prometheus to export the pip metrics automatically.
 try:
