@@ -25,6 +25,12 @@ setup(
     license="Apache",
     keywords="django monitoring prometheus",
     url="http://github.com/korfuri/django-prometheus",
+    project_urls={
+            "Changelog": "https://github.com/korfuri/django-prometheus/blob/master/CHANGELOG.md",
+            "Documentation": "https://github.com/korfuri/django-prometheus/blob/master/README.md",
+            "Source": "https://github.com/korfuri/django-prometheus",
+            "Tracker": "https://github.com/korfuri/django-prometheus/issues",
+    },
     packages=find_packages(exclude=["tests",]),
     test_suite="django_prometheus.tests",
     long_description=LONG_DESCRIPTION,
