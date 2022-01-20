@@ -99,3 +99,6 @@ venv/
 
 ### Prometheus ###
 examples/prometheus/data
+
+# MacOS
+.DS_Store

@@ -8,24 +8,74 @@
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
         "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
         "type": "dashboard"
       }
     ]
   },
   "description": "Django metrics dashboard using korfuri/django-prometheus Prometheus metrics exporter",
   "editable": true,
+  "fiscalYearStartMonth": 0,
   "gnetId": 9528,
   "graphTooltip": 0,
-  "id": 1,
-  "iteration": 1642628798070,
+  "id": 2,
+  "iteration": 1642712550696,
   "links": [],
+  "liveNow": false,
   "panels": [
     {
-      "datasource": null,
-      "description": "",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 26,
+      "panels": [],
+      "title": "Models",
+      "type": "row"
+    },
+    {
+      "description": "Total model objects created per second.",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -44,15 +94,252 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 2,
+        "h": 6,
+        "w": 8,
+        "x": 0,
+        "y": 1
+      },
+      "id": 28,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Jd-krq17k"
+          },
+          "exemplar": true,
+          "expr": "sum by(model) (\n    rate(django_model_inserts_total{job=~\"$job\", instance=~\"$instance\", namespace=~\"\", app=~\"^$\"}[$__rate_interval])\n    )",
+          "interval": "",
+          "legendFormat": "{{model}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Total creations per second",
+      "type": "timeseries"
+    },
+    {
+      "description": "Total model objects updated per second.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 8,
+        "y": 1
+      },
+      "id": 29,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Jd-krq17k"
+          },
+          "exemplar": true,
+          "expr": "sum by(model) (\n    rate(django_model_updates_total{job=~\"$job\", instance=~\"$instance\", namespace=~\"\", app=~\"^$\"}[$__rate_interval])\n    )",
+          "interval": "",
+          "legendFormat": "{{model}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Total updates per second",
+      "type": "timeseries"
+    },
+    {
+      "description": "Total model objects deleted per second.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 16,
+        "y": 1
+      },
+      "id": 30,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Jd-krq17k"
+          },
+          "exemplar": true,
+          "expr": "sum by(model) (\n    rate(django_model_deletes_total{job=~\"$job\", instance=~\"$instance\", namespace=~\"\", app=~\"^$\"}[$__rate_interval])\n    )",
+          "interval": "",
+          "legendFormat": "{{model}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Total deletes per second",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 7
+      },
+      "id": 24,
+      "panels": [],
+      "title": "API",
+      "type": "row"
+    },
+    {
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "super-light-green",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
         "w": 12,
         "x": 0,
-        "y": 0
+        "y": 8
       },
       "id": 20,
       "options": {
         "colorMode": "value",
-        "graphMode": "none",
+        "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
@@ -62,906 +349,598 @@
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.5",
+      "pluginVersion": "8.3.4",
       "targets": [
         {
-          "expr": "sum(increase(django_http_requests_total_by_view_transport_method_total{namespace=~\"\", app=~\"^$\",view!~\"prometheus-django-metrics|healthcheck\"}[1m]))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Jd-krq17k"
+          },
+          "exemplar": true,
+          "expr": "sum(increase(django_http_requests_total_by_view_transport_method_total{job=~\"$job\", instance=~\"$instance\", namespace=~\"\", app=~\"^$\",view!~\"prometheus-django-metrics|healthcheck\"}[1m]))",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Total Request Count",
       "type": "stat"
     },
     {
-      "cacheTimeout": null,
-      "colorBackground": false,
-      "colorValue": false,
-      "colors": [
-        "#629e51",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
-      "datasource": "$datasource",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "color": {
+            "fixedColor": "green",
+            "mode": "fixed"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
         },
         "overrides": []
       },
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
       "gridPos": {
-        "h": 2,
+        "h": 3,
         "w": 4,
         "x": 12,
-        "y": 0
+        "y": 8
       },
       "id": 15,
-      "interval": null,
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
       },
-      "tableColumn": "",
+      "pluginVersion": "8.3.4",
       "targets": [
         {
-          "expr": "sum(irate(django_http_responses_total_by_status_total{status=~\"2.+\",namespace=~\"$namespace\", app=~\"^$app$\"}[1m]))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Jd-krq17k"
+          },
+          "exemplar": true,
+          "expr": "sum(increase(django_http_responses_total_by_status_view_method_total{job=~\"$job\", instance=~\"$instance\", status=~\"2.+\",namespace=~\"\", app=~\"^$\",view!~\"prometheus-django-metrics|healthcheck\"}[1m]))",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "thresholds": "",
       "title": "2XX Responses",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "avg"
+      "type": "stat"
     },
     {
-      "cacheTimeout": null,
-      "colorBackground": false,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
-      "datasource": "$datasource",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "yellow",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
         },
         "overrides": []
       },
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
       "gridPos": {
-        "h": 2,
+        "h": 3,
         "w": 4,
         "x": 16,
-        "y": 0
+        "y": 8
       },
       "id": 16,
-      "interval": null,
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
       },
-      "tableColumn": "",
+      "pluginVersion": "8.3.4",
       "targets": [
         {
-          "expr": "sum(irate(django_http_responses_total_by_status_total{status=~\"4.+\",namespace=~\"$namespace\", app=~\"^$app$\"}[1m]))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Jd-krq17k"
+          },
+          "exemplar": true,
+          "expr": "sum(increase(django_http_responses_total_by_status_view_method_total{job=~\"$job\", instance=~\"$instance\", status=~\"4.+\",namespace=~\"\", app=~\"^$\",view!~\"prometheus-django-metrics|healthcheck\"}[1m]))",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "thresholds": "",
       "title": "4XX Responses",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "avg"
+      "type": "stat"
     },
     {
-      "cacheTimeout": null,
-      "colorBackground": false,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
-      "datasource": "$datasource",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "color": {
+            "fixedColor": "red",
+            "mode": "fixed"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
         },
         "overrides": []
       },
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
       "gridPos": {
-        "h": 2,
+        "h": 3,
         "w": 4,
         "x": 20,
-        "y": 0
+        "y": 8
       },
       "id": 17,
-      "interval": null,
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
       },
-      "tableColumn": "",
+      "pluginVersion": "8.3.4",
       "targets": [
         {
-          "expr": "sum(irate(django_http_responses_total_by_status_total{status=~\"5.+\",namespace=~\"$namespace\", app=~\"^$app$\"}[1m]))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Jd-krq17k"
+          },
+          "exemplar": true,
+          "expr": "sum(increase(django_http_responses_total_by_status_view_method_total{job=~\"$job\", instance=~\"$instance\", status=~\"5.+\",namespace=~\"\", app=~\"^$\",view!~\"prometheus-django-metrics|healthcheck\"}[1m]))",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "thresholds": "",
       "title": "5XX Responses",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "avg"
+      "type": "stat"
     },
     {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "$datasource",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
+      "description": "Requests per seconds, aggregated over HTTP method, and view.",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "req/sec",
+            "axisPlacement": "left",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
         },
         "overrides": []
       },
-      "fill": 1,
-      "fillGradient": 0,
       "gridPos": {
-        "h": 9,
-        "w": 12,
+        "h": 8,
+        "w": 8,
         "x": 0,
-        "y": 2
+        "y": 11
       },
-      "hiddenSeries": false,
       "id": 2,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
       "links": [],
-      "nullPointMode": "null",
-      "percentage": false,
-      "pluginVersion": "7.1.5",
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "8.3.4",
       "targets": [
         {
-          "expr": "sum(increase(django_http_requests_total_by_view_transport_method_total{namespace=~\"\", app=~\"^$\",view!~\"prometheus-django-metrics|healthcheck\"}[1m])) by(method, view)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Jd-krq17k"
+          },
+          "exemplar": true,
+          "expr": "sum by(method, view) (\n    rate(django_http_requests_total_by_view_transport_method_total{job=~\"$job\", instance=~\"$instance\", namespace=~\"\", app=~\"^$\",view!~\"prometheus-django-metrics|healthcheck\"}[$__rate_interval])\n    )",
           "format": "time_series",
           "hide": false,
           "interval": "",
-          "intervalFactor": 1,
+          "intervalFactor": 2,
           "legendFormat": "{{method}} /{{view}}",
           "refId": "A"
         }
       ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Total requests per minute, method and view",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
+      "title": "Requests per second",
+      "type": "timeseries"
     },
     {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "$datasource",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "dtdurations"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "p90"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#F2495C",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
       },
-      "fill": 1,
-      "fillGradient": 0,
       "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 12,
-        "y": 2
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 11
       },
-      "hiddenSeries": false,
       "id": 4,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
       "links": [],
-      "nullPointMode": "null",
-      "percentage": false,
-      "pluginVersion": "7.1.5",
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "8.3.4",
       "targets": [
         {
-          "expr": "histogram_quantile(0.50, sum(rate(django_http_requests_latency_seconds_by_view_method_bucket{namespace=~\"$namespace\", app=~\"^$app$\",view!~\"prometheus-django-metrics|healthcheck\"}[5m])) by (job, le))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Jd-krq17k"
+          },
+          "exemplar": true,
+          "expr": "histogram_quantile(0.9, sum(rate(django_http_requests_latency_seconds_by_view_method_bucket{job=~\"$job\", instance=~\"$instance\", namespace=~\"$namespace\", app=~\"^$app$\",view!~\"prometheus-django-metrics|healthcheck\"}[$__rate_interval])) by (job, le))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "quantile=50",
+          "legendFormat": "p90",
           "refId": "A"
         },
         {
-          "expr": "histogram_quantile(0.95, sum(rate(django_http_requests_latency_seconds_by_view_method_bucket{namespace=~\"$namespace\", app=~\"^$app$\",view!~\"prometheus-django-metrics|healthcheck\"}[5m])) by (job, le))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Jd-krq17k"
+          },
+          "exemplar": true,
+          "expr": "histogram_quantile(0.5, sum(rate(django_http_requests_latency_seconds_by_view_method_bucket{namespace=~\"$namespace\", app=~\"^$app$\",view!~\"prometheus-django-metrics|healthcheck\"}[$__rate_interval])) by (job, le))",
           "format": "time_series",
           "hide": false,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "quantile=95",
+          "legendFormat": "p50",
           "refId": "B"
         },
         {
-          "expr": "histogram_quantile(0.99, sum(rate(django_http_requests_latency_seconds_by_view_method_bucket{namespace=~\"$namespace\", app=~\"^$app$\",view!~\"prometheus-django-metrics|healthcheck\"}[5m])) by (job, le))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Jd-krq17k"
+          },
+          "exemplar": true,
+          "expr": "sum(rate(django_http_requests_latency_seconds_by_view_method_sum{namespace=~\"$namespace\", app=~\"^$app$\",view!~\"prometheus-django-metrics|healthcheck\"}[$__rate_interval])) / sum(rate(django_http_requests_latency_seconds_by_view_method_count{namespace=~\"$namespace\", app=~\"^$app$\",view!~\"prometheus-django-metrics|healthcheck\"}[$__rate_interval]))",
           "format": "time_series",
           "hide": false,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "quantile=99",
+          "legendFormat": "avg",
           "refId": "C"
-        },
-        {
-          "expr": "histogram_quantile(0.999, sum(rate(django_http_requests_latency_seconds_by_view_method_bucket{namespace=~\"$namespace\", app=~\"^$app$\",view!~\"prometheus-django-metrics|healthcheck\"}[5m])) by (job, le))",
-          "format": "time_series",
-          "hide": false,
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "quantile=99.9",
-          "refId": "D"
         }
       ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
       "title": "Request Latency",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "dtdurations",
-          "label": "",
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
+      "type": "timeseries"
     },
     {
-      "aliasColors": {
-        "api-beatstream-api": "#1f78c1"
-      },
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "$datasource",
+      "description": "Total error rate for all views. Errors are considered responses with 5xx http status code.",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "left",
+            "axisSoftMax": 1,
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percentunit"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Error rate"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
       },
-      "fill": 1,
-      "fillGradient": 0,
       "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 0,
+        "h": 8,
+        "w": 8,
+        "x": 16,
         "y": 11
       },
-      "hiddenSeries": false,
-      "id": 7,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
+      "id": 22,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
       },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "percentage": false,
-      "pluginVersion": "7.1.5",
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [
-        {}
-      ],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(django_http_responses_before_middlewares_total{namespace=~\"$namespace\", app=~\"^$app$\", view!~\"prometheus-django-metrics|healthcheck\"}[1m])) by(job)",
-          "format": "time_series",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Jd-krq17k"
+          },
+          "exemplar": true,
+          "expr": "(sum(\n    rate(django_http_responses_total_by_status_view_method_total{job=~\"$job\", instance=~\"$instance\", status=~\"5..\", namespace=~\"\", app=~\"^$\",view!~\"prometheus-django-metrics|healthcheck\"}[$__rate_interval])\n    ) or vector(0)) /\nsum(\n    rate(django_http_responses_total_by_status_view_method_total{job=~\"$job\", instance=~\"$instance\", namespace=~\"\", app=~\"^$\",view!~\"prometheus-django-metrics|healthcheck\"}[$__rate_interval])\n    )",
           "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "{{job}}",
+          "legendFormat": "Error rate",
           "refId": "A"
         }
       ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Responses",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "$datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 12,
-        "y": 11
-      },
-      "hiddenSeries": false,
-      "id": 11,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "percentage": false,
-      "pluginVersion": "7.1.5",
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "sum(irate(django_http_responses_total_by_status_total{namespace=~\"$namespace\", app=~\"^$app$\", view!~\"prometheus-django-metrics|healthcheck\"}[1m])) by(status)",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "{{status}}",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Response Status",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {
-        "mysql": "#584477",
-        "postgresql": "#0064a5"
-      },
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "$datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 5,
-        "w": 24,
-        "x": 0,
-        "y": 20
-      },
-      "hiddenSeries": false,
-      "id": 9,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "percentage": false,
-      "pluginVersion": "7.1.5",
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "sum(irate(django_db_execute_total{namespace=~\"$namespace\", app=~\"^$app$\"}[1m])) by (vendor)",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "{{vendor}}",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Database Ops",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "$datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 5,
-        "w": 24,
-        "x": 0,
-        "y": 25
-      },
-      "hiddenSeries": false,
-      "id": 18,
-      "legend": {
-        "alignAsTable": true,
-        "avg": true,
-        "current": true,
-        "hideEmpty": false,
-        "hideZero": true,
-        "max": true,
-        "min": false,
-        "rightSide": true,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "percentage": false,
-      "pluginVersion": "7.1.5",
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "sum(irate(django_model_deletes_total{namespace=~\"$namespace\", app=~\"^$app$\"}[1m])) by (model)",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "[{{model}}] deletes",
-          "refId": "A"
-        },
-        {
-          "expr": "sum(irate(django_model_inserts_total{namespace=~\"$namespace\", app=~\"^$app$\"}[1m])) by (model)",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "[{{model}}] inserts",
-          "refId": "B"
-        },
-        {
-          "expr": "sum(irate(django_model_updates_total{namespace=~\"$namespace\", app=~\"^$app$\"}[1m])) by (model)",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "[{{model}}] updates",
-          "refId": "C"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Models stats",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
+      "title": "Error rate",
+      "type": "timeseries"
     }
   ],
-  "refresh": "10s",
-  "schemaVersion": 26,
+  "refresh": false,
+  "schemaVersion": 34,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -974,7 +953,7 @@
         },
         "hide": 0,
         "includeAll": false,
-        "label": null,
+        "label": "Data Source",
         "multi": false,
         "name": "datasource",
         "options": [],
@@ -985,6 +964,76 @@
         "type": "datasource"
       },
       {
+        "allValue": ".+",
+        "current": {
+          "selected": true,
+          "text": [
+            "django-todo-list"
+          ],
+          "value": [
+            "django-todo-list"
+          ]
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "$datasource"
+        },
+        "definition": "label_values(django_http_requests_total_by_method_total, job)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "job",
+        "multi": true,
+        "name": "job",
+        "options": [],
+        "query": {
+          "query": "label_values(django_http_requests_total_by_method_total, job)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": ".+",
+        "current": {
+          "selected": true,
+          "text": [
+            "localhost:8000"
+          ],
+          "value": [
+            "localhost:8000"
+          ]
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "$datasource"
+        },
+        "definition": "label_values(django_http_requests_total_by_method_total, instance)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Instance",
+        "multi": true,
+        "name": "instance",
+        "options": [],
+        "query": {
+          "query": "label_values(django_http_requests_total_by_method_total, instance)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
         "allValue": ".*",
         "current": {
           "isNone": true,
@@ -992,33 +1041,40 @@
           "text": "None",
           "value": ""
         },
-        "datasource": "$datasource",
-        "definition": "",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "$datasource"
+        },
+        "definition": "label_values(django_db_new_connections_total, namespace)",
         "hide": 0,
         "includeAll": false,
         "label": "",
         "multi": false,
         "name": "namespace",
         "options": [],
-        "query": "label_values(django_db_new_connections_total, namespace)",
+        "query": {
+          "query": "label_values(django_db_new_connections_total, namespace)",
+          "refId": "StandardVariableQuery"
+        },
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
         "sort": 1,
         "tagValuesQuery": "",
-        "tags": [],
         "tagsQuery": "",
         "type": "query",
         "useTags": false
       },
       {
-        "allValue": null,
         "current": {
           "selected": false,
           "text": "All",
           "value": "$__all"
         },
-        "datasource": "$datasource",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "$datasource"
+        },
         "definition": "",
         "hide": 0,
         "includeAll": true,
@@ -1026,13 +1082,15 @@
         "multi": false,
         "name": "app",
         "options": [],
-        "query": "label_values(django_db_new_connections_total{namespace=~\"$namespace\"}, app)",
+        "query": {
+          "query": "label_values(django_db_new_connections_total{namespace=~\"$namespace\"}, app)",
+          "refId": "Prometheus-app-Variable-Query"
+        },
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
         "sort": 0,
         "tagValuesQuery": "",
-        "tags": [],
         "tagsQuery": "",
         "type": "query",
         "useTags": false
@@ -1040,7 +1098,7 @@
     ]
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {
@@ -1069,7 +1127,8 @@
     ]
   },
   "timezone": "",
-  "title": "a Django Prometheus",
+  "title": "Django Overview",
   "uid": "O6v4rMpizda",
-  "version": 3
+  "version": 2,
+  "weekStart": ""
 }
