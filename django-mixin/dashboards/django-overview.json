@@ -43,6 +43,7 @@
     },
     {
       "description": "Database connections created per second, per vendor.",
+      "datasource": "$datasource",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -112,10 +113,6 @@
       },
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "Jd-krq17k"
-          },
           "exemplar": true,
           "expr": "sum by (vendor) (rate(django_db_new_connections_total{job=~\"$job\", instance=~\"$instance\"}[$__rate_interval]))",
           "interval": "",
@@ -128,6 +125,7 @@
     },
     {
       "description": "Database query latency, per vendor.",
+      "datasource": "$datasource",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -194,10 +192,6 @@
       },
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "Jd-krq17k"
-          },
           "exemplar": true,
           "expr": "histogram_quantile(0.9, sum(rate(django_db_query_duration_seconds_bucket{job=~\"$job\", instance=~\"$instance\"}[$__rate_interval])) by (le, vendor))",
           "interval": "",
@@ -205,10 +199,6 @@
           "refId": "A"
         },
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "Jd-krq17k"
-          },
           "exemplar": true,
           "expr": "histogram_quantile(0.5, sum(rate(django_db_query_duration_seconds_bucket{job=~\"$job\", instance=~\"$instance\"}[$__rate_interval])) by (le, vendor))",
           "hide": false,
@@ -217,10 +207,6 @@
           "refId": "B"
         },
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "Jd-krq17k"
-          },
           "exemplar": true,
           "expr": "sum(rate(django_db_query_duration_seconds_sum{job=~\"$job\", instance=~\"$instance\"}[$__rate_interval])) by (vendor) / sum(rate(django_db_query_duration_seconds_count{job=~\"$job\", instance=~\"$instance\"}[$__rate_interval])) by (vendor)",
           "hide": false,
@@ -247,6 +233,7 @@
     },
     {
       "description": "Total model objects created per second.",
+      "datasource": "$datasource",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -316,10 +303,6 @@
       },
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "Jd-krq17k"
-          },
           "exemplar": true,
           "expr": "sum by(model) (\n    rate(django_model_inserts_total{job=~\"$job\", instance=~\"$instance\", namespace=~\"$namespace\", app=~\"^$app\"}[$__rate_interval])\n    )",
           "interval": "",
@@ -332,6 +315,7 @@
     },
     {
       "description": "Total model objects updated per second.",
+      "datasource": "$datasource",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -401,10 +385,6 @@
       },
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "Jd-krq17k"
-          },
           "exemplar": true,
           "expr": "sum by(model) (\n    rate(django_model_updates_total{job=~\"$job\", instance=~\"$instance\", namespace=~\"$namespace\", app=~\"^$app\"}[$__rate_interval])\n    )",
           "interval": "",
@@ -417,6 +397,7 @@
     },
     {
       "description": "Total model objects deleted per second.",
+      "datasource": "$datasource",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -486,10 +467,6 @@
       },
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "Jd-krq17k"
-          },
           "exemplar": true,
           "expr": "sum by(model) (\n    rate(django_model_deletes_total{job=~\"$job\", instance=~\"$instance\", namespace=~\"$namespace\", app=~\"^$app\"}[$__rate_interval])\n    )",
           "interval": "",
@@ -514,6 +491,8 @@
       "type": "row"
     },
     {
+      "title": "Total Request Count",
+      "datasource": "$datasource",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -559,10 +538,6 @@
       "pluginVersion": "8.3.4",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "Jd-krq17k"
-          },
           "exemplar": true,
           "expr": "sum(increase(django_http_requests_total_by_view_transport_method_total{job=~\"$job\", instance=~\"$instance\", namespace=~\"$namespace\", app=~\"^$app\",view!~\"prometheus-django-metrics|healthcheck\"}[1m]))",
           "interval": "",
@@ -570,14 +545,11 @@
           "refId": "A"
         }
       ],
-      "title": "Total Request Count",
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "$datasource"
-      },
+      "title": "2XX Responses",
+      "datasource": "$datasource",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -635,10 +607,6 @@
       "pluginVersion": "8.3.4",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "Jd-krq17k"
-          },
           "exemplar": true,
           "expr": "sum(increase(django_http_responses_total_by_status_view_method_total{job=~\"$job\", instance=~\"$instance\", status=~\"2.+\",namespace=~\"$namespace\", app=~\"^$app\",view!~\"prometheus-django-metrics|healthcheck\"}[1m]))",
           "format": "time_series",
@@ -648,14 +616,11 @@
           "refId": "A"
         }
       ],
-      "title": "2XX Responses",
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "$datasource"
-      },
+      "title": "4XX Responses",
+      "datasource": "$datasource",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -711,10 +676,6 @@
       "pluginVersion": "8.3.4",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "Jd-krq17k"
-          },
           "exemplar": true,
           "expr": "sum(increase(django_http_responses_total_by_status_view_method_total{job=~\"$job\", instance=~\"$instance\", status=~\"4.+\", namespace=~\"$namespace\", app=~\"^$app\",view!~\"prometheus-django-metrics|healthcheck\"}[1m]))",
           "format": "time_series",
@@ -724,14 +685,11 @@
           "refId": "A"
         }
       ],
-      "title": "4XX Responses",
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "$datasource"
-      },
+      "title": "5XX Responses",
+      "datasource": "$datasource",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -789,10 +747,6 @@
       "pluginVersion": "8.3.4",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "Jd-krq17k"
-          },
           "exemplar": true,
           "expr": "sum(increase(django_http_responses_total_by_status_view_method_total{job=~\"$job\", instance=~\"$instance\", status=~\"5.+\", namespace=~\"$namespace\", app=~\"^$app\",view!~\"prometheus-django-metrics|healthcheck\"}[1m]))",
           "format": "time_series",
@@ -802,14 +756,11 @@
           "refId": "A"
         }
       ],
-      "title": "5XX Responses",
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "$datasource"
-      },
+      "title": "Requests per second",
+      "datasource": "$datasource",
       "description": "Requests per seconds, aggregated over HTTP method, and view.",
       "fieldConfig": {
         "defaults": {
@@ -880,10 +831,6 @@
       "pluginVersion": "8.3.4",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "Jd-krq17k"
-          },
           "exemplar": true,
           "expr": "sum by(method, view) (\n    rate(django_http_requests_total_by_view_transport_method_total{job=~\"$job\", instance=~\"$instance\", namespace=~\"$namespace\", app=~\"^$app\",view!~\"prometheus-django-metrics|healthcheck\"}[$__rate_interval])\n    )",
           "format": "time_series",
@@ -894,14 +841,11 @@
           "refId": "A"
         }
       ],
-      "title": "Requests per second",
       "type": "timeseries"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "$datasource"
-      },
+      "title": "Request Latency",
+      "datasource": "$datasource",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -990,10 +934,6 @@
       "pluginVersion": "8.3.4",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "Jd-krq17k"
-          },
           "exemplar": true,
           "expr": "histogram_quantile(0.9, sum(rate(django_http_requests_latency_seconds_by_view_method_bucket{job=~\"$job\", instance=~\"$instance\", namespace=~\"$namespace\", app=~\"^$app$\",view!~\"prometheus-django-metrics|healthcheck\"}[$__rate_interval])) by (job, le))",
           "format": "time_series",
@@ -1003,10 +943,6 @@
           "refId": "A"
         },
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "Jd-krq17k"
-          },
           "exemplar": true,
           "expr": "histogram_quantile(0.5, sum(rate(django_http_requests_latency_seconds_by_view_method_bucket{namespace=~\"$namespace\", app=~\"^$app$\",view!~\"prometheus-django-metrics|healthcheck\"}[$__rate_interval])) by (job, le))",
           "format": "time_series",
@@ -1017,10 +953,6 @@
           "refId": "B"
         },
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "Jd-krq17k"
-          },
           "exemplar": true,
           "expr": "sum(rate(django_http_requests_latency_seconds_by_view_method_sum{namespace=~\"$namespace\", app=~\"^$app$\",view!~\"prometheus-django-metrics|healthcheck\"}[$__rate_interval])) / sum(rate(django_http_requests_latency_seconds_by_view_method_count{namespace=~\"$namespace\", app=~\"^$app$\",view!~\"prometheus-django-metrics|healthcheck\"}[$__rate_interval]))",
           "format": "time_series",
@@ -1031,10 +963,11 @@
           "refId": "C"
         }
       ],
-      "title": "Request Latency",
       "type": "timeseries"
     },
     {
+      "title": "Error rate",
+      "datasource": "$datasource",
       "description": "Total error rate for all views. Errors are considered responses with 5xx http status code.",
       "fieldConfig": {
         "defaults": {
@@ -1124,10 +1057,6 @@
       },
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "Jd-krq17k"
-          },
           "exemplar": true,
           "expr": "(sum(\n    rate(django_http_responses_total_by_status_view_method_total{job=~\"$job\", instance=~\"$instance\", status=~\"5..\", namespace=~\"$namespace\", app=~\"^$app\",view!~\"prometheus-django-metrics|healthcheck\"}[$__rate_interval])\n    ) or vector(0)) /\nsum(\n    rate(django_http_responses_total_by_status_view_method_total{job=~\"$job\", instance=~\"$instance\", namespace=~\"$namespace\", app=~\"^$app\",view!~\"prometheus-django-metrics|healthcheck\"}[$__rate_interval])\n    )",
           "interval": "",
@@ -1135,7 +1064,6 @@
           "refId": "A"
         }
       ],
-      "title": "Error rate",
       "type": "timeseries"
     }
   ],
