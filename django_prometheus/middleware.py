@@ -117,6 +117,14 @@ class Metrics:
             ["view", "transport", "method"],
             namespace=NAMESPACE,
         )
+        # Set in process_view
+        self.requests_by_view_user = self.register_metric(
+            Counter,
+            "django_http_requests_total_by_view_user",
+            "Count of requests by view, user.",
+            ["view", "user"],
+            namespace=NAMESPACE,
+        )
         self.requests_body_bytes = self.register_metric(
             Histogram,
             "django_http_requests_body_total_bytes",
@@ -235,6 +243,9 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
         ):
             return "<invalid method>"
         return m
+    
+    def _user(self, request):
+        return request.user.username if request.is_authenticated() else "<unknown user>"
 
     def label_metric(self, metric, request, response=None, **labels):
         return metric.labels(**labels) if labels else metric
@@ -268,6 +279,7 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
     def process_view(self, request, view_func, *view_args, **view_kwargs):
         transport = self._transport(request)
         method = self._method(request)
+        user = self._user(request)
         if hasattr(request, "resolver_match"):
             name = request.resolver_match.view_name or "<unnamed view>"
             self.label_metric(
@@ -276,6 +288,12 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
                 view=name,
                 transport=transport,
                 method=method,
+            ).inc()
+            self.label_metric(
+                self.metrics.requests_by_view_user,
+                request,
+                view=name,
+                user=user
             ).inc()
 
     def process_template_response(self, request, response):

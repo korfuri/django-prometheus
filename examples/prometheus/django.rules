@@ -30,6 +30,9 @@ groups:
   - record: job:django_http_requests_total_by_view_transport_method:sum_rate30s
     expr: sum(rate(django_http_requests_total_by_view_transport_method[30s])) BY (job,
       view, transport, method)
+  - record: job:django_http_requests_total_by_view_user:sum_rate30s
+    expr: sum(rate(django_http_requests_total_by_view_user[30s])) BY (job,
+      view, user)
   - record: job:django_http_responses_total_by_templatename:sum_rate30s
     expr: sum(rate(django_http_responses_total_by_templatename[30s])) BY (job, templatename)
   - record: job:django_http_responses_total_by_status:sum_rate30s
