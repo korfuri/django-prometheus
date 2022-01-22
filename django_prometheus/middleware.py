@@ -117,7 +117,6 @@ class Metrics:
             ["view", "transport", "method"],
             namespace=NAMESPACE,
         )
-        # Set in process_view
         self.requests_by_view_user = self.register_metric(
             Counter,
             "django_http_requests_total_by_view_user",
@@ -245,7 +244,7 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
         return m
     
     def _user(self, request):
-        return request.user.username if request.is_authenticated() else "<unknown user>"
+        return request.user.username if request.user.is_authenticated else "<unknown user>"
 
     def label_metric(self, metric, request, response=None, **labels):
         return metric.labels(**labels) if labels else metric
@@ -293,7 +292,7 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
                 self.metrics.requests_by_view_user,
                 request,
                 view=name,
-                user=user
+                user=user,
             ).inc()
 
     def process_template_response(self, request, response):
