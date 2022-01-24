@@ -51,10 +51,11 @@ jobs:
         pip install -U setuptools "tox>=3.23.0,<4" codecov tox-gh-actions coverage
         sudo apt-get update
         sudo apt-get install binutils libproj-dev gdal-bin libmemcached-dev
-    - name: Install Go and Mixtool, later used for mixin
+    - name: Install Go, later used by `mixtool`
       uses: actions/setup-go@v2
       with:
         go-version: '1.17.6'
+    - name: Install `mixtool``, later used for linting the mixin
       run: |
         go get github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb
         go get github.com/monitoring-mixins/mixtool/cmd/mixtool
