@@ -189,8 +189,8 @@ class PrometheusBeforeMiddleware(MiddlewareMixin):
 
     metrics_cls = Metrics
 
-    def __init__(self, get_response=None):
-        super().__init__(get_response)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.metrics = self.metrics_cls.get_instance()
 
     def process_request(self, request):
@@ -213,8 +213,8 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
 
     metrics_cls = Metrics
 
-    def __init__(self, get_response=None):
-        super().__init__(get_response)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.metrics = self.metrics_cls.get_instance()
 
     def _transport(self, request):
