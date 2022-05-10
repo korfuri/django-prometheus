@@ -9,3 +9,5 @@ psycopg2
 pytest==6.2.5
 pytest-django
 pylibmc
+pymemcache
+python-memcached
