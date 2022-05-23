@@ -78,7 +78,7 @@ def get_git_version_info():
 
 
 def prerelease_version():
-    """ return what the prerelease version should be.
+    """return what the prerelease version should be.
     https://packaging.python.org/tutorials/distributing-packages/#pre-release-versioning
     0.0.2.dev22
     """
