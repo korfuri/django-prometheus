@@ -19,7 +19,7 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 
-def DualStackHTTPServer(HTTPServer):
+class DualStackHTTPServer(HTTPServer):
     """
     Default for the python HTTPServer address_family is socket.AF_INET.
     This will by default create a server which works IPv4 only.
