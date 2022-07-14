@@ -26,19 +26,25 @@ setup(
     keywords="django monitoring prometheus",
     url="http://github.com/korfuri/django-prometheus",
     project_urls={
-            "Changelog": "https://github.com/korfuri/django-prometheus/blob/master/CHANGELOG.md",
-            "Documentation": "https://github.com/korfuri/django-prometheus/blob/master/README.md",
-            "Source": "https://github.com/korfuri/django-prometheus",
-            "Tracker": "https://github.com/korfuri/django-prometheus/issues",
+        "Changelog": "https://github.com/korfuri/django-prometheus/blob/master/CHANGELOG.md",
+        "Documentation": "https://github.com/korfuri/django-prometheus/blob/master/README.md",
+        "Source": "https://github.com/korfuri/django-prometheus",
+        "Tracker": "https://github.com/korfuri/django-prometheus/issues",
     },
-    packages=find_packages(exclude=["tests",]),
+    packages=find_packages(
+        exclude=[
+            "tests",
+        ]
+    ),
     test_suite="django_prometheus.tests",
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
     tests_require=["pytest", "pytest-django"],
     setup_requires=["pytest-runner"],
     options={"bdist_wheel": {"universal": "1"}},
-    install_requires=["prometheus-client>=0.7",],
+    install_requires=[
+        "prometheus-client>=0.7",
+    ],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
