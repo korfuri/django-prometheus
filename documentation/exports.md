@@ -97,7 +97,6 @@ env = PROMETHEUS_MULTIPROC_DIR=/path/to/django_metrics
 ```
 
 You can also set this environment variable elsewhere such as in a kubernetes manifest.
-Note that the environment variable is lower_case.
 
 Setting this will create four files (one for counters, one for summaries, ...etc)
 for each pid used. In uwsgi, the number of different pids used can be quite large
