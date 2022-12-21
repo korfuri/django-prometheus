@@ -61,6 +61,9 @@ class Metrics:
                 "Histogram of requests processing time (including middleware "
                 "processing time)."
             ),
+            buckets=getattr(
+                settings, "PROMETHEUS_LATENCY_BUCKETS", DEFAULT_LATENCY_BUCKETS
+            ),
             namespace=NAMESPACE,
         )
         self.requests_unknown_latency_before = self.register_metric(
