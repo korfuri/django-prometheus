@@ -25,6 +25,8 @@ DEFAULT_LATENCY_BUCKETS = (
     float("inf"),
 )
 
+DEFAULT_BYTES_BUCKETS = PowersOf(2, 30)
+
 
 class Metrics:
     _instance = None
@@ -121,7 +123,9 @@ class Metrics:
             Histogram,
             "django_http_requests_body_total_bytes",
             "Histogram of requests by body size.",
-            buckets=PowersOf(2, 30),
+            buckets=getattr(
+                settings, "PROMETHEUS_BYTES_BUCKETS", DEFAULT_BYTES_BUCKETS
+            ),
             namespace=NAMESPACE,
         )
         # Set in process_template_response
@@ -151,7 +155,9 @@ class Metrics:
             Histogram,
             "django_http_responses_body_total_bytes",
             "Histogram of responses by body size.",
-            buckets=PowersOf(2, 30),
+            buckets=getattr(
+                settings, "PROMETHEUS_BYTES_BUCKETS", DEFAULT_BYTES_BUCKETS
+            ),
             namespace=NAMESPACE,
         )
         self.responses_by_charset = self.register_metric(
