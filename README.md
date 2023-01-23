@@ -72,7 +72,10 @@ urlpatterns = [
 ### Configuration
 
 Prometheus uses Histogram based grouping for monitoring latencies. The default
-buckets are here: https://github.com/prometheus/client_python/blob/master/prometheus_client/core.py
+buckets are:
+```python
+PROMETHEUS_LATENCY_BUCKETS = (0.01, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1.0, 2.5, 5.0, 7.5, 10.0, 25.0, 50.0, 75.0, float("inf"),)
+```
 
 You can define custom buckets for latency, adding more buckets decreases performance but
 increases accuracy: https://prometheus.io/docs/practices/histograms/
