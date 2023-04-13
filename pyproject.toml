@@ -15,7 +15,7 @@ include_trailing_comma = true
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = {py37,py38,py39,py310}-django{220,300,310,320}-{end2end,unittests},{py38,py39,py310}-django-400-{end2end,unittests},py38-lint
+envlist = {py37,py38,py39,py310}-django{320}-{end2end,unittests},{py38,py39,py310}-django-400-{end2end,unittests},py39-lint
 
 [gh-actions]
 python =
@@ -27,7 +27,7 @@ python =
 [testenv]
 deps =
     django320: Django>=3.2,<3.3
-    django4: Django==4.0
+    django400: Django==4.0
     coverage
     -rrequirements.txt
 skip_missing_interpreters=true
