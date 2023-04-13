@@ -42,7 +42,7 @@ commands =
     unittests: coverage run --source=django_prometheus setup.py test
     unittests: python setup.py sdist bdist_wheel
 
-[testenv:py38-lint]
+[testenv:py39-lint]
 deps =
     black==22.6.0
     flake8
