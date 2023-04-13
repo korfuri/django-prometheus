@@ -1,6 +1,4 @@
-import psycopg2.extensions
 from django.db.backends.postgresql import base
-
 from django_prometheus.db.common import DatabaseWrapperMixin, ExportingCursorWrapper
 
 
@@ -13,7 +11,7 @@ class DatabaseFeatures(base.DatabaseFeatures):
 class DatabaseWrapper(DatabaseWrapperMixin, base.DatabaseWrapper):
     def get_connection_params(self):
         conn_params = super().get_connection_params()
-        conn_params["cursor_factory"] = ExportingCursorWrapper(psycopg2.extensions.cursor, self.alias, self.vendor)
+        conn_params["cursor_factory"] = ExportingCursorWrapper(base.Cursor, self.alias, self.vendor)
         return conn_params
 
     def create_cursor(self, name=None):
