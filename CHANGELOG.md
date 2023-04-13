@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.3.0 - UNPUBLISHED
+
+* Remove support for old django & python versions and add support for modern versions.
+
 ## v2.2.0 - December 19, 2021
 
 * Switch to Github Actions CI, remove travis-ci.
