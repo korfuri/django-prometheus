@@ -23,7 +23,6 @@ class PyLibMCCache(MemcachedPrometheusCacheMixin, memcached.PyLibMCCache):
 
     pass
 
-
 class PyMemcacheCache(MemcachedPrometheusCacheMixin, memcached.PyMemcacheCache):
     """Inherit memcached to add metrics about hit/miss ratio"""
 
