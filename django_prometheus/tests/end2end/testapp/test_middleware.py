@@ -138,7 +138,7 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
             registry,
             2,
             M("requests_latency_seconds_by_view_method_bucket"),
-            le="2.0",
+            le="2.5",
             view="testapp.views.objection",
             method="GET",
         )

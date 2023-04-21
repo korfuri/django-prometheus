@@ -1,4 +1,3 @@
-from django import VERSION as DJANGO_VERSION
 from django.core.cache import caches
 from django.test import TestCase
 from redis import RedisError
@@ -11,19 +10,12 @@ class TestCachesMetrics(PrometheusTestCaseMixin, TestCase):
 
     def testCounters(self):
         supported_caches = [
-            "memcached.MemcachedCache",
+            "memcached.PyLibMCCache",
+            "memcached.PyMemcacheCache",
             "filebased",
             "locmem",
             "redis",
         ]
-
-        if DJANGO_VERSION >= (3, 2):
-            supported_caches.extend(
-                [
-                    "memcached.PyLibMCCache",
-                    "memcached.PyMemcacheCache",
-                ]
-            )
 
         # Note: those tests require a memcached server running
         for supported_cache in supported_caches:
@@ -115,19 +107,12 @@ class TestCachesMetrics(PrometheusTestCaseMixin, TestCase):
 
     def test_cache_version_support(self):
         supported_caches = [
-            "memcached.MemcachedCache",
+            "memcached.PyLibMCCache",
+            "memcached.PyMemcacheCache",
             "filebased",
             "locmem",
             "redis",
         ]
-
-        if DJANGO_VERSION >= (3, 2):
-            supported_caches.extend(
-                [
-                    "memcached.PyLibMCCache",
-                    "memcached.PyMemcacheCache",
-                ]
-            )
 
         # Note: those tests require a memcached server running
         for supported_cache in supported_caches:

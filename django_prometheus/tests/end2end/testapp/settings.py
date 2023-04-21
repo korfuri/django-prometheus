@@ -1,7 +1,6 @@
 import os
 import tempfile
 
-from django import VERSION as DJANGO_VERSION
 from testapp.helpers import get_middleware
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -97,11 +96,15 @@ _tmp_cache_dir = tempfile.mkdtemp()
 
 CACHES = {
     "default": {
-        "BACKEND": "django_prometheus.cache.backends.memcached.MemcachedCache",
+        "BACKEND": "django_prometheus.cache.backends.memcached.PyLibMCCache",
         "LOCATION": "localhost:11211",
     },
-    "memcached.MemcachedCache": {
-        "BACKEND": "django_prometheus.cache.backends.memcached.MemcachedCache",
+    "memcached.PyLibMCCache": {
+        "BACKEND": "django_prometheus.cache.backends.memcached.PyLibMCCache",
+        "LOCATION": "localhost:11211",
+    },
+    "memcached.PyMemcacheCache": {
+        "BACKEND": "django_prometheus.cache.backends.memcached.PyMemcacheCache",
         "LOCATION": "localhost:11211",
     },
     "filebased": {
@@ -128,16 +131,6 @@ CACHES = {
     },
 }
 
-
-if DJANGO_VERSION >= (3, 2):
-    CACHES["memcached.PyLibMCCache"] = {
-        "BACKEND": "django_prometheus.cache.backends.memcached.PyLibMCCache",
-        "LOCATION": "localhost:11211",
-    }
-    CACHES["memcached.PyMemcacheCache"] = {
-        "BACKEND": "django_prometheus.cache.backends.memcached.PyMemcacheCache",
-        "LOCATION": "localhost:11211",
-    }
 
 # Internationalization
 LANGUAGE_CODE = "en-us"
