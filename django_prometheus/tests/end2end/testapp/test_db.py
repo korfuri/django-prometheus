@@ -186,5 +186,5 @@ class TestPostgisDbMetrics(BaseDbMetricTest):
 
 
 def print_metric(reg):
-    relevant = [m for m in reg if "db_execute" in m._name]
+    relevant = [m for m in reg if "db_execute" in m.name]
     return repr(relevant)
