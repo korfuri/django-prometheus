@@ -172,10 +172,10 @@ class TestPostgisDbMetrics(BaseDbMetricTest):
     def testCounters(self):
         r = self.saveRegistry()
         cursor = connections["postgis"].cursor()
-
+        print("BEFORE LOOP")
         for _ in range(20):
             cursor.execute("SELECT 1")
-
+        print("AFTER LOOP")
         self.assertMetricCompare(
             r,
             lambda a, b: a + 20 <= b < a + 25,
