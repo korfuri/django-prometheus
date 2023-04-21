@@ -2,7 +2,7 @@ django-redis>=4.12.1
 black; python_version >= '3.6'
 flake8
 isort>=5.5.4,<6
-prometheus-client>=0.12.0
+prometheus-client==0.12.0
 pip-prometheus>=1.2.1
 mysqlclient
 psycopg2
