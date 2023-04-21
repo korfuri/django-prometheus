@@ -96,7 +96,7 @@ _tmp_cache_dir = tempfile.mkdtemp()
 
 CACHES = {
     "default": {
-        "BACKEND": "django_prometheus.cache.backends.memcached.MemcachedCache",
+        "BACKEND": "django_prometheus.cache.backends.memcached.PyLibMCCache",
         "LOCATION": "localhost:11211",
     },
     "memcached.PyLibMCCache": {
