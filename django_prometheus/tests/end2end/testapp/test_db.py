@@ -186,5 +186,5 @@ class TestPostgisDbMetrics(BaseDbMetricTest):
 
 
 def print_metric(reg):
-    relevant = [m for m in reg if "db_execute" in m.name]
+    relevant = [m for m in reg if "django_db_execute_total" in m.name]
     return repr(relevant)
