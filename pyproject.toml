@@ -15,11 +15,10 @@ include_trailing_comma = true
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = {py36,py37,py38,py39,py310}-django{220,300,310,320}-{end2end,unittests},{py38,py39,py310}-django-400-{end2end,unittests},py38-lint
+envlist = {py37,py38,py39,py310}-django{320}-{end2end,unittests},{py38,py39,py310}-django-400-{end2end,unittests},py38-lint
 
 [gh-actions]
 python =
-    3.6: py36
     3.7: py37
     3.8: py38, py38-lint
     3.9: py39
@@ -27,9 +26,6 @@ python =
 
 [testenv]
 deps =
-    django220: Django>=2.2,<2.3
-    django300: Django>=3.0,<3.1
-    django310: Django>=3.1,<3.2
     django320: Django>=3.2,<3.3
     django4: Django==4.0
     coverage
@@ -48,7 +44,7 @@ commands =
 
 [testenv:py38-lint]
 deps =
-    black
+    black==22.6.0
     flake8
     isort>=5.5.4,<6
     flake8-debugger

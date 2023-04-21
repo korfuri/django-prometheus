@@ -1,4 +1,3 @@
-from django import VERSION as DJANGO_VERSION
 from django.core.cache.backends import memcached
 
 from django_prometheus.cache.metrics import (
@@ -19,20 +18,13 @@ class MemcachedPrometheusCacheMixin:
         return cached or default
 
 
-class MemcachedCache(MemcachedPrometheusCacheMixin, memcached.MemcachedCache):
+class PyLibMCCache(MemcachedPrometheusCacheMixin, memcached.PyLibMCCache):
     """Inherit memcached to add metrics about hit/miss ratio"""
 
     pass
 
 
-if DJANGO_VERSION >= (3, 2):
+class PyMemcacheCache(MemcachedPrometheusCacheMixin, memcached.PyMemcacheCache):
+    """Inherit memcached to add metrics about hit/miss ratio"""
 
-    class PyLibMCCache(MemcachedPrometheusCacheMixin, memcached.PyLibMCCache):
-        """Inherit memcached to add metrics about hit/miss ratio"""
-
-        pass
-
-    class PyMemcacheCache(MemcachedPrometheusCacheMixin, memcached.PyMemcacheCache):
-        """Inherit memcached to add metrics about hit/miss ratio"""
-
-        pass
+    pass
