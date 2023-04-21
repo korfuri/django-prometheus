@@ -10,11 +10,11 @@ class TestCachesMetrics(PrometheusTestCaseMixin, TestCase):
 
     def testCounters(self):
         supported_caches = [
+            "memcached.PyLibMCCache",
+            "memcached.PyMemcacheCache",
             "filebased",
             "locmem",
             "redis",
-            "memcached.PyLibMCCache",
-            "memcached.PyMemcacheCache",
         ]
 
         # Note: those tests require a memcached server running
