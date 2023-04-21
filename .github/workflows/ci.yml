@@ -44,8 +44,8 @@ jobs:
     - name: install packages
       uses: awalsh128/cache-apt-pkgs-action@v1.3.0
       with:
-        packages:  binutils libproj-dev gdal-bin libmemcached-dev
-        
+        packages: binutils libproj-dev gdal-bin libmemcached-dev
+        version: v1
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
