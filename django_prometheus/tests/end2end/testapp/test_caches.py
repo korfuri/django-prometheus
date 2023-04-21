@@ -15,8 +15,9 @@ class TestCachesMetrics(PrometheusTestCaseMixin, TestCase):
             "filebased",
             "locmem",
             "redis",
+            "memcached.PyLibMCCache",
+            "memcached.PyMemcacheCache",
         ]
-
         # Note: those tests require a memcached server running
         for supported_cache in supported_caches:
             tested_cache = caches[supported_cache]
