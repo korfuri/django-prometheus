@@ -64,6 +64,7 @@ def ExportingCursorWrapper(cursor_class, alias, vendor):
         """Extends the base CursorWrapper to count events."""
 
         def execute(self, *args, **kwargs):
+            print(f"**** ExportingCursorWrapper EXECUTE INCREMENT FOR alias={alias} vendor={vendor}")
             execute_total.labels(alias, vendor).inc()
             with query_duration_seconds.labels(**labels).time(), ExceptionCounterByType(
                 errors_total, extra_labels=labels
@@ -71,6 +72,7 @@ def ExportingCursorWrapper(cursor_class, alias, vendor):
                 return super().execute(*args, **kwargs)
 
         def executemany(self, query, param_list, *args, **kwargs):
+            print(f"**** ExportingCursorWrapper EXECUTE-MANY INCREMENT FOR alias={alias} vendor={vendor}")
             execute_total.labels(alias, vendor).inc(len(param_list))
             execute_many_total.labels(alias, vendor).inc(len(param_list))
             with query_duration_seconds.labels(**labels).time(), ExceptionCounterByType(
