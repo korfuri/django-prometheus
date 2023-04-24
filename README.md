@@ -15,14 +15,15 @@ Export Django monitoring metrics for Prometheus.io
 This library provides Prometheus metrics for Django related operations:
 
 * Requests & Responses
-* Database access done via [Django ORM](https://docs.djangoproject.com/en/3.0/topics/db/)
-* Cache access done via [Django Cache framework](https://docs.djangoproject.com/en/3.0/topics/cache/)
+* Database access done via [Django ORM](https://docs.djangoproject.com/en/3.2/topics/db/)
+* Cache access done via [Django Cache framework](https://docs.djangoproject.com/en/3.2/topics/cache/)
 
 ## Usage
 
 ### Requirements
 
-* Django >= 2.2
+* Django >= 3.2
+* Python 3.7 and above.
 
 ### Installation
 
@@ -73,12 +74,13 @@ urlpatterns = [
 
 Prometheus uses Histogram based grouping for monitoring latencies. The default
 buckets are:
+
 ```python
 PROMETHEUS_LATENCY_BUCKETS = (0.01, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1.0, 2.5, 5.0, 7.5, 10.0, 25.0, 50.0, 75.0, float("inf"),)
 ```
 
 You can define custom buckets for latency, adding more buckets decreases performance but
-increases accuracy: https://prometheus.io/docs/practices/histograms/
+increases accuracy: <https://prometheus.io/docs/practices/histograms/>
 
 ```python
 PROMETHEUS_LATENCY_BUCKETS = (.1, .2, .5, .6, .8, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.5, 9.0, 12.0, 15.0, 20.0, 30.0, float("inf"))

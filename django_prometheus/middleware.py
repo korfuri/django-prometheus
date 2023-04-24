@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.utils.deprecation import MiddlewareMixin
 from prometheus_client import Counter, Histogram
 

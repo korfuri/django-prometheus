@@ -12,8 +12,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
-        os: [ubuntu-latest]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
+        os: [ubuntu-20.04]
     runs-on: ${{ matrix.os }}
     name: "${{ matrix.os }} Python: ${{ matrix.python-version }}"
     services:
@@ -48,7 +48,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -U "pip>=21.1"
-        pip install -U setuptools "tox>=3.23.0,<4" codecov tox-gh-actions coverage
+        pip install -U setuptools "tox-gh-actions==2.12.0" coverage
         sudo apt-get update
         sudo apt-get install binutils libproj-dev gdal-bin libmemcached-dev
     - name: Log versions
