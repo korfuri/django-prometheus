@@ -54,7 +54,6 @@ class TestCachesMetrics(PrometheusTestCaseMixin, TestCase):
             )
 
     def test_redis_cache_fail(self):
-
         # Note: test use fake service config (like if server was stopped)
         supported_cache = "redis"
 
