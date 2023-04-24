@@ -11,6 +11,12 @@ line_length = 88
 force_grid_wrap = 0
 include_trailing_comma = true
 
+[tool.black]
+line-length = 120
+
+[tool.ruff]
+line-length = 120
+
 
 [tool.tox]
 legacy_tox_ini = """
@@ -49,6 +55,7 @@ commands =
 deps =
     black==23.3.0
     flake8
+    ruff==0.0.262
     isort>=5.5.4,<6
     flake8-debugger
     flake8-2020
@@ -58,5 +65,6 @@ commands =
     black --check django_prometheus/
     flake8 django_prometheus
     isort --check-only django_prometheus/
+    ruff check django_prometheus/
 
 """

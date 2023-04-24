@@ -50,9 +50,7 @@ class PrometheusTestCaseMixin:
 
     def getMetric(self, metric_name, registry=REGISTRY, **labels):
         """Gets a single metric."""
-        return self.getMetricFromFrozenRegistry(
-            metric_name, registry.collect(), **labels
-        )
+        return self.getMetricFromFrozenRegistry(metric_name, registry.collect(), **labels)
 
     def getMetricVectorFromFrozenRegistry(self, metric_name, frozen_registry):
         """Like getMetricVector, but from a frozen registry."""
@@ -90,16 +88,9 @@ class PrometheusTestCaseMixin:
         """Formats a list of (labels, value) where labels is a dict into a
         human-readable representation.
         """
-        return "\n".join(
-            [
-                "{} = {}".format(self.formatLabels(labels), value)
-                for labels, value in vector
-            ]
-        )
+        return "\n".join(["{} = {}".format(self.formatLabels(labels), value) for labels, value in vector])
 
-    def assertMetricEquals(
-        self, expected_value, metric_name, registry=REGISTRY, **labels
-    ):
+    def assertMetricEquals(self, expected_value, metric_name, registry=REGISTRY, **labels):
         """Asserts that metric_name{**labels} == expected_value."""
         value = self.getMetric(metric_name, registry=registry, **labels)
         self.assertEqual(
@@ -116,17 +107,13 @@ class PrometheusTestCaseMixin:
             ),
         )
 
-    def assertMetricDiff(
-        self, frozen_registry, expected_diff, metric_name, registry=REGISTRY, **labels
-    ):
+    def assertMetricDiff(self, frozen_registry, expected_diff, metric_name, registry=REGISTRY, **labels):
         """Asserts that metric_name{**labels} changed by expected_diff between
         the frozen registry and now. A frozen registry can be obtained
         by calling saveRegistry, typically at the beginning of a test
         case.
         """
-        saved_value = self.getMetricFromFrozenRegistry(
-            metric_name, frozen_registry, **labels
-        )
+        saved_value = self.getMetricFromFrozenRegistry(metric_name, frozen_registry, **labels)
         current_value = self.getMetric(metric_name, registry=registry, **labels)
         assert current_value is not None, METRIC_DIFF_ERR_NONE_EXPLANATION % (
             metric_name,
@@ -149,17 +136,13 @@ class PrometheusTestCaseMixin:
             ),
         )
 
-    def assertMetricCompare(
-        self, frozen_registry, predicate, metric_name, registry=REGISTRY, **labels
-    ):
+    def assertMetricCompare(self, frozen_registry, predicate, metric_name, registry=REGISTRY, **labels):
         """Asserts that metric_name{**labels} changed according to a provided
         predicate function between the frozen registry and now. A
         frozen registry can be obtained by calling saveRegistry,
         typically at the beginning of a test case.
         """
-        saved_value = self.getMetricFromFrozenRegistry(
-            metric_name, frozen_registry, **labels
-        )
+        saved_value = self.getMetricFromFrozenRegistry(metric_name, frozen_registry, **labels)
         current_value = self.getMetric(metric_name, registry=registry, **labels)
         assert current_value is not None, METRIC_DIFF_ERR_NONE_EXPLANATION % (
             metric_name,
@@ -167,9 +150,7 @@ class PrometheusTestCaseMixin:
             saved_value,
             current_value,
         )
-        assert (
-            predicate(saved_value, current_value) is True
-        ), METRIC_COMPARE_ERR_EXPLANATION % (
+        assert predicate(saved_value, current_value) is True, METRIC_COMPARE_ERR_EXPLANATION % (
             metric_name,
             self.formatLabels(labels),
             saved_value,

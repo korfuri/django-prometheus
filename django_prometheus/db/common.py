@@ -48,9 +48,7 @@ class DatabaseWrapperMixin:
             raise
 
     def create_cursor(self, name=None):
-        return self.connection.cursor(
-            factory=ExportingCursorWrapper(self.CURSOR_CLASS, self.alias, self.vendor)
-        )
+        return self.connection.cursor(factory=ExportingCursorWrapper(self.CURSOR_CLASS, self.alias, self.vendor))
 
 
 def ExportingCursorWrapper(cursor_class, alias, vendor):
