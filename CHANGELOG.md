@@ -6,6 +6,7 @@
 * Fix two latency metrics not using PROMETHEUS_LATENCY_BUCKETS setting, Thanks [@AleksaC](https://github.com/korfuri/django-prometheus/pull/343)
 * Support new cache backend names in newer Django versions, Thanks [@tneuct](https://github.com/korfuri/django-prometheus/pull/329)
 * Make export of migrations False by default, Thanks [@kaypee90](https://github.com/korfuri/django-prometheus/pull/313)
+* Add support for Djago 4.1
 
 ## v2.2.0 - December 19, 2021
 
