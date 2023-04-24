@@ -50,8 +50,8 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        pip install -U "pip>=21.1"
-        pip install -U setuptools "tox-gh-actions==2.12.0" coverage
+        pip install -U "pip>=23.1.1"
+        pip install -U setuptools "tox-gh-actions==3.1.0" coverage
         sudo apt-get update
         sudo apt-get install binutils libproj-dev gdal-bin libmemcached-dev
     - name: Log versions
