@@ -41,6 +41,10 @@ jobs:
         ports:
           - 5432:5432
     steps:
+    - name: Install OS Packages
+      run: |
+        sudo apt-get update
+        sudo apt-get install binutils libproj-dev gdal-bin libmemcached-dev
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
@@ -52,8 +56,6 @@ jobs:
       run: |
         pip install -U "pip>=23.1.1"
         pip install -U setuptools "tox-gh-actions==3.1.0" coverage
-        sudo apt-get update
-        sudo apt-get install binutils libproj-dev gdal-bin libmemcached-dev
     - name: Log versions
       run: |
         python --version
