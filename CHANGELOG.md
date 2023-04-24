@@ -1,5 +1,12 @@
 # Changelog
 
+## v2.3.0 - UNPUBLISHED
+
+* Remove support for Python 3.6, Django versions older tha than 3.2
+* Fix two latency metrics not using PROMETHEUS_LATENCY_BUCKETS setting, Thanks [@AleksaC](https://github.com/korfuri/django-prometheus/pull/343)
+* Support new cache backend names in newer Django versions, Thanks [@tneuct](https://github.com/korfuri/django-prometheus/pull/329)
+* Make export of migrations False by default, Thanks [@kaypee90](https://github.com/korfuri/django-prometheus/pull/313)
+
 ## v2.2.0 - December 19, 2021
 
 * Switch to Github Actions CI, remove travis-ci.
