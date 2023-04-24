@@ -15,6 +15,7 @@ include_trailing_comma = true
 [tool.tox]
 legacy_tox_ini = """
 [tox]
+min_version = 4.4
 envlist = {py37,py38,py39,py310,py311}-django{320}-{end2end,unittests},{py38,py39,py310,py311}-django{400,410}-{end2end,unittests},py39-lint
 
 [gh-actions]
