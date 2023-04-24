@@ -4,6 +4,9 @@ Adapted from https://github.com/pygame/pygameweb/blob/master/pygameweb/builds/up
 For updating the version from git.
 __init__.py contains a __version__ field.
 Update that.
+If the user supplies "patch" as a CLi argument, we want to bump the existing patch version
+If the user supplied the full version as a CLI argument, we want to use that version.
+Otherwise,
 If we are on master, we want to update the version as a pre-release.
 git describe --tags
 With these:
@@ -18,41 +21,37 @@ Get the branch/tag name with this.
     git symbolic-ref -q --short HEAD || git describe --tags --exact-match
 """
 
-import os
+import io
 import re
 import subprocess
+import sys
+from pathlib import Path
+
+from packaging.version import Version
+
+_INIT_FILE = Path("django_prometheus/__init__.py")
 
 
-def migrate_source_attribute(attr, to_this, target_file, regex):
+def migrate_source_attribute(attr, to_this, target_file):
     """Updates __magic__ attributes in the source file"""
-    change_this = re.compile(regex, re.S)
     new_file = []
     found = False
-
-    with open(target_file, "r") as fp:
-        lines = fp.readlines()
+    lines = target_file.read_text().splitlines()
 
     for line in lines:
         if line.startswith(attr):
             found = True
-            line = re.sub(change_this, to_this, line)
+            line = to_this
         new_file.append(line)
 
     if found:
-        with open(target_file, "w") as fp:
-            fp.writelines(new_file)
+        target_file.write_text("\n".join(new_file))
 
 
-def migrate_version(target_file, new_version):
-    """Updates __version__ in the source file"""
-    regex = r"['\"](.*)['\"]"
-    migrate_source_attribute(
-        "__version__",
-        "'{new_version}'".format(new_version=new_version),
-        target_file,
-        regex,
-    )
-    print("Updating to version: {}".format(new_version))
+def migrate_version(new_version):
+    """Updates __version__ in the init file"""
+    print(f"migrate to version: {new_version}")
+    migrate_source_attribute("__version__", to_this=f'__version__ = "{new_version}"\n', target_file=_INIT_FILE)
 
 
 def is_master_branch():
@@ -61,20 +60,11 @@ def is_master_branch():
     return tag_branch in [b"master\n"]
 
 
-def git_tag_name():
-    cmd = "git describe --tags"
-    tag_branch = subprocess.check_output(cmd, shell=True)
-    tag_branch = tag_branch.decode().strip()
-    return tag_branch
-
-
 def get_git_version_info():
     cmd = "git describe --tags"
     ver_str = subprocess.check_output(cmd, shell=True)
     ver, commits_since, githash = ver_str.decode().strip().split("-")
-    if ver[0] == "v":
-        ver = ver[1:]
-    return ver, commits_since, githash
+    return Version(ver), int(commits_since), githash
 
 
 def prerelease_version():
@@ -85,26 +75,27 @@ def prerelease_version():
     ver, commits_since, githash = get_git_version_info()
     initpy_ver = get_version()
 
-    assert len(initpy_ver.split(".")) in [
-        3,
-        4,
-    ], "django_prometheus/__init__.py version should be like 0.0.2.dev"
-    assert (
-        initpy_ver > ver
-    ), "the django_prometheus/__init__.py version should be newer than the last tagged release."
-    return "{initpy_ver}.{commits_since}".format(
-        initpy_ver=initpy_ver, commits_since=commits_since
-    )
+    assert initpy_ver > ver, "the django_prometheus/__init__.py version should be newer than the last tagged release."
+    return f"{initpy_ver.major}.{initpy_ver.minor}.{initpy_ver.micro}.dev{commits_since}"
 
 
 def get_version():
-    version_file = open("django_prometheus/__init__.py", "r").read()
-    version_match = re.search(
-        r'^__version__ = [\'"]([^\'"]*)[\'"]', version_file, re.MULTILINE
-    )
-    if version_match:
-        return version_match.group(1)
-    raise RuntimeError("Unable to find version string.")
+    """Returns version from django_prometheus/__init__.py"""
+    version_file = _INIT_FILE.read_text()
+    version_match = re.search(r'^__version__ = [\'"]([^\'"]*)[\'"]', version_file, re.MULTILINE)
+    if not version_match:
+        raise RuntimeError("Unable to find version string.")
+    initpy_ver = version_match.group(1)
+    assert len(initpy_ver.split(".")) in [3, 4], "django_prometheus/__init__.py version should be like 0.0.2.dev"
+    return Version(initpy_ver)
+
+
+def increase_patch_version(old_version):
+    """
+    :param old_version: 2.0.1
+    :return: 2.0.2.dev
+    """
+    return f"{old_version.major}.{old_version.minor}.{old_version.micro + 1}.dev"
 
 
 def release_version_correct():
@@ -112,29 +103,27 @@ def release_version_correct():
     - prerelease verion for master is correct.
     - release version is correct for tags.
     """
-    if is_master_branch():
-        # update for a pre release version.
-        initpy = os.path.abspath("django_prometheus/__init__.py")
-
-        new_version = prerelease_version()
-        if ".dev" not in new_version:
-            assert False, "Automation used only for pre-releases"
-        print(
-            "updating version in __init__.py to {new_version}".format(
-                new_version=new_version
-            )
-        )
-        assert (
-            len(new_version.split(".")) >= 4
-        ), "django_prometheus/__init__.py version should be like 0.0.2.dev"
-        migrate_version(initpy, new_version)
-    else:
-        assert False, "No non-master deployments yet"
-        # check that we are a tag with the same version as in __init__.py
-        assert (
-            get_version() == git_tag_name()
-        ), "git tag/branch name not the same as django_prometheus/__init__.py __verion__"
+    print("update for a pre release version")
+    assert is_master_branch(), "No non-master deployments yet"
+    new_version = prerelease_version()
+    print(f"updating version in __init__.py to {new_version}")
+    assert len(new_version.split(".")) >= 4, "django_prometheus/__init__.py version should be like 0.0.2.dev"
+    migrate_version(new_version)
 
 
 if __name__ == "__main__":
-    release_version_correct()
+    new_version = None
+    if len(sys.argv) == 1:
+        release_version_correct()
+    elif len(sys.argv) == 2:
+        for _, arg in enumerate(sys.argv):
+            new_version = arg
+        if new_version == "patch":
+            new_version = increase_patch_version(get_version())
+
+        migrate_version(new_version)
+    else:
+        print(
+            "Invalid usage. Supply 0 or 1 arguments. "
+            "Argument can be either a version '1.2.3' or 'patch' if you want to increase the patch-version (1.2.3 -> 1.2.4.dev)"
+        )
