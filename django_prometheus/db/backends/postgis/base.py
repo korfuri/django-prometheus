@@ -22,6 +22,7 @@ if VERSION < (4, 2):
 else:
     from django.contrib.gis.db.backends.postgis import base
     from django.db.backends.postgresql.base import Cursor
+
     from django_prometheus.db.common import DatabaseWrapperMixin, ExportingCursorWrapper
 
     class DatabaseWrapper(DatabaseWrapperMixin, base.DatabaseWrapper):

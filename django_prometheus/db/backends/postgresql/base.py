@@ -26,6 +26,7 @@ if VERSION < (4, 2):
 
 else:
     from django.db.backends.postgresql import base
+
     from django_prometheus.db.common import DatabaseWrapperMixin, ExportingCursorWrapper
 
     class DatabaseFeatures(base.DatabaseFeatures):
