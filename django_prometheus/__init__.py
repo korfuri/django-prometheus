@@ -6,8 +6,6 @@ https://github.com/korfuri/django-prometheus
 # Import all files that define metrics. This has the effect that
 # `import django_prometheus` will always instantiate all metric
 # objects right away.
-import django
-
 from django_prometheus import middleware, models
 
 __all__ = ["middleware", "models", "pip_prometheus"]
@@ -20,6 +18,3 @@ try:
 except ImportError:
     # If people don't have pip, don't export anything.
     pass
-
-if django.VERSION < (3, 1):
-    default_app_config = "django_prometheus.apps.DjangoPrometheusConfig"
