@@ -15,13 +15,12 @@ include_trailing_comma = true
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = {py37,py38,py39,py310}-django{320}-{end2end,unittests},{py38,py39,py310}-django{400,410}-{end2end,unittests},py38-lint
-
+envlist = {py37,py38,py39,py310}-django{320}-{end2end,unittests},{py38,py39,py310}-django{400,410}-{end2end,unittests},py39-lint
 [gh-actions]
 python =
     3.7: py37
-    3.8: py38, py38-lint
-    3.9: py39
+    3.8: py38
+    3.9: py39, py39-lint
     3.10: py310
 
 [testenv]
@@ -43,9 +42,9 @@ commands =
     unittests: coverage run --source=django_prometheus setup.py test
     unittests: python setup.py sdist bdist_wheel
 
-[testenv:py38-lint]
+[testenv:py39-lint]
 deps =
-    black==22.6.0
+    black==23.3.0
     flake8
     isort>=5.5.4,<6
     flake8-debugger
