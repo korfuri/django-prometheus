@@ -55,7 +55,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -U "pip>=23.1.1"
-        pip install -U setuptools "tox-gh-actions==3.1.0" coverage
+        pip install -U "tox-gh-actions==3.1.0" coverage
     - name: Log versions
       run: |
         python --version
