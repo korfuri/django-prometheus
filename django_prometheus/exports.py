@@ -93,9 +93,7 @@ def SetupPrometheusEndpointOnPortRange(port_range, addr=""):
         thread.start()
         logger.info("Exporting Prometheus /metrics/ on port %s" % port)
         return port  # Stop trying ports at this point
-    logger.warning(
-        "Cannot export Prometheus /metrics/ - " "no available ports in supplied range"
-    )
+    logger.warning("Cannot export Prometheus /metrics/ - " "no available ports in supplied range")
     return None
 
 
@@ -115,15 +113,10 @@ def ExportToDjangoView(request):
 
     You can use django_prometheus.urls to map /metrics to this view.
     """
-    if (
-        "PROMETHEUS_MULTIPROC_DIR" in os.environ
-        or "prometheus_multiproc_dir" in os.environ
-    ):
+    if "PROMETHEUS_MULTIPROC_DIR" in os.environ or "prometheus_multiproc_dir" in os.environ:
         registry = prometheus_client.CollectorRegistry()
         multiprocess.MultiProcessCollector(registry)
     else:
         registry = prometheus_client.REGISTRY
     metrics_page = prometheus_client.generate_latest(registry)
-    return HttpResponse(
-        metrics_page, content_type=prometheus_client.CONTENT_TYPE_LATEST
-    )
+    return HttpResponse(metrics_page, content_type=prometheus_client.CONTENT_TYPE_LATEST)

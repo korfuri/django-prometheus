@@ -13,9 +13,7 @@ class DatabaseFeatures(base.DatabaseFeatures):
 class DatabaseWrapper(DatabaseWrapperMixin, base.DatabaseWrapper):
     def get_connection_params(self):
         conn_params = super().get_connection_params()
-        conn_params["cursor_factory"] = ExportingCursorWrapper(
-            psycopg2.extensions.cursor, self.alias, self.vendor
-        )
+        conn_params["cursor_factory"] = ExportingCursorWrapper(psycopg2.extensions.cursor, self.alias, self.vendor)
         return conn_params
 
     def create_cursor(self, name=None):

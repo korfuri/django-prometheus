@@ -21,9 +21,7 @@ class CustomMetrics(Metrics):
     def register_metric(self, metric_cls, name, documentation, labelnames=(), **kwargs):
         if name in EXTENDED_METRICS:
             labelnames.extend(("view_type", "user_agent_type"))
-        return super().register_metric(
-            metric_cls, name, documentation, labelnames=labelnames, **kwargs
-        )
+        return super().register_metric(metric_cls, name, documentation, labelnames=labelnames, **kwargs)
 
 
 class AppMetricsBeforeMiddleware(PrometheusBeforeMiddleware):
@@ -68,9 +66,7 @@ class TestMiddlewareMetricsWithCustomLabels(PrometheusTestCaseMixin, SimpleTestC
         self.assertMetricDiff(registry, 4, M("responses_before_middlewares_total"))
         self.assertMetricDiff(registry, 3, T("requests_total_by_method"), method="GET")
         self.assertMetricDiff(registry, 1, T("requests_total_by_method"), method="POST")
-        self.assertMetricDiff(
-            registry, 4, T("requests_total_by_transport"), transport="http"
-        )
+        self.assertMetricDiff(registry, 4, T("requests_total_by_transport"), transport="http")
         self.assertMetricDiff(
             registry,
             2,

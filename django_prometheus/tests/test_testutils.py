@@ -24,9 +24,7 @@ class SomeTestCase(PrometheusTestCaseMixin):
 class PrometheusTestCaseMixinTest(unittest.TestCase):
     def setUp(self):
         self.registry = prometheus_client.CollectorRegistry()
-        self.some_gauge = prometheus_client.Gauge(
-            "some_gauge", "Some gauge.", registry=self.registry
-        )
+        self.some_gauge = prometheus_client.Gauge("some_gauge", "Some gauge.", registry=self.registry)
         self.some_gauge.set(42)
         self.some_labelled_gauge = prometheus_client.Gauge(
             "some_labelled_gauge",
@@ -52,15 +50,11 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
 
     def testGetMetricVector(self):
         """Tests getMetricVector."""
-        vector = self.test_case.getMetricVector(
-            "some_nonexistent_gauge", registry=self.registry
-        )
+        vector = self.test_case.getMetricVector("some_nonexistent_gauge", registry=self.registry)
         assert [] == vector
         vector = self.test_case.getMetricVector("some_gauge", registry=self.registry)
         assert [({}, 42)] == vector
-        vector = self.test_case.getMetricVector(
-            "some_labelled_gauge", registry=self.registry
-        )
+        vector = self.test_case.getMetricVector("some_labelled_gauge", registry=self.registry)
         assert sorted(
             [
                 ({"labelred": "pink", "labelblue": "indigo"}, 1),
@@ -81,9 +75,7 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
         self.test_case.passes = True
 
         # Here we test that assertMetricEquals fails on nonexistent gauges.
-        self.test_case.assertMetricEquals(
-            42, "some_nonexistent_gauge", registry=self.registry
-        )
+        self.test_case.assertMetricEquals(42, "some_nonexistent_gauge", registry=self.registry)
         assert not self.test_case.passes
         self.test_case.passes = True
 
@@ -110,20 +102,12 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
         """Tests saveRegistry and frozen registries operations."""
         frozen_registry = self.test_case.saveRegistry(registry=self.registry)
         # Test that we can manipulate a frozen scalar metric.
-        assert 42 == self.test_case.getMetricFromFrozenRegistry(
-            "some_gauge", frozen_registry
-        )
+        assert 42 == self.test_case.getMetricFromFrozenRegistry("some_gauge", frozen_registry)
         self.some_gauge.set(99)
-        assert 42 == self.test_case.getMetricFromFrozenRegistry(
-            "some_gauge", frozen_registry
-        )
-        self.test_case.assertMetricDiff(
-            frozen_registry, 99 - 42, "some_gauge", registry=self.registry
-        )
+        assert 42 == self.test_case.getMetricFromFrozenRegistry("some_gauge", frozen_registry)
+        self.test_case.assertMetricDiff(frozen_registry, 99 - 42, "some_gauge", registry=self.registry)
         assert self.test_case.passes is True
-        self.test_case.assertMetricDiff(
-            frozen_registry, 1, "some_gauge", registry=self.registry
-        )
+        self.test_case.assertMetricDiff(frozen_registry, 1, "some_gauge", registry=self.registry)
         assert self.test_case.passes is False
         self.test_case.passes = True
 

@@ -14,7 +14,5 @@ class DatabaseWrapper(DatabaseWrapperMixin, base.DatabaseWrapper):
 
     def create_cursor(self, name=None):
         cursor = self.connection.cursor()
-        CursorWrapper = ExportingCursorWrapper(
-            self.CURSOR_CLASS, self.alias, self.vendor
-        )
+        CursorWrapper = ExportingCursorWrapper(self.CURSOR_CLASS, self.alias, self.vendor)
         return CursorWrapper(cursor)

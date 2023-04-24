@@ -11,9 +11,7 @@ class BaseDbMetricTest(PrometheusTestCaseMixin, TestCase):
     databases = "__all__"
 
 
-@skipUnless(
-    connections["test_db_1"].vendor == "sqlite", "Skipped unless test_db_1 uses sqlite"
-)
+@skipUnless(connections["test_db_1"].vendor == "sqlite", "Skipped unless test_db_1 uses sqlite")
 class TestDbMetrics(BaseDbMetricTest):
     """Test django_prometheus.db metrics.
 
@@ -50,18 +48,8 @@ class TestDbMetrics(BaseDbMetricTest):
             vendor="sqlite",
             type="OperationalError",
         )
-        assert (
-            self.getMetric(
-                "django_db_execute_total", alias="test_db_1", vendor="sqlite"
-            )
-            > 0
-        )
-        assert (
-            self.getMetric(
-                "django_db_execute_total", alias="test_db_2", vendor="sqlite"
-            )
-            >= 200
-        )
+        assert self.getMetric("django_db_execute_total", alias="test_db_1", vendor="sqlite") > 0
+        assert self.getMetric("django_db_execute_total", alias="test_db_2", vendor="sqlite") >= 200
 
     def testHistograms(self):
         cursor_db1 = connections["test_db_1"].cursor()
@@ -102,9 +90,7 @@ class TestDbMetrics(BaseDbMetricTest):
         )
 
 
-@skipUnless(
-    "postgresql" in connections, "Skipped unless postgresql database is enabled"
-)
+@skipUnless("postgresql" in connections, "Skipped unless postgresql database is enabled")
 class TestPostgresDbMetrics(BaseDbMetricTest):
     """Test django_prometheus.db metrics for postgres backend.
 

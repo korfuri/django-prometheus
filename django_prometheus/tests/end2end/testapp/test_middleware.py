@@ -20,9 +20,7 @@ def T(metric_name):
     return "%s_total" % M(metric_name)
 
 
-@override_settings(
-    PROMETHEUS_LATENCY_BUCKETS=(0.05, 1.0, 2.0, 4.0, 5.0, 10.0, float("inf"))
-)
+@override_settings(PROMETHEUS_LATENCY_BUCKETS=(0.05, 1.0, 2.0, 4.0, 5.0, 10.0, float("inf")))
 class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
     """Test django_prometheus.middleware.
 
@@ -42,9 +40,7 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
         self.assertMetricDiff(registry, 4, M("responses_before_middlewares_total"))
         self.assertMetricDiff(registry, 3, T("requests_total_by_method"), method="GET")
         self.assertMetricDiff(registry, 1, T("requests_total_by_method"), method="POST")
-        self.assertMetricDiff(
-            registry, 4, T("requests_total_by_transport"), transport="http"
-        )
+        self.assertMetricDiff(registry, 4, T("requests_total_by_transport"), transport="http")
         self.assertMetricDiff(
             registry,
             2,
@@ -72,31 +68,15 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
         # We have 3 requests with no post body, and one with a few
         # bytes, but buckets are cumulative so that is 4 requests with
         # <=128 bytes bodies.
-        self.assertMetricDiff(
-            registry, 3, M("requests_body_total_bytes_bucket"), le="0.0"
-        )
-        self.assertMetricDiff(
-            registry, 4, M("requests_body_total_bytes_bucket"), le="128.0"
-        )
-        self.assertMetricEquals(
-            None, M("responses_total_by_templatename"), templatename="help.html"
-        )
-        self.assertMetricDiff(
-            registry, 3, T("responses_total_by_templatename"), templatename="index.html"
-        )
+        self.assertMetricDiff(registry, 3, M("requests_body_total_bytes_bucket"), le="0.0")
+        self.assertMetricDiff(registry, 4, M("requests_body_total_bytes_bucket"), le="128.0")
+        self.assertMetricEquals(None, M("responses_total_by_templatename"), templatename="help.html")
+        self.assertMetricDiff(registry, 3, T("responses_total_by_templatename"), templatename="index.html")
         self.assertMetricDiff(registry, 4, T("responses_total_by_status"), status="200")
-        self.assertMetricDiff(
-            registry, 0, M("responses_body_total_bytes_bucket"), le="0.0"
-        )
-        self.assertMetricDiff(
-            registry, 3, M("responses_body_total_bytes_bucket"), le="128.0"
-        )
-        self.assertMetricDiff(
-            registry, 4, M("responses_body_total_bytes_bucket"), le="8192.0"
-        )
-        self.assertMetricDiff(
-            registry, 4, T("responses_total_by_charset"), charset="utf-8"
-        )
+        self.assertMetricDiff(registry, 0, M("responses_body_total_bytes_bucket"), le="0.0")
+        self.assertMetricDiff(registry, 3, M("responses_body_total_bytes_bucket"), le="128.0")
+        self.assertMetricDiff(registry, 4, M("responses_body_total_bytes_bucket"), le="8192.0")
+        self.assertMetricDiff(registry, 4, T("responses_total_by_charset"), charset="utf-8")
         self.assertMetricDiff(registry, 0, M("responses_streaming_total"))
 
     def test_latency_histograms(self):
@@ -148,6 +128,4 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
         self.client.get("/")
         self.client.get("/file")
         self.assertMetricDiff(registry, 1, M("responses_streaming_total"))
-        self.assertMetricDiff(
-            registry, 1, M("responses_body_total_bytes_bucket"), le="+Inf"
-        )
+        self.assertMetricDiff(registry, 1, M("responses_body_total_bytes_bucket"), le="+Inf")
