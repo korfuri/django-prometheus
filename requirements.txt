@@ -4,7 +4,6 @@ flake8
 prometheus-client>=0.12.0
 pip-prometheus>=1.2.1
 mysqlclient
-psycopg2
 pytest==7.3.1
 pytest-django
 pylibmc
