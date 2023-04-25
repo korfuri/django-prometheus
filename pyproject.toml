@@ -57,7 +57,7 @@ deps =
     black==23.3.0
     flake8
     ruff==0.0.262
-    isort>=5.5.4,<6
+    isort>=5.12.0,<6
     flake8-debugger
     flake8-2020
     flake8-comprehensions
