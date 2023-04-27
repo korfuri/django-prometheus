@@ -17,9 +17,6 @@ class SomeTestCase(PrometheusTestCaseMixin):
     def assertEqual(self, left, right, *args, **kwargs):
         self.passes = self.passes and (left == right)
 
-    def assertFalse(self, expression, *args, **kwargs):
-        self.passes = self.passes and (not expression)
-
 
 class PrometheusTestCaseMixinTest(unittest.TestCase):
     def setUp(self):
