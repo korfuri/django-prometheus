@@ -6,6 +6,7 @@ from django.test import TestCase
 from django_prometheus.testutils import (
     PrometheusTestCaseMixin,
     assert_metric_compare,
+    assert_metric_diff,
     get_metric,
     save_registry,
 )
@@ -86,7 +87,7 @@ class TestDbMetrics(BaseDbMetricTest):
             "INSERT INTO testapp_lawn(location) VALUES (?)",
             [("Paris",), ("New York",), ("Berlin",), ("San Francisco",)],
         )
-        self.assertMetricDiff(
+        assert_metric_diff(
             registry,
             4,
             "django_db_execute_many_total",

@@ -9,7 +9,11 @@ from django_prometheus.middleware import (
     PrometheusAfterMiddleware,
     PrometheusBeforeMiddleware,
 )
-from django_prometheus.testutils import PrometheusTestCaseMixin, save_registry
+from django_prometheus.testutils import (
+    PrometheusTestCaseMixin,
+    assert_metric_diff,
+    save_registry,
+)
 
 EXTENDED_METRICS = [
     M("requests_latency_seconds_by_view_method"),
@@ -62,12 +66,12 @@ class TestMiddlewareMetricsWithCustomLabels(PrometheusTestCaseMixin, SimpleTestC
         self.client.get("/help")
         self.client.post("/", {"test": "data"})
 
-        self.assertMetricDiff(registry, 4, M("requests_before_middlewares_total"))
-        self.assertMetricDiff(registry, 4, M("responses_before_middlewares_total"))
-        self.assertMetricDiff(registry, 3, T("requests_total_by_method"), method="GET")
-        self.assertMetricDiff(registry, 1, T("requests_total_by_method"), method="POST")
-        self.assertMetricDiff(registry, 4, T("requests_total_by_transport"), transport="http")
-        self.assertMetricDiff(
+        assert_metric_diff(registry, 4, M("requests_before_middlewares_total"))
+        assert_metric_diff(registry, 4, M("responses_before_middlewares_total"))
+        assert_metric_diff(registry, 3, T("requests_total_by_method"), method="GET")
+        assert_metric_diff(registry, 1, T("requests_total_by_method"), method="POST")
+        assert_metric_diff(registry, 4, T("requests_total_by_transport"), transport="http")
+        assert_metric_diff(
             registry,
             2,
             T("requests_total_by_view_transport_method"),
@@ -75,7 +79,7 @@ class TestMiddlewareMetricsWithCustomLabels(PrometheusTestCaseMixin, SimpleTestC
             transport="http",
             method="GET",
         )
-        self.assertMetricDiff(
+        assert_metric_diff(
             registry,
             1,
             T("requests_total_by_view_transport_method"),
@@ -83,7 +87,7 @@ class TestMiddlewareMetricsWithCustomLabels(PrometheusTestCaseMixin, SimpleTestC
             transport="http",
             method="GET",
         )
-        self.assertMetricDiff(
+        assert_metric_diff(
             registry,
             1,
             T("requests_total_by_view_transport_method"),
@@ -91,7 +95,7 @@ class TestMiddlewareMetricsWithCustomLabels(PrometheusTestCaseMixin, SimpleTestC
             transport="http",
             method="POST",
         )
-        self.assertMetricDiff(
+        assert_metric_diff(
             registry,
             2.0,
             T("responses_total_by_status_view_method"),
@@ -101,7 +105,7 @@ class TestMiddlewareMetricsWithCustomLabels(PrometheusTestCaseMixin, SimpleTestC
             view_type="foo",
             user_agent_type="browser",
         )
-        self.assertMetricDiff(
+        assert_metric_diff(
             registry,
             1.0,
             T("responses_total_by_status_view_method"),
