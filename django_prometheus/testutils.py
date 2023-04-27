@@ -126,7 +126,7 @@ class PrometheusTestCaseMixin:
             saved_value,
             current_value,
         )
-        self.assertEqual(expected_diff, diff, assert_err)
+        assert expected_diff == diff, assert_err
 
     def assertMetricCompare(self, frozen_registry, predicate, metric_name, registry=REGISTRY, **labels):
         """Asserts that metric_name{**labels} changed according to a provided
