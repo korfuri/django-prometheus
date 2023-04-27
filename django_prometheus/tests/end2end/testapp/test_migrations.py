@@ -24,7 +24,7 @@ class TestMigrations(PrometheusTestCaseMixin, SimpleTestCase):
         executor.migration_plan.return_value = set()
         executor.loader.applied_migrations = {"a", "b", "c"}
         ExportMigrationsForDatabase("fakedb1", executor)
-        self.assertEqual(executor.migration_plan.call_count, 1)
+        assert executor.migration_plan.call_count == 1
         executor.migration_plan = MagicMock()
         executor.migration_plan.return_value = {"a"}
         executor.loader.applied_migrations = {"b", "c"}
