@@ -9,7 +9,7 @@ from django_prometheus.middleware import (
     PrometheusAfterMiddleware,
     PrometheusBeforeMiddleware,
 )
-from django_prometheus.testutils import PrometheusTestCaseMixin
+from django_prometheus.testutils import PrometheusTestCaseMixin, save_registry
 
 EXTENDED_METRICS = [
     M("requests_latency_seconds_by_view_method"),
@@ -56,7 +56,7 @@ class TestMiddlewareMetricsWithCustomLabels(PrometheusTestCaseMixin, SimpleTestC
         Metrics._instance = None
 
     def test_request_counters(self):
-        registry = self.saveRegistry()
+        registry = save_registry()
         self.client.get("/")
         self.client.get("/")
         self.client.get("/help")

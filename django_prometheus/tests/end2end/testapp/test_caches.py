@@ -2,7 +2,7 @@ from django.core.cache import caches
 from django.test import TestCase
 from redis import RedisError
 
-from django_prometheus.testutils import PrometheusTestCaseMixin
+from django_prometheus.testutils import PrometheusTestCaseMixin, get_metric
 
 
 class TestCachesMetrics(PrometheusTestCaseMixin, TestCase):
@@ -22,9 +22,9 @@ class TestCachesMetrics(PrometheusTestCaseMixin, TestCase):
             tested_cache = caches[supported_cache]
             backend = supported_cache.split(".")[0]
 
-            total_before = self.getMetric("django_cache_get_total", backend=backend) or 0
-            hit_before = self.getMetric("django_cache_get_hits_total", backend=backend) or 0
-            miss_before = self.getMetric("django_cache_get_misses_total", backend=backend) or 0
+            total_before = get_metric("django_cache_get_total", backend=backend) or 0
+            hit_before = get_metric("django_cache_get_hits_total", backend=backend) or 0
+            miss_before = get_metric("django_cache_get_misses_total", backend=backend) or 0
 
             tested_cache.set("foo1", "bar")
             tested_cache.get("foo1")
@@ -47,10 +47,10 @@ class TestCachesMetrics(PrometheusTestCaseMixin, TestCase):
         # Note: test use fake service config (like if server was stopped)
         supported_cache = "redis"
 
-        total_before = self.getMetric("django_cache_get_total", backend=supported_cache) or 0
-        fail_before = self.getMetric("django_cache_get_fail_total", backend=supported_cache) or 0
-        hit_before = self.getMetric("django_cache_get_hits_total", backend=supported_cache) or 0
-        miss_before = self.getMetric("django_cache_get_misses_total", backend=supported_cache) or 0
+        total_before = get_metric("django_cache_get_total", backend=supported_cache) or 0
+        fail_before = get_metric("django_cache_get_fail_total", backend=supported_cache) or 0
+        hit_before = get_metric("django_cache_get_hits_total", backend=supported_cache) or 0
+        miss_before = get_metric("django_cache_get_misses_total", backend=supported_cache) or 0
 
         tested_cache = caches["stopped_redis_ignore_exception"]
         tested_cache.get("foo1")

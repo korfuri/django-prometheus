@@ -4,7 +4,12 @@ from operator import itemgetter
 
 import prometheus_client
 
-from django_prometheus.testutils import PrometheusTestCaseMixin
+from django_prometheus.testutils import (
+    PrometheusTestCaseMixin,
+    get_metric,
+    get_metrics_vector,
+    save_registry,
+)
 
 
 class SomeTestCase(PrometheusTestCaseMixin):
@@ -35,23 +40,23 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
         self.some_labelled_gauge.labels("carmin", "royal").set(4)
         self.test_case = SomeTestCase()
 
-    def testGetMetrics(self):
-        """Tests getMetric."""
-        assert 42 == self.test_case.getMetric("some_gauge", registry=self.registry)
-        assert 1 == self.test_case.getMetric(
+    def test_get_metric(self):
+        """Tests get_metric."""
+        assert 42 == get_metric("some_gauge", registry=self.registry)
+        assert 1 == get_metric(
             "some_labelled_gauge",
             registry=self.registry,
             labelred="pink",
             labelblue="indigo",
         )
 
-    def testGetMetricVector(self):
-        """Tests getMetricVector."""
-        vector = self.test_case.getMetricVector("some_nonexistent_gauge", registry=self.registry)
+    def test_get_metrics_vector(self):
+        """Tests get_metrics_vector."""
+        vector = get_metrics_vector("some_nonexistent_gauge", registry=self.registry)
         assert [] == vector
-        vector = self.test_case.getMetricVector("some_gauge", registry=self.registry)
+        vector = get_metrics_vector("some_gauge", registry=self.registry)
         assert [({}, 42)] == vector
-        vector = self.test_case.getMetricVector("some_labelled_gauge", registry=self.registry)
+        vector = get_metrics_vector("some_labelled_gauge", registry=self.registry)
         assert sorted(
             [
                 ({"labelred": "pink", "labelblue": "indigo"}, 1),
@@ -90,12 +95,12 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
         )
 
     def testRegistrySaving(self):
-        """Tests saveRegistry and frozen registries operations."""
-        frozen_registry = self.test_case.saveRegistry(registry=self.registry)
+        """Tests save_registry and frozen registries operations."""
+        frozen_registry = save_registry(registry=self.registry)
         # Test that we can manipulate a frozen scalar metric.
-        assert 42 == self.test_case.getMetricFromFrozenRegistry("some_gauge", frozen_registry)
+        assert 42 == self.test_case.get_metric_from_frozen_registry("some_gauge", frozen_registry)
         self.some_gauge.set(99)
-        assert 42 == self.test_case.getMetricFromFrozenRegistry("some_gauge", frozen_registry)
+        assert 42 == self.test_case.get_metric_from_frozen_registry("some_gauge", frozen_registry)
         self.test_case.assertMetricDiff(frozen_registry, 99 - 42, "some_gauge", registry=self.registry)
         assert self.test_case.passes is True
         self.test_case.assertMetricDiff(frozen_registry, 1, "some_gauge", registry=self.registry)
@@ -103,11 +108,11 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
         self.test_case.passes = True
 
         # Now test the same thing with a labelled metric.
-        assert 1 == self.test_case.getMetricFromFrozenRegistry(
+        assert 1 == self.test_case.get_metric_from_frozen_registry(
             "some_labelled_gauge", frozen_registry, labelred="pink", labelblue="indigo"
         )
         self.some_labelled_gauge.labels("pink", "indigo").set(5)
-        assert 1 == self.test_case.getMetricFromFrozenRegistry(
+        assert 1 == self.test_case.get_metric_from_frozen_registry(
             "some_labelled_gauge", frozen_registry, labelred="pink", labelblue="indigo"
         )
         self.test_case.assertMetricDiff(
