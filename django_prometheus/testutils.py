@@ -93,19 +93,15 @@ class PrometheusTestCaseMixin:
     def assertMetricEquals(self, expected_value, metric_name, registry=REGISTRY, **labels):
         """Asserts that metric_name{**labels} == expected_value."""
         value = self.getMetric(metric_name, registry=registry, **labels)
-        self.assertEqual(
-            expected_value,
+        assert_err = METRIC_EQUALS_ERR_EXPLANATION % (
+            metric_name,
+            self.formatLabels(labels),
             value,
-            METRIC_EQUALS_ERR_EXPLANATION
-            % (
-                metric_name,
-                self.formatLabels(labels),
-                value,
-                expected_value,
-                metric_name,
-                self.formatVector(self.getMetricVector(metric_name)),
-            ),
+            expected_value,
+            metric_name,
+            self.formatVector(self.getMetricVector(metric_name)),
         )
+        self.assertEqual(expected_value, value, assert_err)
 
     def assertMetricDiff(self, frozen_registry, expected_diff, metric_name, registry=REGISTRY, **labels):
         """Asserts that metric_name{**labels} changed by expected_diff between
@@ -122,19 +118,15 @@ class PrometheusTestCaseMixin:
             current_value,
         )
         diff = current_value - (saved_value or 0.0)
-        self.assertEqual(
-            expected_diff,
+        assert_err = METRIC_DIFF_ERR_EXPLANATION % (
+            metric_name,
+            self.formatLabels(labels),
             diff,
-            METRIC_DIFF_ERR_EXPLANATION
-            % (
-                metric_name,
-                self.formatLabels(labels),
-                diff,
-                expected_diff,
-                saved_value,
-                current_value,
-            ),
+            expected_diff,
+            saved_value,
+            current_value,
         )
+        self.assertEqual(expected_diff, diff, assert_err)
 
     def assertMetricCompare(self, frozen_registry, predicate, metric_name, registry=REGISTRY, **labels):
         """Asserts that metric_name{**labels} changed according to a provided
