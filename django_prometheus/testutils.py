@@ -101,7 +101,7 @@ class PrometheusTestCaseMixin:
             metric_name,
             self.formatVector(self.getMetricVector(metric_name)),
         )
-        self.assertEqual(expected_value, value, assert_err)
+        assert expected_value == value, assert_err
 
     def assertMetricDiff(self, frozen_registry, expected_diff, metric_name, registry=REGISTRY, **labels):
         """Asserts that metric_name{**labels} changed by expected_diff between
