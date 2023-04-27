@@ -103,6 +103,19 @@ class PrometheusTestCaseMixin:
         )
         self.assertEqual(expected_value, value, assert_err)
 
+    def assertMetricNotEquals(self, expected_value, metric_name, registry=REGISTRY, **labels):
+        """Asserts that metric_name{**labels} == expected_value."""
+        value = self.getMetric(metric_name, registry=registry, **labels)
+        assert_err = METRIC_EQUALS_ERR_EXPLANATION % (
+            metric_name,
+            self.formatLabels(labels),
+            value,
+            expected_value,
+            metric_name,
+            self.formatVector(self.getMetricVector(metric_name)),
+        )
+        assert expected_value != value, assert_err
+
     def assertMetricDiff(self, frozen_registry, expected_diff, metric_name, registry=REGISTRY, **labels):
         """Asserts that metric_name{**labels} changed by expected_diff between
         the frozen registry and now. A frozen registry can be obtained

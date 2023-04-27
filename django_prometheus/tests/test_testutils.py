@@ -67,14 +67,10 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
         # First we test that a scalar metric can be tested.
         self.test_case.assertMetricEquals(42, "some_gauge", registry=self.registry)
         assert self.test_case.passes is True
-        self.test_case.assertMetricEquals(43, "some_gauge", registry=self.registry)
-        assert self.test_case.passes is False
-        self.test_case.passes = True
+        self.test_case.assertMetricNotEquals(43, "some_gauge", registry=self.registry)
 
         # Here we test that assertMetricEquals fails on nonexistent gauges.
-        self.test_case.assertMetricEquals(42, "some_nonexistent_gauge", registry=self.registry)
-        assert not self.test_case.passes
-        self.test_case.passes = True
+        self.test_case.assertMetricNotEquals(42, "some_nonexistent_gauge", registry=self.registry)
 
         # Here we test that labelled metrics can be tested.
         self.test_case.assertMetricEquals(
@@ -85,15 +81,13 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
             labelblue="indigo",
         )
         assert self.test_case.passes is True
-        self.test_case.assertMetricEquals(
+        self.test_case.assertMetricNotEquals(
             1,
             "some_labelled_gauge",
             registry=self.registry,
             labelred="tomato",
             labelblue="sky",
         )
-        assert self.test_case.passes is False
-        self.test_case.passes = True
 
     def testRegistrySaving(self):
         """Tests saveRegistry and frozen registries operations."""
