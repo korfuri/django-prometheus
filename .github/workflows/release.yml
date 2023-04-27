@@ -1,0 +1,60 @@
+name: Release
+on:
+  push:
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+
+jobs:
+  org-check:
+    name: Check GitHub Organization
+    if: ${{ github.repository_owner == 'korfuri' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Noop
+        run: "true"
+  determine-tag:
+    name: Determine the release tag to operate against.
+    needs: org-check
+    runs-on: ubuntu-latest
+    outputs:
+      release-tag: ${{ steps.determine-tag.outputs.release-tag }}
+      release-version: ${{ steps.determine-tag.outputs.release-version }}
+    steps:
+      - name: Determine Tag
+        id: determine-tag
+        run: |
+          RELEASE_TAG=${GITHUB_REF#refs/tags/}
+          fi
+          if [[ "${RELEASE_TAG}" =~ ^v[0-9]+.[0-9]+.[0-9]+$ ]]; then
+            echo "release-tag=${RELEASE_TAG}" >> $GITHUB_OUTPUT
+            echo "release-version=${RELEASE_TAG#v}" >> $GITHUB_OUTPUT
+          else
+            echo "::error::Release tag '${RELEASE_TAG}' must match 'v\d+.\d+.\d+'."
+            exit 1
+          fi
+  release-django-prometheus-job:
+    runs-on: ubuntu-latest
+    name: Release Django-Promethues
+    needs: determine-tag
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ needs.determine-tag.outputs.release-tag }}
+        fetch-depth: 0
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.9
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install wheel setuptools packaging twine build --upgrade
+    - name: Build
+      run: python -m build
+    - name: Publish to TEST PyPI
+      uses: pypa/gh-action-pypi-publish@v1.8.5
+      with:
+        repository-url: https://test.pypi.org/legacy/
+        skip-existing: true
+        verbose: true
+        print-hash: true
+
