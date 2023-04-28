@@ -2,8 +2,8 @@ from django.test import SimpleTestCase, override_settings
 from testapp.views import ObjectionException
 
 from django_prometheus.testutils import (
-    PrometheusTestCaseMixin,
     assert_metric_diff,
+    assert_metric_equal,
     save_registry,
 )
 
@@ -25,7 +25,7 @@ def T(metric_name):
 
 
 @override_settings(PROMETHEUS_LATENCY_BUCKETS=(0.05, 1.0, 2.0, 4.0, 5.0, 10.0, float("inf")))
-class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
+class TestMiddlewareMetrics(SimpleTestCase):
     """Test django_prometheus.middleware.
 
     Note that counters related to exceptions can't be tested as
@@ -74,7 +74,7 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
         # <=128 bytes bodies.
         assert_metric_diff(registry, 3, M("requests_body_total_bytes_bucket"), le="0.0")
         assert_metric_diff(registry, 4, M("requests_body_total_bytes_bucket"), le="128.0")
-        self.assertMetricEquals(None, M("responses_total_by_templatename"), templatename="help.html")
+        assert_metric_equal(None, M("responses_total_by_templatename"), templatename="help.html")
         assert_metric_diff(registry, 3, T("responses_total_by_templatename"), templatename="index.html")
         assert_metric_diff(registry, 4, T("responses_total_by_status"), status="200")
         assert_metric_diff(registry, 0, M("responses_body_total_bytes_bucket"), le="0.0")

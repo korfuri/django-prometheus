@@ -26,23 +26,23 @@ Value after: %s
 """
 
 
-class PrometheusTestCaseMixin:
-    """A collection of utilities that make it easier to write test cases
-    that interact with metrics.
-    """
+"""A collection of utilities that make it easier to write test cases
+that interact with metrics.
+"""
 
-    def assertMetricEquals(self, expected_value, metric_name, registry=REGISTRY, **labels):
-        """Asserts that metric_name{**labels} == expected_value."""
-        value = get_metric(metric_name, registry=registry, **labels)
-        assert_err = METRIC_EQUALS_ERR_EXPLANATION % (
-            metric_name,
-            format_labels(labels),
-            value,
-            expected_value,
-            metric_name,
-            format_vector(get_metrics_vector(metric_name)),
-        )
-        assert expected_value == value, assert_err
+
+def assert_metric_equal(expected_value, metric_name, registry=REGISTRY, **labels):
+    """Asserts that metric_name{**labels} == expected_value."""
+    value = get_metric(metric_name, registry=registry, **labels)
+    assert_err = METRIC_EQUALS_ERR_EXPLANATION % (
+        metric_name,
+        format_labels(labels),
+        value,
+        expected_value,
+        metric_name,
+        format_vector(get_metrics_vector(metric_name)),
+    )
+    assert expected_value == value, assert_err
 
 
 def assert_metric_diff(frozen_registry, expected_diff, metric_name, registry=REGISTRY, **labels):

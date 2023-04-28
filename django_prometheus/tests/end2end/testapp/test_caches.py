@@ -2,10 +2,10 @@ from django.core.cache import caches
 from django.test import TestCase
 from redis import RedisError
 
-from django_prometheus.testutils import PrometheusTestCaseMixin, get_metric
+from django_prometheus.testutils import assert_metric_equal, get_metric
 
 
-class TestCachesMetrics(PrometheusTestCaseMixin, TestCase):
+class TestCachesMetrics(TestCase):
     """Test django_prometheus.caches metrics."""
 
     def test_counters(self):
@@ -35,9 +35,9 @@ class TestCachesMetrics(PrometheusTestCaseMixin, TestCase):
 
             assert result == "default"
 
-            self.assertMetricEquals(total_before + 4, "django_cache_get_total", backend=backend)
-            self.assertMetricEquals(hit_before + 2, "django_cache_get_hits_total", backend=backend)
-            self.assertMetricEquals(
+            assert_metric_equal(total_before + 4, "django_cache_get_total", backend=backend)
+            assert_metric_equal(hit_before + 2, "django_cache_get_hits_total", backend=backend)
+            assert_metric_equal(
                 miss_before + 2,
                 "django_cache_get_misses_total",
                 backend=backend,
@@ -55,19 +55,19 @@ class TestCachesMetrics(PrometheusTestCaseMixin, TestCase):
         tested_cache = caches["stopped_redis_ignore_exception"]
         tested_cache.get("foo1")
 
-        self.assertMetricEquals(hit_before, "django_cache_get_hits_total", backend=supported_cache)
-        self.assertMetricEquals(miss_before, "django_cache_get_misses_total", backend=supported_cache)
-        self.assertMetricEquals(total_before + 1, "django_cache_get_total", backend=supported_cache)
-        self.assertMetricEquals(fail_before + 1, "django_cache_get_fail_total", backend=supported_cache)
+        assert_metric_equal(hit_before, "django_cache_get_hits_total", backend=supported_cache)
+        assert_metric_equal(miss_before, "django_cache_get_misses_total", backend=supported_cache)
+        assert_metric_equal(total_before + 1, "django_cache_get_total", backend=supported_cache)
+        assert_metric_equal(fail_before + 1, "django_cache_get_fail_total", backend=supported_cache)
 
         tested_cache = caches["stopped_redis"]
         with self.assertRaises(RedisError):
             tested_cache.get("foo1")
 
-        self.assertMetricEquals(hit_before, "django_cache_get_hits_total", backend=supported_cache)
-        self.assertMetricEquals(miss_before, "django_cache_get_misses_total", backend=supported_cache)
-        self.assertMetricEquals(total_before + 2, "django_cache_get_total", backend=supported_cache)
-        self.assertMetricEquals(fail_before + 2, "django_cache_get_fail_total", backend=supported_cache)
+        assert_metric_equal(hit_before, "django_cache_get_hits_total", backend=supported_cache)
+        assert_metric_equal(miss_before, "django_cache_get_misses_total", backend=supported_cache)
+        assert_metric_equal(total_before + 2, "django_cache_get_total", backend=supported_cache)
+        assert_metric_equal(fail_before + 2, "django_cache_get_fail_total", backend=supported_cache)
 
     def test_cache_version_support(self):
         supported_caches = [

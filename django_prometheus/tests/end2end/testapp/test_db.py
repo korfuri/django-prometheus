@@ -4,15 +4,15 @@ from django.db import connections
 from django.test import TestCase
 
 from django_prometheus.testutils import (
-    PrometheusTestCaseMixin,
     assert_metric_compare,
     assert_metric_diff,
+    assert_metric_equal,
     get_metric,
     save_registry,
 )
 
 
-class BaseDbMetricTest(PrometheusTestCaseMixin, TestCase):
+class BaseDbMetricTest(TestCase):
     # https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.SimpleTestCase.databases
     databases = "__all__"
 
@@ -47,7 +47,7 @@ class TestDbMetrics(BaseDbMetricTest):
         except Exception:
             pass
 
-        self.assertMetricEquals(
+        assert_metric_equal(
             1,
             "django_db_errors_total",
             alias="test_db_1",
