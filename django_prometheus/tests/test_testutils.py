@@ -6,6 +6,7 @@ import prometheus_client
 
 from django_prometheus.testutils import (
     PrometheusTestCaseMixin,
+    assert_metric_not_equal,
     get_metric,
     get_metric_from_frozen_registry,
     get_metrics_vector,
@@ -73,10 +74,10 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
         # First we test that a scalar metric can be tested.
         self.test_case.assertMetricEquals(42, "some_gauge", registry=self.registry)
         assert self.test_case.passes is True
-        self.test_case.assertMetricNotEquals(43, "some_gauge", registry=self.registry)
+        assert_metric_not_equal(43, "some_gauge", registry=self.registry)
 
         # Here we test that assertMetricEquals fails on nonexistent gauges.
-        self.test_case.assertMetricNotEquals(42, "some_nonexistent_gauge", registry=self.registry)
+        assert_metric_not_equal(42, "some_nonexistent_gauge", registry=self.registry)
 
         # Here we test that labelled metrics can be tested.
         self.test_case.assertMetricEquals(
@@ -87,7 +88,7 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
             labelblue="indigo",
         )
         assert self.test_case.passes is True
-        self.test_case.assertMetricNotEquals(
+        assert_metric_not_equal(
             1,
             "some_labelled_gauge",
             registry=self.registry,
