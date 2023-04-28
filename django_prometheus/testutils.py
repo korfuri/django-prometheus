@@ -44,19 +44,6 @@ class PrometheusTestCaseMixin:
         )
         self.assertEqual(expected_value, value, assert_err)
 
-    def assertMetricNotEquals(self, expected_value, metric_name, registry=REGISTRY, **labels):
-        """Asserts that metric_name{**labels} == expected_value."""
-        value = get_metric(metric_name, registry=registry, **labels)
-        assert_err = METRIC_EQUALS_ERR_EXPLANATION % (
-            metric_name,
-            format_labels(labels),
-            value,
-            expected_value,
-            metric_name,
-            format_vector(get_metrics_vector(metric_name)),
-        )
-        assert expected_value != value, assert_err
-
     def assertMetricDiff(self, frozen_registry, expected_diff, metric_name, registry=REGISTRY, **labels):
         """Asserts that metric_name{**labels} changed by expected_diff between
         the frozen registry and now. A frozen registry can be obtained
@@ -82,26 +69,41 @@ class PrometheusTestCaseMixin:
         )
         self.assertEqual(expected_diff, diff, assert_err)
 
-    def assertMetricCompare(self, frozen_registry, predicate, metric_name, registry=REGISTRY, **labels):
-        """Asserts that metric_name{**labels} changed according to a provided
-        predicate function between the frozen registry and now. A
-        frozen registry can be obtained by calling save_registry,
-        typically at the beginning of a test case.
-        """
-        saved_value = get_metric_from_frozen_registry(metric_name, frozen_registry, **labels)
-        current_value = get_metric(metric_name, registry=registry, **labels)
-        assert current_value is not None, METRIC_DIFF_ERR_NONE_EXPLANATION % (
-            metric_name,
-            format_labels(labels),
-            saved_value,
-            current_value,
-        )
-        assert predicate(saved_value, current_value) is True, METRIC_COMPARE_ERR_EXPLANATION % (
-            metric_name,
-            format_labels(labels),
-            saved_value,
-            current_value,
-        )
+
+def assert_metric_not_equal(expected_value, metric_name, registry=REGISTRY, **labels):
+    """Asserts that metric_name{**labels} == expected_value."""
+    value = get_metric(metric_name, registry=registry, **labels)
+    assert_err = METRIC_EQUALS_ERR_EXPLANATION % (
+        metric_name,
+        format_labels(labels),
+        value,
+        expected_value,
+        metric_name,
+        format_vector(get_metrics_vector(metric_name)),
+    )
+    assert expected_value != value, assert_err
+
+
+def assert_metric_compare(frozen_registry, predicate, metric_name, registry=REGISTRY, **labels):
+    """Asserts that metric_name{**labels} changed according to a provided
+    predicate function between the frozen registry and now. A
+    frozen registry can be obtained by calling save_registry,
+    typically at the beginning of a test case.
+    """
+    saved_value = get_metric_from_frozen_registry(metric_name, frozen_registry, **labels)
+    current_value = get_metric(metric_name, registry=registry, **labels)
+    assert current_value is not None, METRIC_DIFF_ERR_NONE_EXPLANATION % (
+        metric_name,
+        format_labels(labels),
+        saved_value,
+        current_value,
+    )
+    assert predicate(saved_value, current_value) is True, METRIC_COMPARE_ERR_EXPLANATION % (
+        metric_name,
+        format_labels(labels),
+        saved_value,
+        current_value,
+    )
 
 
 def save_registry(registry=REGISTRY):

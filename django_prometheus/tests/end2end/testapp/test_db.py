@@ -5,6 +5,7 @@ from django.test import TestCase
 
 from django_prometheus.testutils import (
     PrometheusTestCaseMixin,
+    assert_metric_compare,
     get_metric,
     save_registry,
 )
@@ -112,7 +113,7 @@ class TestPostgresDbMetrics(BaseDbMetricTest):
         for _ in range(20):
             cursor.execute("SELECT 1")
 
-        self.assertMetricCompare(
+        assert_metric_compare(
             registry,
             lambda a, b: a + 20 <= b < a + 25,
             "django_db_execute_total",
@@ -139,7 +140,7 @@ class TestMysDbMetrics(BaseDbMetricTest):
         for _ in range(20):
             cursor.execute("SELECT 1")
 
-        self.assertMetricCompare(
+        assert_metric_compare(
             registry,
             lambda a, b: a + 20 <= b < a + 25,
             "django_db_execute_total",
@@ -166,7 +167,7 @@ class TestPostgisDbMetrics(BaseDbMetricTest):
         for _ in range(20):
             cursor.execute("SELECT 1")
 
-        self.assertMetricCompare(
+        assert_metric_compare(
             r,
             lambda a, b: a + 20 <= b < a + 25,
             "django_db_execute_total",
