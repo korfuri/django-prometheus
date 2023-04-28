@@ -1,10 +1,8 @@
 #!/usr/bin/env python
-import unittest
-
 from django_prometheus.utils import PowersOf
 
 
-class DjangoPrometheusTest(unittest.TestCase):
+class TestDjangoPrometheus:
     def testPowersOf(self):
         """Tests utils.PowersOf."""
         assert [0, 1, 2, 4, 8] == PowersOf(2, 4)
