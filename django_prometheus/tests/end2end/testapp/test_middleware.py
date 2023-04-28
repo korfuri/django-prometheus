@@ -1,7 +1,7 @@
 from django.test import SimpleTestCase, override_settings
 from testapp.views import ObjectionException
 
-from django_prometheus.testutils import PrometheusTestCaseMixin
+from django_prometheus.testutils import PrometheusTestCaseMixin, save_registry
 
 
 def M(metric_name):
@@ -30,7 +30,7 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
     """
 
     def test_request_counters(self):
-        registry = self.saveRegistry()
+        registry = save_registry()
         self.client.get("/")
         self.client.get("/")
         self.client.get("/help")
@@ -85,7 +85,7 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
         # to complete), to eliminate flakiness we adjust the buckets used
         # in the test suite.
 
-        registry = self.saveRegistry()
+        registry = save_registry()
 
         # This always takes more than .1 second, so checking the lower
         # buckets is fine.
@@ -108,7 +108,7 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
         )
 
     def test_exception_latency_histograms(self):
-        registry = self.saveRegistry()
+        registry = save_registry()
 
         try:
             self.client.get("/objection")
@@ -124,7 +124,7 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
         )
 
     def test_streaming_responses(self):
-        registry = self.saveRegistry()
+        registry = save_registry()
         self.client.get("/")
         self.client.get("/file")
         self.assertMetricDiff(registry, 1, M("responses_streaming_total"))

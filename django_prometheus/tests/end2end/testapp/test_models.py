@@ -1,7 +1,7 @@
 from django.test import TestCase
 from testapp.models import Dog, Lawn
 
-from django_prometheus.testutils import PrometheusTestCaseMixin
+from django_prometheus.testutils import PrometheusTestCaseMixin, save_registry
 
 
 def M(metric_name):
@@ -17,7 +17,7 @@ class TestModelMetrics(PrometheusTestCaseMixin, TestCase):
     """Test django_prometheus.models."""
 
     def test_counters(self):
-        registry = self.saveRegistry()
+        registry = save_registry()
         cool = Dog()
         cool.name = "Cool"
         cool.save()

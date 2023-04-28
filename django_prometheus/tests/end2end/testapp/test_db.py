@@ -3,7 +3,11 @@ from unittest import skipUnless
 from django.db import connections
 from django.test import TestCase
 
-from django_prometheus.testutils import PrometheusTestCaseMixin
+from django_prometheus.testutils import (
+    PrometheusTestCaseMixin,
+    get_metric,
+    save_registry,
+)
 
 
 class BaseDbMetricTest(PrometheusTestCaseMixin, TestCase):
@@ -48,8 +52,8 @@ class TestDbMetrics(BaseDbMetricTest):
             vendor="sqlite",
             type="OperationalError",
         )
-        assert self.getMetric("django_db_execute_total", alias="test_db_1", vendor="sqlite") > 0
-        assert self.getMetric("django_db_execute_total", alias="test_db_2", vendor="sqlite") >= 200
+        assert get_metric("django_db_execute_total", alias="test_db_1", vendor="sqlite") > 0
+        assert get_metric("django_db_execute_total", alias="test_db_2", vendor="sqlite") >= 200
 
     def test_histograms(self):
         cursor_db1 = connections["test_db_1"].cursor()
@@ -58,7 +62,7 @@ class TestDbMetrics(BaseDbMetricTest):
         for _ in range(200):
             cursor_db2.execute("SELECT 2")
         assert (
-            self.getMetric(
+            get_metric(
                 "django_db_query_duration_seconds_count",
                 alias="test_db_1",
                 vendor="sqlite",
@@ -66,7 +70,7 @@ class TestDbMetrics(BaseDbMetricTest):
             > 0
         )
         assert (
-            self.getMetric(
+            get_metric(
                 "django_db_query_duration_seconds_count",
                 alias="test_db_2",
                 vendor="sqlite",
@@ -75,7 +79,7 @@ class TestDbMetrics(BaseDbMetricTest):
         )
 
     def test_execute_many(self):
-        registry = self.saveRegistry()
+        registry = save_registry()
         cursor_db1 = connections["test_db_1"].cursor()
         cursor_db1.executemany(
             "INSERT INTO testapp_lawn(location) VALUES (?)",
@@ -102,7 +106,7 @@ class TestPostgresDbMetrics(BaseDbMetricTest):
     """
 
     def test_counters(self):
-        registry = self.saveRegistry()
+        registry = save_registry()
         cursor = connections["postgresql"].cursor()
 
         for _ in range(20):
@@ -129,7 +133,7 @@ class TestMysDbMetrics(BaseDbMetricTest):
     """
 
     def test_counters(self):
-        registry = self.saveRegistry()
+        registry = save_registry()
         cursor = connections["mysql"].cursor()
 
         for _ in range(20):
@@ -156,7 +160,7 @@ class TestPostgisDbMetrics(BaseDbMetricTest):
     """
 
     def test_counters(self):
-        r = self.saveRegistry()
+        r = save_registry()
         cursor = connections["postgis"].cursor()
 
         for _ in range(20):

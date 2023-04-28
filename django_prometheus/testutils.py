@@ -31,109 +31,50 @@ class PrometheusTestCaseMixin:
     that interact with metrics.
     """
 
-    def saveRegistry(self, registry=REGISTRY):
-        """Freezes a registry. This lets a user test changes to a metric
-        instead of testing the absolute value. A typical use case looks like:
-
-          registry = self.saveRegistry()
-          doStuff()
-          self.assertMetricDiff(registry, 1, 'stuff_done_total')
-        """
-        return copy.deepcopy(list(registry.collect()))
-
-    def getMetricFromFrozenRegistry(self, metric_name, frozen_registry, **labels):
-        """Gets a single metric from a frozen registry."""
-        for metric in frozen_registry:
-            for sample in metric.samples:
-                if sample[0] == metric_name and sample[1] == labels:
-                    return sample[2]
-
-    def getMetric(self, metric_name, registry=REGISTRY, **labels):
-        """Gets a single metric."""
-        return self.getMetricFromFrozenRegistry(metric_name, registry.collect(), **labels)
-
-    def getMetricVectorFromFrozenRegistry(self, metric_name, frozen_registry):
-        """Like getMetricVector, but from a frozen registry."""
-        output = []
-        for metric in frozen_registry:
-            for sample in metric.samples:
-                if sample[0] == metric_name:
-                    output.append((sample[1], sample[2]))
-        return output
-
-    def getMetricVector(self, metric_name, registry=REGISTRY):
-        """Returns the values for all labels of a given metric.
-
-        The result is returned as a list of (labels, value) tuples,
-        where `labels` is a dict.
-
-        This is quite a hack since it relies on the internal
-        representation of the prometheus_client, and it should
-        probably be provided as a function there instead.
-        """
-        return self.getMetricVectorFromFrozenRegistry(metric_name, registry.collect())
-
-    def formatLabels(self, labels):
-        """Format a set of labels to Prometheus representation.
-
-        In:
-          {'method': 'GET', 'port': '80'}
-
-        Out:
-          '{method="GET",port="80"}'
-        """
-        return "{%s}" % ",".join([f'{k}="{v}"' for k, v in labels.items()])
-
-    def formatVector(self, vector):
-        """Formats a list of (labels, value) where labels is a dict into a
-        human-readable representation.
-        """
-        return "\n".join(["{} = {}".format(self.formatLabels(labels), value) for labels, value in vector])
-
     def assertMetricEquals(self, expected_value, metric_name, registry=REGISTRY, **labels):
         """Asserts that metric_name{**labels} == expected_value."""
-        value = self.getMetric(metric_name, registry=registry, **labels)
+        value = get_metric(metric_name, registry=registry, **labels)
         assert_err = METRIC_EQUALS_ERR_EXPLANATION % (
             metric_name,
-            self.formatLabels(labels),
+            format_labels(labels),
             value,
             expected_value,
             metric_name,
-            self.formatVector(self.getMetricVector(metric_name)),
+            format_vector(get_metrics_vector(metric_name)),
         )
         self.assertEqual(expected_value, value, assert_err)
 
     def assertMetricNotEquals(self, expected_value, metric_name, registry=REGISTRY, **labels):
         """Asserts that metric_name{**labels} == expected_value."""
-        value = self.getMetric(metric_name, registry=registry, **labels)
+        value = get_metric(metric_name, registry=registry, **labels)
         assert_err = METRIC_EQUALS_ERR_EXPLANATION % (
             metric_name,
-            self.formatLabels(labels),
+            format_labels(labels),
             value,
             expected_value,
             metric_name,
-            self.formatVector(self.getMetricVector(metric_name)),
+            format_vector(get_metrics_vector(metric_name)),
         )
         assert expected_value != value, assert_err
 
     def assertMetricDiff(self, frozen_registry, expected_diff, metric_name, registry=REGISTRY, **labels):
         """Asserts that metric_name{**labels} changed by expected_diff between
         the frozen registry and now. A frozen registry can be obtained
-        by calling saveRegistry, typically at the beginning of a test
+        by calling save_registry, typically at the beginning of a test
         case.
         """
-        saved_value = self.getMetricFromFrozenRegistry(metric_name, frozen_registry, **labels)
-        current_value = self.getMetric(metric_name, registry=registry, **labels)
+        saved_value = get_metric_from_frozen_registry(metric_name, frozen_registry, **labels)
+        current_value = get_metric(metric_name, registry=registry, **labels)
         assert current_value is not None, METRIC_DIFF_ERR_NONE_EXPLANATION % (
             metric_name,
-            self.formatLabels(labels),
+            format_labels(labels),
             saved_value,
             current_value,
         )
         diff = current_value - (saved_value or 0.0)
         assert_err = METRIC_DIFF_ERR_EXPLANATION % (
             metric_name,
-            self.formatLabels(labels),
+            format_labels(labels),
             diff,
             expected_diff,
             saved_value,
@@ -144,20 +85,86 @@ class PrometheusTestCaseMixin:
     def assertMetricCompare(self, frozen_registry, predicate, metric_name, registry=REGISTRY, **labels):
         """Asserts that metric_name{**labels} changed according to a provided
         predicate function between the frozen registry and now. A
-        frozen registry can be obtained by calling saveRegistry,
+        frozen registry can be obtained by calling save_registry,
         typically at the beginning of a test case.
         """
-        saved_value = self.getMetricFromFrozenRegistry(metric_name, frozen_registry, **labels)
-        current_value = self.getMetric(metric_name, registry=registry, **labels)
+        saved_value = get_metric_from_frozen_registry(metric_name, frozen_registry, **labels)
+        current_value = get_metric(metric_name, registry=registry, **labels)
         assert current_value is not None, METRIC_DIFF_ERR_NONE_EXPLANATION % (
             metric_name,
-            self.formatLabels(labels),
+            format_labels(labels),
             saved_value,
             current_value,
         )
         assert predicate(saved_value, current_value) is True, METRIC_COMPARE_ERR_EXPLANATION % (
             metric_name,
-            self.formatLabels(labels),
+            format_labels(labels),
             saved_value,
             current_value,
         )
+
+
+def save_registry(registry=REGISTRY):
+    """Freezes a registry. This lets a user test changes to a metric
+    instead of testing the absolute value. A typical use case looks like:
+
+        registry = save_registry()
+        doStuff()
+        self.assertMetricDiff(registry, 1, 'stuff_done_total')
+    """
+    return copy.deepcopy(list(registry.collect()))
+
+
+def get_metric(metric_name, registry=REGISTRY, **labels):
+    """Gets a single metric."""
+    return get_metric_from_frozen_registry(metric_name, registry.collect(), **labels)
+
+
+def get_metrics_vector(metric_name, registry=REGISTRY):
+    """Returns the values for all labels of a given metric.
+
+    The result is returned as a list of (labels, value) tuples,
+    where `labels` is a dict.
+
+    This is quite a hack since it relies on the internal
+    representation of the prometheus_client, and it should
+    probably be provided as a function there instead.
+    """
+    return get_metric_vector_from_frozen_registry(metric_name, registry.collect())
+
+
+def get_metric_vector_from_frozen_registry(metric_name, frozen_registry):
+    """Like get_metrics_vector, but from a frozen registry."""
+    output = []
+    for metric in frozen_registry:
+        for sample in metric.samples:
+            if sample[0] == metric_name:
+                output.append((sample[1], sample[2]))
+    return output
+
+
+def get_metric_from_frozen_registry(metric_name, frozen_registry, **labels):
+    """Gets a single metric from a frozen registry."""
+    for metric in frozen_registry:
+        for sample in metric.samples:
+            if sample[0] == metric_name and sample[1] == labels:
+                return sample[2]
+
+
+def format_labels(labels):
+    """Format a set of labels to Prometheus representation.
+
+    In:
+      {'method': 'GET', 'port': '80'}
+
+    Out:
+      '{method="GET",port="80"}'
+    """
+    return "{%s}" % ",".join([f'{k}="{v}"' for k, v in labels.items()])
+
+
+def format_vector(vector):
+    """Formats a list of (labels, value) where labels is a dict into a
+    human-readable representation.
+    """
+    return "\n".join(["{} = {}".format(format_labels(labels), value) for labels, value in vector])
