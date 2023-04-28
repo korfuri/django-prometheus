@@ -26,14 +26,14 @@ class TestDbMetrics(BaseDbMetricTest):
     threshold, or check by how much it increased during the test.
     """
 
-    def testConfigHasExpectedDatabases(self):
+    def test_config_has_expected_databases(self):
         """Not a real unit test: ensures that testapp.settings contains the
         databases this test expects."""
         assert "default" in connections.databases.keys()
         assert "test_db_1" in connections.databases.keys()
         assert "test_db_2" in connections.databases.keys()
 
-    def testCounters(self):
+    def test_counters(self):
         cursor_db1 = connections["test_db_1"].cursor()
         cursor_db2 = connections["test_db_2"].cursor()
         cursor_db1.execute("SELECT 1")
@@ -55,7 +55,7 @@ class TestDbMetrics(BaseDbMetricTest):
         assert get_metric("django_db_execute_total", alias="test_db_1", vendor="sqlite") > 0
         assert get_metric("django_db_execute_total", alias="test_db_2", vendor="sqlite") >= 200
 
-    def testHistograms(self):
+    def test_histograms(self):
         cursor_db1 = connections["test_db_1"].cursor()
         cursor_db2 = connections["test_db_2"].cursor()
         cursor_db1.execute("SELECT 1")
@@ -78,7 +78,7 @@ class TestDbMetrics(BaseDbMetricTest):
             >= 200
         )
 
-    def testExecuteMany(self):
+    def test_execute_many(self):
         registry = save_registry()
         cursor_db1 = connections["test_db_1"].cursor()
         cursor_db1.executemany(
@@ -105,7 +105,7 @@ class TestPostgresDbMetrics(BaseDbMetricTest):
     threshold, or check by how much it increased during the test.
     """
 
-    def testCounters(self):
+    def test_counters(self):
         registry = save_registry()
         cursor = connections["postgresql"].cursor()
 
@@ -132,7 +132,7 @@ class TestMysDbMetrics(BaseDbMetricTest):
     threshold, or check by how much it increased during the test.
     """
 
-    def testCounters(self):
+    def test_counters(self):
         registry = save_registry()
         cursor = connections["mysql"].cursor()
 
@@ -159,7 +159,7 @@ class TestPostgisDbMetrics(BaseDbMetricTest):
     threshold, or check by how much it increased during the test.
     """
 
-    def testCounters(self):
+    def test_counters(self):
         r = save_registry()
         cursor = connections["postgis"].cursor()
 

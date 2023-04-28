@@ -95,7 +95,7 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
             labelblue="sky",
         )
 
-    def testRegistrySaving(self):
+    def test_registry_saving(self):
         """Tests save_registry and frozen registries operations."""
         frozen_registry = save_registry(registry=self.registry)
         # Test that we can manipulate a frozen scalar metric.
