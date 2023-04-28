@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 from django.test import SimpleTestCase
 
 from django_prometheus.migrations import ExportMigrationsForDatabase
-from django_prometheus.testutils import PrometheusTestCaseMixin
+from django_prometheus.testutils import assert_metric_equal
 
 
 def M(metric_name):
@@ -15,7 +15,7 @@ def M(metric_name):
     return "django_migrations_%s" % metric_name
 
 
-class TestMigrations(PrometheusTestCaseMixin, SimpleTestCase):
+class TestMigrations(SimpleTestCase):
     """Test migration counters."""
 
     def test_counters(self):
@@ -30,7 +30,7 @@ class TestMigrations(PrometheusTestCaseMixin, SimpleTestCase):
         executor.loader.applied_migrations = {"b", "c"}
         ExportMigrationsForDatabase("fakedb2", executor)
 
-        self.assertMetricEquals(3, M("applied_total"), connection="fakedb1")
-        self.assertMetricEquals(0, M("unapplied_total"), connection="fakedb1")
-        self.assertMetricEquals(2, M("applied_total"), connection="fakedb2")
-        self.assertMetricEquals(1, M("unapplied_total"), connection="fakedb2")
+        assert_metric_equal(3, M("applied_total"), connection="fakedb1")
+        assert_metric_equal(0, M("unapplied_total"), connection="fakedb1")
+        assert_metric_equal(2, M("applied_total"), connection="fakedb2")
+        assert_metric_equal(1, M("unapplied_total"), connection="fakedb2")

@@ -9,11 +9,7 @@ from django_prometheus.middleware import (
     PrometheusAfterMiddleware,
     PrometheusBeforeMiddleware,
 )
-from django_prometheus.testutils import (
-    PrometheusTestCaseMixin,
-    assert_metric_diff,
-    save_registry,
-)
+from django_prometheus.testutils import assert_metric_diff, save_registry
 
 EXTENDED_METRICS = [
     M("requests_latency_seconds_by_view_method"),
@@ -49,7 +45,7 @@ class AppMetricsAfterMiddleware(PrometheusAfterMiddleware):
         "testapp.test_middleware_custom_labels.AppMetricsAfterMiddleware",
     )
 )
-class TestMiddlewareMetricsWithCustomLabels(PrometheusTestCaseMixin, SimpleTestCase):
+class TestMiddlewareMetricsWithCustomLabels(SimpleTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

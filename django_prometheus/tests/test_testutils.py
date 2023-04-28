@@ -5,8 +5,8 @@ from operator import itemgetter
 import prometheus_client
 
 from django_prometheus.testutils import (
-    PrometheusTestCaseMixin,
     assert_metric_diff,
+    assert_metric_equal,
     assert_metric_no_diff,
     assert_metric_not_equal,
     get_metric,
@@ -14,17 +14,6 @@ from django_prometheus.testutils import (
     get_metrics_vector,
     save_registry,
 )
-
-
-class SomeTestCase(PrometheusTestCaseMixin):
-    """A class that pretends to be a unit test."""
-
-    def __init__(self):
-        self.passes = True
-        super().__init__()
-
-    def assertEqual(self, left, right, *args, **kwargs):
-        self.passes = self.passes and (left == right)
 
 
 class PrometheusTestCaseMixinTest(unittest.TestCase):
@@ -42,7 +31,6 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
         self.some_labelled_gauge.labels("pink", "royal").set(2)
         self.some_labelled_gauge.labels("carmin", "indigo").set(3)
         self.some_labelled_gauge.labels("carmin", "royal").set(4)
-        self.test_case = SomeTestCase()
 
     def test_get_metric(self):
         """Tests get_metric."""
@@ -71,25 +59,25 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
             key=itemgetter(1),
         ) == sorted(vector, key=itemgetter(1))
 
-    def testAssertMetricEquals(self):
-        """Tests assertMetricEquals."""
+    def test_assert_metric_equal(self):
+        """Tests assert_metric_equal."""
         # First we test that a scalar metric can be tested.
-        self.test_case.assertMetricEquals(42, "some_gauge", registry=self.registry)
-        assert self.test_case.passes is True
+        assert_metric_equal(42, "some_gauge", registry=self.registry)
+
         assert_metric_not_equal(43, "some_gauge", registry=self.registry)
 
-        # Here we test that assertMetricEquals fails on nonexistent gauges.
+        # Here we test that assert_metric_equal fails on nonexistent gauges.
         assert_metric_not_equal(42, "some_nonexistent_gauge", registry=self.registry)
 
         # Here we test that labelled metrics can be tested.
-        self.test_case.assertMetricEquals(
+        assert_metric_equal(
             1,
             "some_labelled_gauge",
             registry=self.registry,
             labelred="pink",
             labelblue="indigo",
         )
-        assert self.test_case.passes is True
+
         assert_metric_not_equal(
             1,
             "some_labelled_gauge",
