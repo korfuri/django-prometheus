@@ -6,6 +6,7 @@ import prometheus_client
 
 from django_prometheus.testutils import (
     PrometheusTestCaseMixin,
+    assert_metric_no_diff,
     assert_metric_not_equal,
     get_metric,
     get_metric_from_frozen_registry,
@@ -105,9 +106,7 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
         assert 42 == get_metric_from_frozen_registry("some_gauge", frozen_registry)
         self.test_case.assertMetricDiff(frozen_registry, 99 - 42, "some_gauge", registry=self.registry)
         assert self.test_case.passes is True
-        self.test_case.assertMetricDiff(frozen_registry, 1, "some_gauge", registry=self.registry)
-        assert self.test_case.passes is False
-        self.test_case.passes = True
+        assert_metric_no_diff(frozen_registry, 1, "some_gauge", registry=self.registry)
 
         # Now test the same thing with a labelled metric.
         assert 1 == get_metric_from_frozen_registry(
@@ -126,7 +125,7 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
             labelblue="indigo",
         )
         assert self.test_case.passes is True
-        self.test_case.assertMetricDiff(
+        assert_metric_no_diff(
             frozen_registry,
             1,
             "some_labelled_gauge",
@@ -134,4 +133,3 @@ class PrometheusTestCaseMixinTest(unittest.TestCase):
             labelred="pink",
             labelblue="indigo",
         )
-        assert self.test_case.passes is False
