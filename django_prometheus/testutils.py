@@ -42,32 +42,33 @@ class PrometheusTestCaseMixin:
             metric_name,
             format_vector(get_metrics_vector(metric_name)),
         )
-        self.assertEqual(expected_value, value, assert_err)
+        assert expected_value == value, assert_err
 
-    def assertMetricDiff(self, frozen_registry, expected_diff, metric_name, registry=REGISTRY, **labels):
-        """Asserts that metric_name{**labels} changed by expected_diff between
-        the frozen registry and now. A frozen registry can be obtained
-        by calling save_registry, typically at the beginning of a test
-        case.
-        """
-        saved_value = get_metric_from_frozen_registry(metric_name, frozen_registry, **labels)
-        current_value = get_metric(metric_name, registry=registry, **labels)
-        assert current_value is not None, METRIC_DIFF_ERR_NONE_EXPLANATION % (
-            metric_name,
-            format_labels(labels),
-            saved_value,
-            current_value,
-        )
-        diff = current_value - (saved_value or 0.0)
-        assert_err = METRIC_DIFF_ERR_EXPLANATION % (
-            metric_name,
-            format_labels(labels),
-            diff,
-            expected_diff,
-            saved_value,
-            current_value,
-        )
-        self.assertEqual(expected_diff, diff, assert_err)
+
+def assert_metric_diff(frozen_registry, expected_diff, metric_name, registry=REGISTRY, **labels):
+    """Asserts that metric_name{**labels} changed by expected_diff between
+    the frozen registry and now. A frozen registry can be obtained
+    by calling save_registry, typically at the beginning of a test
+    case.
+    """
+    saved_value = get_metric_from_frozen_registry(metric_name, frozen_registry, **labels)
+    current_value = get_metric(metric_name, registry=registry, **labels)
+    assert current_value is not None, METRIC_DIFF_ERR_NONE_EXPLANATION % (
+        metric_name,
+        format_labels(labels),
+        saved_value,
+        current_value,
+    )
+    diff = current_value - (saved_value or 0.0)
+    assert_err = METRIC_DIFF_ERR_EXPLANATION % (
+        metric_name,
+        format_labels(labels),
+        diff,
+        expected_diff,
+        saved_value,
+        current_value,
+    )
+    assert expected_diff == diff, assert_err
 
 
 def assert_metric_no_diff(frozen_registry, expected_diff, metric_name, registry=REGISTRY, **labels):
@@ -138,7 +139,7 @@ def save_registry(registry=REGISTRY):
 
         registry = save_registry()
         doStuff()
-        self.assertMetricDiff(registry, 1, 'stuff_done_total')
+        assert_metric_diff(registry, 1, 'stuff_done_total')
     """
     return copy.deepcopy(list(registry.collect()))
 

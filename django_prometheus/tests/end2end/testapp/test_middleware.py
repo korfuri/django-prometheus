@@ -1,7 +1,11 @@
 from django.test import SimpleTestCase, override_settings
 from testapp.views import ObjectionException
 
-from django_prometheus.testutils import PrometheusTestCaseMixin, save_registry
+from django_prometheus.testutils import (
+    PrometheusTestCaseMixin,
+    assert_metric_diff,
+    save_registry,
+)
 
 
 def M(metric_name):
@@ -36,12 +40,12 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
         self.client.get("/help")
         self.client.post("/", {"test": "data"})
 
-        self.assertMetricDiff(registry, 4, M("requests_before_middlewares_total"))
-        self.assertMetricDiff(registry, 4, M("responses_before_middlewares_total"))
-        self.assertMetricDiff(registry, 3, T("requests_total_by_method"), method="GET")
-        self.assertMetricDiff(registry, 1, T("requests_total_by_method"), method="POST")
-        self.assertMetricDiff(registry, 4, T("requests_total_by_transport"), transport="http")
-        self.assertMetricDiff(
+        assert_metric_diff(registry, 4, M("requests_before_middlewares_total"))
+        assert_metric_diff(registry, 4, M("responses_before_middlewares_total"))
+        assert_metric_diff(registry, 3, T("requests_total_by_method"), method="GET")
+        assert_metric_diff(registry, 1, T("requests_total_by_method"), method="POST")
+        assert_metric_diff(registry, 4, T("requests_total_by_transport"), transport="http")
+        assert_metric_diff(
             registry,
             2,
             T("requests_total_by_view_transport_method"),
@@ -49,7 +53,7 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
             transport="http",
             method="GET",
         )
-        self.assertMetricDiff(
+        assert_metric_diff(
             registry,
             1,
             T("requests_total_by_view_transport_method"),
@@ -57,7 +61,7 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
             transport="http",
             method="GET",
         )
-        self.assertMetricDiff(
+        assert_metric_diff(
             registry,
             1,
             T("requests_total_by_view_transport_method"),
@@ -68,16 +72,16 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
         # We have 3 requests with no post body, and one with a few
         # bytes, but buckets are cumulative so that is 4 requests with
         # <=128 bytes bodies.
-        self.assertMetricDiff(registry, 3, M("requests_body_total_bytes_bucket"), le="0.0")
-        self.assertMetricDiff(registry, 4, M("requests_body_total_bytes_bucket"), le="128.0")
+        assert_metric_diff(registry, 3, M("requests_body_total_bytes_bucket"), le="0.0")
+        assert_metric_diff(registry, 4, M("requests_body_total_bytes_bucket"), le="128.0")
         self.assertMetricEquals(None, M("responses_total_by_templatename"), templatename="help.html")
-        self.assertMetricDiff(registry, 3, T("responses_total_by_templatename"), templatename="index.html")
-        self.assertMetricDiff(registry, 4, T("responses_total_by_status"), status="200")
-        self.assertMetricDiff(registry, 0, M("responses_body_total_bytes_bucket"), le="0.0")
-        self.assertMetricDiff(registry, 3, M("responses_body_total_bytes_bucket"), le="128.0")
-        self.assertMetricDiff(registry, 4, M("responses_body_total_bytes_bucket"), le="8192.0")
-        self.assertMetricDiff(registry, 4, T("responses_total_by_charset"), charset="utf-8")
-        self.assertMetricDiff(registry, 0, M("responses_streaming_total"))
+        assert_metric_diff(registry, 3, T("responses_total_by_templatename"), templatename="index.html")
+        assert_metric_diff(registry, 4, T("responses_total_by_status"), status="200")
+        assert_metric_diff(registry, 0, M("responses_body_total_bytes_bucket"), le="0.0")
+        assert_metric_diff(registry, 3, M("responses_body_total_bytes_bucket"), le="128.0")
+        assert_metric_diff(registry, 4, M("responses_body_total_bytes_bucket"), le="8192.0")
+        assert_metric_diff(registry, 4, T("responses_total_by_charset"), charset="utf-8")
+        assert_metric_diff(registry, 0, M("responses_streaming_total"))
 
     def test_latency_histograms(self):
         # Caution: this test is timing-based. This is not ideal. It
@@ -90,7 +94,7 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
         # This always takes more than .1 second, so checking the lower
         # buckets is fine.
         self.client.get("/slow")
-        self.assertMetricDiff(
+        assert_metric_diff(
             registry,
             0,
             M("requests_latency_seconds_by_view_method_bucket"),
@@ -98,7 +102,7 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
             view="slow",
             method="GET",
         )
-        self.assertMetricDiff(
+        assert_metric_diff(
             registry,
             1,
             M("requests_latency_seconds_by_view_method_bucket"),
@@ -114,7 +118,7 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
             self.client.get("/objection")
         except ObjectionException:
             pass
-        self.assertMetricDiff(
+        assert_metric_diff(
             registry,
             2,
             M("requests_latency_seconds_by_view_method_bucket"),
@@ -127,5 +131,5 @@ class TestMiddlewareMetrics(PrometheusTestCaseMixin, SimpleTestCase):
         registry = save_registry()
         self.client.get("/")
         self.client.get("/file")
-        self.assertMetricDiff(registry, 1, M("responses_streaming_total"))
-        self.assertMetricDiff(registry, 1, M("responses_body_total_bytes_bucket"), le="+Inf")
+        assert_metric_diff(registry, 1, M("responses_streaming_total"))
+        assert_metric_diff(registry, 1, M("responses_body_total_bytes_bucket"), le="+Inf")
