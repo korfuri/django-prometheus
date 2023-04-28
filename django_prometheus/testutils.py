@@ -53,7 +53,7 @@ class PrometheusTestCaseMixin:
             value,
             expected_value,
             metric_name,
-            self.formatVector(get_metrics_vector(metric_name)),
+            format_vector(get_metrics_vector(metric_name)),
         )
         assert expected_value != value, assert_err
 
