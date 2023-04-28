@@ -82,27 +82,26 @@ class PrometheusTestCaseMixin:
         )
         self.assertEqual(expected_diff, diff, assert_err)
 
-
-def assert_metric_compare(frozen_registry, predicate, metric_name, registry=REGISTRY, **labels):
-    """Asserts that metric_name{**labels} changed according to a provided
-    predicate function between the frozen registry and now. A
-    frozen registry can be obtained by calling save_registry,
-    typically at the beginning of a test case.
-    """
-    saved_value = get_metric_from_frozen_registry(metric_name, frozen_registry, **labels)
-    current_value = get_metric(metric_name, registry=registry, **labels)
-    assert current_value is not None, METRIC_DIFF_ERR_NONE_EXPLANATION % (
-        metric_name,
-        format_labels(labels),
-        saved_value,
-        current_value,
-    )
-    assert predicate(saved_value, current_value) is True, METRIC_COMPARE_ERR_EXPLANATION % (
-        metric_name,
-        format_labels(labels),
-        saved_value,
-        current_value,
-    )
+    def assertMetricCompare(self, frozen_registry, predicate, metric_name, registry=REGISTRY, **labels):
+        """Asserts that metric_name{**labels} changed according to a provided
+        predicate function between the frozen registry and now. A
+        frozen registry can be obtained by calling save_registry,
+        typically at the beginning of a test case.
+        """
+        saved_value = get_metric_from_frozen_registry(metric_name, frozen_registry, **labels)
+        current_value = get_metric(metric_name, registry=registry, **labels)
+        assert current_value is not None, METRIC_DIFF_ERR_NONE_EXPLANATION % (
+            metric_name,
+            format_labels(labels),
+            saved_value,
+            current_value,
+        )
+        assert predicate(saved_value, current_value) is True, METRIC_COMPARE_ERR_EXPLANATION % (
+            metric_name,
+            format_labels(labels),
+            saved_value,
+            current_value,
+        )
 
 
 def save_registry(registry=REGISTRY):

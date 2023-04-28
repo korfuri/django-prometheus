@@ -8,7 +8,7 @@ from django_prometheus.testutils import PrometheusTestCaseMixin, get_metric
 class TestCachesMetrics(PrometheusTestCaseMixin, TestCase):
     """Test django_prometheus.caches metrics."""
 
-    def test_counters(self):
+    def testCounters(self):
         supported_caches = [
             "memcached.PyLibMCCache",
             "memcached.PyMemcacheCache",
