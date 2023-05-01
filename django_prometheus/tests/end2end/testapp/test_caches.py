@@ -1,6 +1,5 @@
 import pytest
 from django.core.cache import caches
-from django.test import TestCase
 from redis import RedisError
 
 from django_prometheus.testutils import assert_metric_equal, get_metric
@@ -8,7 +7,7 @@ from django_prometheus.testutils import assert_metric_equal, get_metric
 _SUPPORTED_CACHES = ["memcached.PyLibMCCache", "memcached.PyMemcacheCache", "filebased", "locmem", "redis"]
 
 
-class TestCachesMetrics(TestCase):
+class TestCachesMetrics:
     """Test django_prometheus.caches metrics."""
 
     @pytest.mark.parametrize("supported_cache", _SUPPORTED_CACHES)
