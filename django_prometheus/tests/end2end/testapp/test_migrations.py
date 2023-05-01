@@ -1,5 +1,7 @@
 from unittest.mock import MagicMock
 
+import pytest
+
 from django_prometheus.migrations import ExportMigrationsForDatabase
 from django_prometheus.testutils import assert_metric_equal
 
@@ -13,6 +15,7 @@ def M(metric_name):
     return "django_migrations_%s" % metric_name
 
 
+@pytest.mark.django_db()
 class TestMigrations:
     """Test migration counters."""
 
