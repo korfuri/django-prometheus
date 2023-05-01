@@ -1,6 +1,6 @@
 # Changelog
 
-## v2.3.0 - UNPUBLISHED
+## v2.3.0 - May 2nd, 2023
 
 * Remove support for Python 3.6, Django versions older tha than 3.2
 * Fix two latency metrics not using PROMETHEUS_LATENCY_BUCKETS setting, Thanks [@AleksaC](https://github.com/korfuri/django-prometheus/pull/343)
