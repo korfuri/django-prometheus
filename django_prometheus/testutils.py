@@ -196,4 +196,4 @@ def format_vector(vector):
     """Formats a list of (labels, value) where labels is a dict into a
     human-readable representation.
     """
-    return "\n".join(["{} = {}".format(format_labels(labels), value) for labels, value in vector])
+    return "\n".join([f"{format_labels(labels)} = {value}" for labels, value in vector])
