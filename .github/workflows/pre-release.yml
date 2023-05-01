@@ -9,9 +9,6 @@ jobs:
     name: pre-release django-prometheus
     permissions:
       id-token: write
-    # environment:
-    #   name: pypi
-    #   url: https://test.pypi.org/p/django-prometheus/
     steps:
     - uses: actions/checkout@v3
       with:
@@ -28,10 +25,9 @@ jobs:
       run: python update_version_from_git.py
     - name: Build
       run: python -m build
-    - name: Publish to TEST PyPI
+    - name: Publish to PyPI
       uses: pypa/gh-action-pypi-publish@v1.8.5
       with:
-        repository-url: https://test.pypi.org/legacy/
         skip-existing: true
         verbose: true
         print-hash: true
