@@ -52,10 +52,9 @@ jobs:
         pip install wheel setuptools packaging twine build --upgrade
     - name: Build
       run: python -m build
-    - name: Publish to TEST PyPI
+    - name: Publish to PyPI
       uses: pypa/gh-action-pypi-publish@v1.8.5
       with:
-        repository-url: https://test.pypi.org/legacy/
         skip-existing: true
         verbose: true
         print-hash: true
