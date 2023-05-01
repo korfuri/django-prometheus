@@ -52,12 +52,12 @@ class TestMiddlewareMetricsWithCustomLabels:
                 REGISTRY.unregister(metric)
         Metrics._instance = None
 
-    def test_request_counters(self):
+    def test_request_counters(self, client):
         registry = save_registry()
-        self.client.get("/")
-        self.client.get("/")
-        self.client.get("/help")
-        self.client.post("/", {"test": "data"})
+        client.get("/")
+        client.get("/")
+        client.get("/help")
+        client.post("/", {"test": "data"})
 
         assert_metric_diff(registry, 4, M("requests_before_middlewares_total"))
         assert_metric_diff(registry, 4, M("responses_before_middlewares_total"))

@@ -36,12 +36,12 @@ class TestMiddlewareMetrics:
     def _setup(self, settings):
         settings.PROMETHEUS_LATENCY_BUCKETS = (0.05, 1.0, 2.0, 4.0, 5.0, 10.0, float("inf"))
 
-    def test_request_counters(self):
+    def test_request_counters(self, client):
         registry = save_registry()
-        self.client.get("/")
-        self.client.get("/")
-        self.client.get("/help")
-        self.client.post("/", {"test": "data"})
+        client.get("/")
+        client.get("/")
+        client.get("/help")
+        client.post("/", {"test": "data"})
 
         assert_metric_diff(registry, 4, M("requests_before_middlewares_total"))
         assert_metric_diff(registry, 4, M("responses_before_middlewares_total"))
@@ -86,7 +86,7 @@ class TestMiddlewareMetrics:
         assert_metric_diff(registry, 4, T("responses_total_by_charset"), charset="utf-8")
         assert_metric_diff(registry, 0, M("responses_streaming_total"))
 
-    def test_latency_histograms(self):
+    def test_latency_histograms(self, client):
         # Caution: this test is timing-based. This is not ideal. It
         # runs slowly (each request to /slow takes at least .1 seconds
         # to complete), to eliminate flakiness we adjust the buckets used
@@ -96,7 +96,7 @@ class TestMiddlewareMetrics:
 
         # This always takes more than .1 second, so checking the lower
         # buckets is fine.
-        self.client.get("/slow")
+        client.get("/slow")
         assert_metric_diff(
             registry,
             0,
@@ -114,11 +114,11 @@ class TestMiddlewareMetrics:
             method="GET",
         )
 
-    def test_exception_latency_histograms(self):
+    def test_exception_latency_histograms(self, client):
         registry = save_registry()
 
         try:
-            self.client.get("/objection")
+            client.get("/objection")
         except ObjectionException:
             pass
         assert_metric_diff(
@@ -130,9 +130,9 @@ class TestMiddlewareMetrics:
             method="GET",
         )
 
-    def test_streaming_responses(self):
+    def test_streaming_responses(self, client):
         registry = save_registry()
-        self.client.get("/")
-        self.client.get("/file")
+        client.get("/")
+        client.get("/file")
         assert_metric_diff(registry, 1, M("responses_streaming_total"))
         assert_metric_diff(registry, 1, M("responses_body_total_bytes_bucket"), le="+Inf")
