@@ -5,13 +5,13 @@ from redis import RedisError
 
 from django_prometheus.testutils import assert_metric_equal, get_metric
 
+_SUPPORTED_CACHES = ["memcached.PyLibMCCache", "memcached.PyMemcacheCache", "filebased", "locmem", "redis"]
+
 
 class TestCachesMetrics(TestCase):
     """Test django_prometheus.caches metrics."""
 
-    @pytest.mark.parametrize(
-        "supported_cache", ["memcached.PyLibMCCache", "memcached.PyMemcacheCache", "filebased", "locmem", "redis"]
-    )
+    @pytest.mark.parametrize("supported_cache", _SUPPORTED_CACHES)
     def test_counters(self, supported_cache):
         # Note: those tests require a memcached server running
         tested_cache = caches[supported_cache]
@@ -58,9 +58,7 @@ class TestCachesMetrics(TestCase):
         assert_metric_equal(total_before + 2, "django_cache_get_total", backend=supported_cache)
         assert_metric_equal(fail_before + 2, "django_cache_get_fail_total", backend=supported_cache)
 
-    @pytest.mark.parametrize(
-        "supported_cache", ["memcached.PyLibMCCache", "memcached.PyMemcacheCache", "filebased", "locmem", "redis"]
-    )
+    @pytest.mark.parametrize("supported_cache", _SUPPORTED_CACHES)
     def test_cache_version_support(self, supported_cache):
         # Note: those tests require a memcached server running
         tested_cache = caches[supported_cache]
