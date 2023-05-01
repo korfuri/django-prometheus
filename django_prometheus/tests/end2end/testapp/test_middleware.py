@@ -1,4 +1,4 @@
-from django.test import SimpleTestCase, override_settings
+import pytest
 from testapp.views import ObjectionException
 
 from django_prometheus.testutils import (
@@ -24,14 +24,17 @@ def T(metric_name):
     return "%s_total" % M(metric_name)
 
 
-@override_settings(PROMETHEUS_LATENCY_BUCKETS=(0.05, 1.0, 2.0, 4.0, 5.0, 10.0, float("inf")))
-class TestMiddlewareMetrics(SimpleTestCase):
+class TestMiddlewareMetrics:
     """Test django_prometheus.middleware.
 
     Note that counters related to exceptions can't be tested as
     Django's test Client only simulates requests and the exception
     handling flow is very different in that simulation.
     """
+
+    @pytest.fixture(autouse=True)
+    def _setup(self, settings):
+        settings.PROMETHEUS_LATENCY_BUCKETS = (0.05, 1.0, 2.0, 4.0, 5.0, 10.0, float("inf"))
 
     def test_request_counters(self):
         registry = save_registry()
