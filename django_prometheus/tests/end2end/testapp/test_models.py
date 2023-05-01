@@ -1,4 +1,3 @@
-from django.test import TestCase
 from testapp.models import Dog, Lawn
 
 from django_prometheus.testutils import assert_metric_diff, save_registry
@@ -13,7 +12,7 @@ def M(metric_name):
     return "django_model_%s" % metric_name
 
 
-class TestModelMetrics(TestCase):
+class TestModelMetrics:
     """Test django_prometheus.models."""
 
     def test_counters(self):
