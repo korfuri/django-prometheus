@@ -1,8 +1,8 @@
 # Changelog
 
-## v2.4.0 - UNPUBLISHED
+## v2.3.1 - May 2nd, 2023
 
-* TBD
+* Fix postgresql provider import, Thaks [@wilsonehusin](https://github.com/korfuri/django-prometheus/pull/402)
 
 ## v2.3.0 - May 2nd, 2023
 
