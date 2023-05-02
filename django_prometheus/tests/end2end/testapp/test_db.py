@@ -10,6 +10,11 @@ from django_prometheus.testutils import (
 )
 
 
+@pytest.fixture(autouse=True)
+def enable_db_access_for_all_tests(db):
+    pass
+
+
 @pytest.mark.django_db()
 @pytest.mark.skipif(connections["test_db_1"].vendor != "sqlite", reason="Skipped unless test_db_1 uses sqlite")
 class TestDbMetrics:
