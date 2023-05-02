@@ -1,4 +1,4 @@
-from django.contrib.gis.db.backends.postgis import base
+from django.db.backends.postgresql import base
 
 from django_prometheus.db.backends.common import get_postgres_cursor_class
 from django_prometheus.db.common import DatabaseWrapperMixin, ExportingCursorWrapper
