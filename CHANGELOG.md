@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.4.0 - UNPUBLISHED
+
+* TBD
+
 ## v2.3.0 - May 2nd, 2023
 
 * Remove support for Python 3.6, Django versions older tha than 3.2
