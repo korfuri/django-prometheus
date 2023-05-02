@@ -1,4 +1,4 @@
-from django.test import SimpleTestCase, override_settings
+import pytest
 from prometheus_client import REGISTRY
 from prometheus_client.metrics import MetricWrapperBase
 from testapp.helpers import get_middleware
@@ -39,28 +39,25 @@ class AppMetricsAfterMiddleware(PrometheusAfterMiddleware):
         return super().label_metric(metric, request, response=response, **new_labels)
 
 
-@override_settings(
-    MIDDLEWARE=get_middleware(
-        "testapp.test_middleware_custom_labels.AppMetricsBeforeMiddleware",
-        "testapp.test_middleware_custom_labels.AppMetricsAfterMiddleware",
-    )
-)
-class TestMiddlewareMetricsWithCustomLabels(SimpleTestCase):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+class TestMiddlewareMetricsWithCustomLabels:
+    @pytest.fixture(autouse=True)
+    def _setup(self, settings):
+        settings.MIDDLEWARE = get_middleware(
+            "testapp.test_middleware_custom_labels.AppMetricsBeforeMiddleware",
+            "testapp.test_middleware_custom_labels.AppMetricsAfterMiddleware",
+        )
         # Allow CustomMetrics to be used
         for metric in Metrics._instance.__dict__.values():
             if isinstance(metric, MetricWrapperBase):
                 REGISTRY.unregister(metric)
         Metrics._instance = None
 
-    def test_request_counters(self):
+    def test_request_counters(self, client):
         registry = save_registry()
-        self.client.get("/")
-        self.client.get("/")
-        self.client.get("/help")
-        self.client.post("/", {"test": "data"})
+        client.get("/")
+        client.get("/")
+        client.get("/help")
+        client.post("/", {"test": "data"})
 
         assert_metric_diff(registry, 4, M("requests_before_middlewares_total"))
         assert_metric_diff(registry, 4, M("responses_before_middlewares_total"))
