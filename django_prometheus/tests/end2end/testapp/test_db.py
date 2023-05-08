@@ -1,4 +1,5 @@
 import pytest
+from django.conf import settings
 from django.db import connections
 
 from django_prometheus.testutils import (
@@ -9,15 +10,18 @@ from django_prometheus.testutils import (
     save_registry,
 )
 
+# @pytest.fixture(autouse=True)
+# def enable_db_access_for_all_tests(db):
+#     pass
 
-@pytest.fixture(autouse=True)
-def enable_db_access_for_all_tests(db):
+
+@pytest.mark.django_db(databases=list(settings.DATABASES.keys()))
+class BaseDBTest:
     pass
 
 
-@pytest.mark.django_db()
 @pytest.mark.skipif(connections["test_db_1"].vendor != "sqlite", reason="Skipped unless test_db_1 uses sqlite")
-class TestDbMetrics:
+class TestDbMetrics(BaseDBTest):
     """Test django_prometheus.db metrics.
 
     Note regarding the values of metrics: many tests interact with the
@@ -95,9 +99,8 @@ class TestDbMetrics:
         )
 
 
-@pytest.mark.django_db()
 @pytest.mark.skipif("postgresql" not in connections, reason="Skipped unless postgresql database is enabled")
-class TestPostgresDbMetrics:
+class TestPostgresDbMetrics(BaseDBTest):
     """Test django_prometheus.db metrics for postgres backend.
 
     Note regarding the values of metrics: many tests interact with the
@@ -123,9 +126,8 @@ class TestPostgresDbMetrics:
         )
 
 
-@pytest.mark.django_db()
 @pytest.mark.skipif("mysql" not in connections, reason="Skipped unless mysql database is enabled")
-class TestMysDbMetrics:
+class TestMysDbMetrics(BaseDBTest):
     """Test django_prometheus.db metrics for mys backend.
 
     Note regarding the values of metrics: many tests interact with the
@@ -151,9 +153,8 @@ class TestMysDbMetrics:
         )
 
 
-@pytest.mark.django_db()
 @pytest.mark.skipif("postgis" not in connections, reason="Skipped unless postgis database is enabled")
-class TestPostgisDbMetrics:
+class TestPostgisDbMetrics(BaseDBTest):
     """Test django_prometheus.db metrics for postgis backend.
 
     Note regarding the values of metrics: many tests interact with the
