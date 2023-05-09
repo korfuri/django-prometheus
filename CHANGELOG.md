@@ -12,9 +12,9 @@
 * Fix two latency metrics not using PROMETHEUS_LATENCY_BUCKETS setting, Thanks [@AleksaC](https://github.com/korfuri/django-prometheus/pull/343)
 * Support new cache backend names in newer Django versions, Thanks [@tneuct](https://github.com/korfuri/django-prometheus/pull/329)
 * Make export of migrations False by default, Thanks [@kaypee90](https://github.com/korfuri/django-prometheus/pull/313)
-* Add support for Django 4.1, Python 3.11
+* Add support for Django 4.1, Python 3.11  & 3.12
 * Add support for Django 4.2 and Psycopg 3
-
+ 
 ## v2.2.0 - December 19, 2021
 
 * Switch to Github Actions CI, remove travis-ci.
