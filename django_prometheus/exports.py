@@ -42,8 +42,11 @@ def SetupPrometheusEndpointOnPort(port, addr=""):
         "autoreloader is active. Use the URL exporter, or start django "
         "with --noreload. See documentation/exports.md."
     )
+
+    registry = prometheus_client.CollectorRegistry()
+    multiprocess.MultiProcessCollector(registry)
     try:
-        prometheus_client.start_http_server(port, addr=addr)
+        prometheus_client.start_http_server(port, addr=addr, registry=registry)
     except OSError:
         """
         first process serves metrics on port 8001, other processes raise error: port already in use
