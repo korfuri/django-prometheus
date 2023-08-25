@@ -86,6 +86,20 @@ increases accuracy: <https://prometheus.io/docs/practices/histograms/>
 PROMETHEUS_LATENCY_BUCKETS = (.1, .2, .5, .6, .8, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.5, 9.0, 12.0, 15.0, 20.0, 30.0, float("inf"))
 ```
 
+---
+
+You can have a custom namespace for your metrics:
+
+```python
+PROMETHEUS_METRIC_NAMESPACE = "project"
+```
+
+This will prefix all metrics with `project_` word like this:
+
+```text
+project_django_http_requests_total_by_method_total{method="GET"} 1.0
+```
+
 ### Monitoring your databases
 
 SQLite, MySQL, and PostgreSQL databases can be monitored. Just
