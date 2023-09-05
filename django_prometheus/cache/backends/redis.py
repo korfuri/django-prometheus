@@ -1,5 +1,6 @@
 from django_redis import cache, exceptions
 
+
 from django_prometheus.cache.metrics import (
     django_cache_get_fail_total,
     django_cache_get_total,
@@ -20,7 +21,7 @@ class RedisCache(cache.RedisCache):
             django_cache_get_fail_total.labels(backend="redis").inc()
             if self._ignore_exceptions:
                 if self._log_ignored_exceptions:
-                    cache.logger.error(str(e))
+                    self.logger.error(str(e))
                 return default
             raise
         else:
