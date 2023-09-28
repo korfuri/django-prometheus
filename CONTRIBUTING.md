@@ -28,15 +28,14 @@ Please write unit tests for your change. There are two kinds of tests:
 ### Running all tests
 
 ```shell
-python setup.py test
-cd tests/end2end/ &&  PYTHONPATH=../.. ./manage.py test
+tox
 ```
 
 The former runs the regular unit tests, the latter runs the Django
 unit test.
 
-To avoid setting PYTHONPATH every time, you can also run `python
-setup.py install`.
+To avoid setting PYTHONPATH every time, you can also run `pip install
+-e .`
 
 ### Running the test Django app
 
