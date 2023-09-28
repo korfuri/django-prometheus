@@ -40,7 +40,6 @@ Tracker = "https://github.com/korfuri/django-prometheus/issues"
 testing = ["pytest", "pytest-django"]
 
 [tool.setuptools]
-test-suite = "django_prometheus.tests"
 include-package-data = false
 
 [tool.setuptools.packages.find]
@@ -49,9 +48,6 @@ namespaces = false
 
 [tool.setuptools.dynamic]
 version = {attr = "django_prometheus.__version__"}
-
-[tool.aliases]
-test = "pytest"
 
 [build-system]
 requires = [ "setuptools >= 67.7.2", "wheel >= 0.40.0"]
