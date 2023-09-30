@@ -1,3 +1,54 @@
+[project]
+name = "django-prometheus"
+authors = [{name = "Uriel Corfa", email = "uriel@corfa.fr"}]
+license = {text = "Apache"}
+description = "Django middlewares to monitor your application with Prometheus.io."
+keywords = ["django", "monitoring", "prometheus"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Framework :: Django :: 3.2",
+    "Framework :: Django :: 4.0",
+    "Framework :: Django :: 4.1",
+    "Framework :: Django :: 4.2",
+    "Topic :: System :: Monitoring",
+    "License :: OSI Approved :: Apache Software License",
+]
+dependencies = ["prometheus-client>=0.7"]
+dynamic = ["version"]
+
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+[project.urls]
+Homepage = "https://github.com/korfuri/django-prometheus"
+Changelog = "https://github.com/korfuri/django-prometheus/blob/master/CHANGELOG.md"
+Documentation = "https://github.com/korfuri/django-prometheus/blob/master/README.md"
+Source = "https://github.com/korfuri/django-prometheus"
+Tracker = "https://github.com/korfuri/django-prometheus/issues"
+
+[project.optional-dependencies]
+testing = ["pytest", "pytest-django"]
+
+[tool.setuptools]
+include-package-data = false
+
+[tool.setuptools.packages.find]
+exclude = ["tests"]
+namespaces = false
+
+[tool.setuptools.dynamic]
+version = {attr = "django_prometheus.__version__"}
+
 [build-system]
 requires = [ "setuptools >= 67.7.2", "wheel >= 0.40.0"]
 build-backend = "setuptools.build_meta"
