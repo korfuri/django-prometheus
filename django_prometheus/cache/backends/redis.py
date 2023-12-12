@@ -1,5 +1,5 @@
+from django import VERSION as DJANGO_VERSION
 from django_redis import cache, exceptions
-
 from django_prometheus.cache.metrics import (
     django_cache_get_fail_total,
     django_cache_get_total,
@@ -29,4 +29,24 @@ class RedisCache(cache.RedisCache):
                 return cached
             else:
                 django_cache_misses_total.labels(backend="redis").inc()
+                return default
+
+
+if DJANGO_VERSION >= (4, 0):
+    from django.core.cache.backends.redis import RedisCache as DjangoRedisCache
+
+    class NativeRedisCache(DjangoRedisCache):
+
+        def get(self, key, default=None, version=None):
+            django_cache_get_total.labels(backend="native_redis").inc()
+            try:
+                result = super().get(key, default=None, version=version)
+            except Exception:
+                django_cache_get_fail_total.labels(backend="native_redis").inc()
+                raise
+            if result is not None:
+                django_cache_hits_total.labels(backend="native_redis").inc()
+                return result
+            else:
+                django_cache_misses_total.labels(backend="native_redis").inc()
                 return default
