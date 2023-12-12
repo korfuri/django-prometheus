@@ -2,6 +2,8 @@
 
 ## v2.4.0 - UNPUBLISHED
 
+* Add support for Django 5.0 and Python 3.12.
+
 ## v2.3.1 - May 2nd, 2023
 
 * Fix postgresql provider import, Thanks [@wilsonehusin](https://github.com/korfuri/django-prometheus/pull/402)

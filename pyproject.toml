@@ -22,7 +22,11 @@ line-length = 120
 legacy_tox_ini = """
 [tox]
 min_version = 4.4
-envlist = {py37,py38,py39,py310,py311}-django{320}-{end2end,unittests},{py38,py39,py310,py311}-django{400,410,420}-{end2end,unittests},py39-lint
+envlist =
+    {py37,py38,py39,py310,py311}-django{320}-{end2end,unittests}
+    {py38,py39,py310,py311,312}-django{400,410,420}-{end2end,unittests}
+    {py310,py311,312}-django{500}-{end2end,unittests}
+    py39-lint
 
 [gh-actions]
 python =
@@ -31,6 +35,7 @@ python =
     3.9: py39, py39-lint
     3.10: py310
     3.11: py311
+    3.12: py312
 
 [testenv]
 deps =
@@ -38,6 +43,7 @@ deps =
     django400: Django>=4.0,<4.1
     django410: Django>=4.1,<4.2
     django420: Django>=4.2,<4.3
+    django500: Django>=5.0a1,<5.1
     coverage
     -rrequirements.txt
 skip_missing_interpreters=true
