@@ -1,5 +1,5 @@
 from django import VERSION as DJANGO_VERSION
-from django_redis import cache, exceptions
+
 from django_prometheus.cache.metrics import (
     django_cache_get_fail_total,
     django_cache_get_total,
@@ -7,35 +7,43 @@ from django_prometheus.cache.metrics import (
     django_cache_misses_total,
 )
 
+try:
+    import django_redis
+    from django_redis import cache, exceptions
+except ImportError:
+    django_redis = None
 
-class RedisCache(cache.RedisCache):
-    """Inherit redis to add metrics about hit/miss/interruption ratio"""
 
-    @cache.omit_exception
-    def get(self, key, default=None, version=None, client=None):
-        try:
-            django_cache_get_total.labels(backend="redis").inc()
-            cached = self.client.get(key, default=None, version=version, client=client)
-        except exceptions.ConnectionInterrupted as e:
-            django_cache_get_fail_total.labels(backend="redis").inc()
-            if self._ignore_exceptions:
-                if self._log_ignored_exceptions:
-                    cache.logger.error(str(e))
-                return default
-            raise
-        else:
-            if cached is not None:
-                django_cache_hits_total.labels(backend="redis").inc()
-                return cached
+if django_redis is not None:
+
+    class RedisCache(cache.RedisCache):
+        """Inherit redis to add metrics about hit/miss/interruption ratio"""
+
+        @cache.omit_exception
+        def get(self, key, default=None, version=None, client=None):
+            try:
+                django_cache_get_total.labels(backend="redis").inc()
+                cached = self.client.get(key, default=None, version=version, client=client)
+            except exceptions.ConnectionInterrupted as e:
+                django_cache_get_fail_total.labels(backend="redis").inc()
+                if self._ignore_exceptions:
+                    if self._log_ignored_exceptions:
+                        cache.logger.error(str(e))
+                    return default
+                raise
             else:
-                django_cache_misses_total.labels(backend="redis").inc()
-                return default
+                if cached is not None:
+                    django_cache_hits_total.labels(backend="redis").inc()
+                    return cached
+                else:
+                    django_cache_misses_total.labels(backend="redis").inc()
+                    return default
 
 
 if DJANGO_VERSION >= (4, 0):
     from django.core.cache.backends.redis import RedisCache as DjangoRedisCache
 
-    class NativeRedisCache(DjangoRedisCache):
+    class RedisNativeCache(DjangoRedisCache):
 
         def get(self, key, default=None, version=None):
             django_cache_get_total.labels(backend="native_redis").inc()

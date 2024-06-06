@@ -135,7 +135,7 @@ CACHES = {
 
 if DJANGO_VERSION >= (4, 0):
     CACHES["native_redis"] = {
-        "BACKEND": "django_prometheus.cache.backends.redis.NativeRedisCache",
+        "BACKEND": "django_prometheus.cache.backends.redis.RedisNativeCache",
         "LOCATION": "redis://127.0.0.1:6379/0",
     }
 
