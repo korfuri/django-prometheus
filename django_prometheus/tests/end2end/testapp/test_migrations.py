@@ -50,8 +50,8 @@ class TestMigrations:
         applied_metric = next((m for m in metrics if m.name == M("applied_total")), None)
         unapplied_metric = next((m for m in metrics if m.name == M("unapplied_total")), None)
         
-        assert applied_metric.samples[1].value == 2
-        assert applied_metric.samples[1].labels == {"connection": "test_db_1"}
+        assert applied_metric.samples[0].value == 2
+        assert applied_metric.samples[0].labels == {"connection": "default"}
         
-        assert unapplied_metric.samples[1].value == 1
-        assert unapplied_metric.samples[1].labels == {"connection": "test_db_1"}
+        assert unapplied_metric.samples[0].value == 1
+        assert unapplied_metric.samples[0].labels == {"connection": "default"}
