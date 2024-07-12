@@ -43,8 +43,12 @@ def SetupPrometheusEndpointOnPort(port, addr=""):
         "with --noreload. See documentation/exports.md."
     )
 
-    registry = prometheus_client.CollectorRegistry()
-    multiprocess.MultiProcessCollector(registry)
+    if "PROMETHEUS_MULTIPROC_DIR" in os.environ or "prometheus_multiproc_dir" in os.environ:
+        registry = prometheus_client.CollectorRegistry()
+        multiprocess.MultiProcessCollector(registry)
+    else:
+        registry = prometheus_client.REGISTRY
+    
     try:
         prometheus_client.start_http_server(port, addr=addr, registry=registry)
     except OSError:
