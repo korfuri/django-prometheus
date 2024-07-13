@@ -49,13 +49,7 @@ def SetupPrometheusEndpointOnPort(port, addr=""):
     else:
         registry = prometheus_client.REGISTRY
     
-    try:
-        prometheus_client.start_http_server(port, addr=addr, registry=registry)
-    except OSError:
-        """
-        first process serves metrics on port 8001, other processes raise error: port already in use
-        one processes collect metrics from PROMETHEUS_MULTIPROC_DIR
-        """
+    prometheus_client.start_http_server(port, addr=addr, registry=registry)
 
 
 class PrometheusEndpointServer(threading.Thread):
