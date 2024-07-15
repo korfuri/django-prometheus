@@ -223,7 +223,7 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
             self.label_metric(self.metrics.requests_ajax, request).inc()
 
         content_length = 0
-        raw_content_length = request.META.get("CONTENT_LENGTH")
+        raw_content_length = request.META.get("CONTENT_LENGTH", "")
         if raw_content_length.isdigit():
             content_length = int(raw_content_length)
         self.label_metric(self.metrics.requests_body_bytes, request).observe(content_length)
