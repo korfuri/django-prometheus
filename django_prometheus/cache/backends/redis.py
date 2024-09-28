@@ -1,5 +1,6 @@
 from django import VERSION as DJANGO_VERSION
 from django_redis import cache, exceptions
+
 from django_prometheus.cache.metrics import (
     django_cache_get_fail_total,
     django_cache_get_total,
@@ -36,7 +37,6 @@ if DJANGO_VERSION >= (4, 0):
     from django.core.cache.backends.redis import RedisCache as DjangoRedisCache
 
     class NativeRedisCache(DjangoRedisCache):
-
         def get(self, key, default=None, version=None):
             django_cache_get_total.labels(backend="native_redis").inc()
             try:

@@ -10,5 +10,5 @@ pytest-django
 pylibmc
 pymemcache
 python-memcached
-setuptools
+setuptools<72.0.0
 wheel

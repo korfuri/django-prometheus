@@ -2,7 +2,6 @@ import os
 import tempfile
 
 from django import VERSION as DJANGO_VERSION
-
 from testapp.helpers import get_middleware
 
 # SECURITY WARNING: keep the secret key used in production secret!
