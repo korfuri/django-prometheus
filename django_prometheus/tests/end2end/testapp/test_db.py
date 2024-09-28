@@ -178,3 +178,35 @@ class TestPostgisDbMetrics(BaseDBTest):
             alias="postgis",
             vendor="postgresql",
         )
+
+
+@pytest.mark.skipif("spatialite" not in connections, reason="Skipped unless spatialite database is enabled")
+class TestSpatialiteDbMetrics(BaseDBTest):
+    """Test django_prometheus.db metrics for spatialite backend.
+
+    Note regarding the values of metrics: many tests interact with the
+    database, and the test runner itself does. As such, tests that
+    require that a metric has a specific value are at best very
+    fragile. Consider asserting that the value exceeds a certain
+    threshold, or check by how much it increased during the test.
+    """
+
+    def test_counters(self):
+        r = save_registry()
+        connection = connections["spatialite"]
+
+        # Make sure the extension is loaded and geospatial tables are created
+        connection.prepare_database()
+
+        cursor = connection.cursor()
+
+        for _ in range(20):
+            cursor.execute("SELECT 1")
+
+        assert_metric_compare(
+            r,
+            lambda a, b: a + 20 <= b < a + 25,
+            "django_db_execute_total",
+            alias="spatialite",
+            vendor="sqlite",
+        )

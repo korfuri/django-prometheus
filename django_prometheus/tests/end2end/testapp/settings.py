@@ -81,6 +81,10 @@ DATABASES = {
         "HOST": "127.0.0.1",
         "PORT": "3306",
     },
+    "spatialite": {
+        "ENGINE": "django_prometheus.db.backends.spatialite",
+        "NAME": "db_spatialite.sqlite3",
+    },
     # The following databases are used by test_db.py only
     "test_db_1": {
         "ENGINE": "django_prometheus.db.backends.sqlite3",

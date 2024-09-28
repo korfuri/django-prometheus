@@ -15,8 +15,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11", "3.12"]
-        os: [ubuntu-22.04]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        os: [ubuntu-24.04]
     runs-on: ${{ matrix.os }}
     name: "${{ matrix.os }} Python: ${{ matrix.python-version }}"
     services:
@@ -44,7 +44,7 @@ jobs:
     - name: Install OS Packages
       run: |
         sudo apt-get update
-        sudo apt-get install binutils libproj-dev gdal-bin libmemcached-dev
+        sudo apt-get install binutils libproj-dev gdal-bin libmemcached-dev libsqlite3-mod-spatialite
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
