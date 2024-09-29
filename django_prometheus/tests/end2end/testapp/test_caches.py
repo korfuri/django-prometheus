@@ -1,6 +1,6 @@
 import pytest
-from django.core.cache import caches
 from django import VERSION as DJANGO_VERSION
+from django.core.cache import caches
 from redis import RedisError
 
 from django_prometheus.testutils import assert_metric_equal, get_metric
