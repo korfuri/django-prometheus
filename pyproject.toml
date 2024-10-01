@@ -23,14 +23,13 @@ legacy_tox_ini = """
 [tox]
 min_version = 4.4
 envlist =
-    {py37,py38,py39,py310,py311}-django{320}-{end2end,unittests}
+    {py38,py39,py310,py311}-django{320}-{end2end,unittests}
     {py38,py39,py310,py311,py312}-django{400,410,420}-{end2end,unittests}
     {py310,py311,py312}-django{500,510}-{end2end,unittests}
     py39-lint
 
 [gh-actions]
 python =
-    3.7: py37
     3.8: py38
     3.9: py39, py39-lint
     3.10: py310
