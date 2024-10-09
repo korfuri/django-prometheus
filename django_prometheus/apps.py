@@ -2,8 +2,9 @@ from django.apps import AppConfig
 from django.conf import settings
 
 import django_prometheus
+from prometheus_client.core import REGISTRY
 from django_prometheus.exports import SetupPrometheusExportsFromConfig
-from django_prometheus.migrations import ExportMigrations
+from django_prometheus.migrations import MigrationCollector
 
 
 class DjangoPrometheusConfig(AppConfig):
@@ -21,4 +22,4 @@ class DjangoPrometheusConfig(AppConfig):
         """
         SetupPrometheusExportsFromConfig()
         if getattr(settings, "PROMETHEUS_EXPORT_MIGRATIONS", False):
-            ExportMigrations()
+            REGISTRY.register(MigrationCollector())
