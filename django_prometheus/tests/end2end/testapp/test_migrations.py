@@ -1,9 +1,10 @@
-from unittest.mock import MagicMock
+from unittest.mock import patch
 
 import pytest
+from prometheus_client import CollectorRegistry
 
-from django_prometheus.migrations import ExportMigrationsForDatabase
-from django_prometheus.testutils import assert_metric_equal
+from django_prometheus.migrations import MigrationCollector
+
 
 
 def M(metric_name):
@@ -19,19 +20,38 @@ def M(metric_name):
 class TestMigrations:
     """Test migration counters."""
 
-    def test_counters(self):
-        executor = MagicMock()
-        executor.migration_plan = MagicMock()
-        executor.migration_plan.return_value = set()
-        executor.loader.applied_migrations = {"a", "b", "c"}
-        ExportMigrationsForDatabase("fakedb1", executor)
-        assert executor.migration_plan.call_count == 1
-        executor.migration_plan = MagicMock()
-        executor.migration_plan.return_value = {"a"}
-        executor.loader.applied_migrations = {"b", "c"}
-        ExportMigrationsForDatabase("fakedb2", executor)
-
-        assert_metric_equal(3, M("applied_total"), connection="fakedb1")
-        assert_metric_equal(0, M("unapplied_total"), connection="fakedb1")
-        assert_metric_equal(2, M("applied_total"), connection="fakedb2")
-        assert_metric_equal(1, M("unapplied_total"), connection="fakedb2")
+    @patch('django.db.migrations.executor.MigrationExecutor')
+    def test_counters(self, MockMigrationExecutor):
+        
+        mock_executor = MockMigrationExecutor.return_value
+        mock_executor.migration_plan.return_value = set()
+        mock_executor.loader.applied_migrations = {"a", "b", "c"}
+        
+        test_registry = CollectorRegistry()
+        collector = MigrationCollector()
+        test_registry.register(collector)
+        
+        metrics = list(collector.collect())
+        
+        applied_metric = next((m for m in metrics if m.name == M("applied_total")), None)
+        unapplied_metric = next((m for m in metrics if m.name == M("unapplied_total")), None)
+        
+        assert applied_metric.samples[0].value == 3
+        assert applied_metric.samples[0].labels == {"connection": "default"}
+        
+        assert unapplied_metric.samples[0].value == 0
+        assert unapplied_metric.samples[0].labels == {"connection": "default"}
+        
+        mock_executor.migration_plan.return_value = {"a"}
+        mock_executor.loader.applied_migrations = {"b", "c"}
+        
+        metrics = list(collector.collect())
+        
+        applied_metric = next((m for m in metrics if m.name == M("applied_total")), None)
+        unapplied_metric = next((m for m in metrics if m.name == M("unapplied_total")), None)
+        
+        assert applied_metric.samples[0].value == 2
+        assert applied_metric.samples[0].labels == {"connection": "default"}
+        
+        assert unapplied_metric.samples[0].value == 1
+        assert unapplied_metric.samples[0].labels == {"connection": "default"}
