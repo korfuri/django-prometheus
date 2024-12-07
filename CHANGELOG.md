@@ -3,6 +3,7 @@
 ## v2.4.0 - UNPUBLISHED
 
 * Add support for Django 5.0 and Python 3.12.
+* Replace black, flake8 and isort with Ruff
 * Drop support for Django 3.2 (Python 3.7), 4.0 and 4.1
 
 ## v2.3.1 - May 2nd, 2023
