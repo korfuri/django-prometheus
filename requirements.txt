@@ -1,4 +1,3 @@
-django-redis>=4.12.1
 black
 flake8
 prometheus-client>=0.12.0
@@ -10,5 +9,6 @@ pytest-django
 pylibmc
 pymemcache
 python-memcached
+redis
 setuptools<72.0.0
 wheel

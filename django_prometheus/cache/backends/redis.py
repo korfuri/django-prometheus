@@ -1,5 +1,5 @@
-from django import VERSION as DJANGO_VERSION
-from django_redis import cache, exceptions
+from warnings import deprecated
+from django.core.cache.backends.redis import RedisCache
 
 from django_prometheus.cache.metrics import (
     django_cache_get_fail_total,
@@ -9,44 +9,19 @@ from django_prometheus.cache.metrics import (
 )
 
 
-class RedisCache(cache.RedisCache):
-    """Inherit redis to add metrics about hit/miss/interruption ratio"""
-
-    @cache.omit_exception
-    def get(self, key, default=None, version=None, client=None):
+class NativeRedisCache(RedisCache):
+    def get(self, key, default=None, version=None):
+        django_cache_get_total.labels(backend="native_redis").inc()
         try:
-            django_cache_get_total.labels(backend="redis").inc()
-            cached = self.client.get(key, default=None, version=version, client=client)
-        except exceptions.ConnectionInterrupted as e:
-            django_cache_get_fail_total.labels(backend="redis").inc()
-            if self._ignore_exceptions:
-                if self._log_ignored_exceptions:
-                    cache.logger.error(str(e))
-                return default
+            result = super().get(key, default=None, version=version)
+        except Exception:
+            django_cache_get_fail_total.labels(backend="native_redis").inc()
             raise
+        if result is not None:
+            django_cache_hits_total.labels(backend="native_redis").inc()
+            return result
         else:
-            if cached is not None:
-                django_cache_hits_total.labels(backend="redis").inc()
-                return cached
-            else:
-                django_cache_misses_total.labels(backend="redis").inc()
-                return default
+            django_cache_misses_total.labels(backend="native_redis").inc()
+            return default
 
-
-if DJANGO_VERSION >= (4, 0):
-    from django.core.cache.backends.redis import RedisCache as DjangoRedisCache
-
-    class NativeRedisCache(DjangoRedisCache):
-        def get(self, key, default=None, version=None):
-            django_cache_get_total.labels(backend="native_redis").inc()
-            try:
-                result = super().get(key, default=None, version=version)
-            except Exception:
-                django_cache_get_fail_total.labels(backend="native_redis").inc()
-                raise
-            if result is not None:
-                django_cache_hits_total.labels(backend="native_redis").inc()
-                return result
-            else:
-                django_cache_misses_total.labels(backend="native_redis").inc()
-                return default
+RedisCache = deprecated("RedisCache is deprecated, use NativeRedisCache instead")(NativeRedisCache)
