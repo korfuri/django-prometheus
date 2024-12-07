@@ -35,7 +35,7 @@ jobs:
         ports:
           - 3306:3306
       postgresql:
-        image: postgis/postgis:14-master
+        image: postgis/postgis:14-alpine
         env:
           POSTGRES_HOST_AUTH_METHOD: trust
         ports:
