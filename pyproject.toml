@@ -10,7 +10,7 @@ line-length = 120
 target-version = "py38"
 
 [tool.ruff.lint]
-select = ["I"]
+select = ["B", "C4", "E", "F", "I", "T10", "YTT", "W"]
 
 [tool.tox]
 legacy_tox_ini = """
@@ -50,14 +50,8 @@ commands =
 
 [testenv:py39-lint]
 deps =
-    flake8
     ruff==0.8.2
-    flake8-debugger
-    flake8-2020
-    flake8-comprehensions
-    flake8-bugbear
 commands =
     ruff format --check django_prometheus/
-    flake8 django_prometheus
     ruff check django_prometheus/
 """
