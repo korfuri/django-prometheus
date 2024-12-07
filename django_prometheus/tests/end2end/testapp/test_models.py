@@ -1,7 +1,7 @@
 import pytest
-from testapp.models import Dog, Lawn
 
 from django_prometheus.testutils import assert_metric_diff, save_registry
+from testapp.models import Dog, Lawn
 
 
 def M(metric_name):

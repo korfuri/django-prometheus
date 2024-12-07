@@ -1,11 +1,11 @@
 import pytest
-from testapp.views import ObjectionException
 
 from django_prometheus.testutils import (
     assert_metric_diff,
     assert_metric_equal,
     save_registry,
 )
+from testapp.views import ObjectionException
 
 
 def M(metric_name):
