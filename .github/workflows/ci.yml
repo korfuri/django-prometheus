@@ -21,11 +21,11 @@ jobs:
     name: "${{ matrix.os }} Python: ${{ matrix.python-version }}"
     services:
       redis:
-        image: redis:6.2.6
+        image: redis:6.2-alpine
         ports:
           - 6379:6379
       memcached:
-        image: memcached:1.6.12
+        image: memcached:1.6-alpine
         ports:
           - 11211:11211
       mysql:
@@ -35,7 +35,7 @@ jobs:
         ports:
           - 3306:3306
       postgresql:
-        image: postgis/postgis:14-master
+        image: postgis/postgis:14-3.5-alpine
         env:
           POSTGRES_HOST_AUTH_METHOD: trust
         ports:
