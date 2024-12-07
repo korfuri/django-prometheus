@@ -120,6 +120,10 @@ CACHES = {
         "BACKEND": "django_prometheus.cache.backends.locmem.LocMemCache",
         "LOCATION": os.path.join(_tmp_cache_dir, "locmem_cache"),
     },
+    "native_redis": {
+        "BACKEND": "django_prometheus.cache.backends.redis.NativeRedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/0",
+    },
     "redis": {
         "BACKEND": "django_prometheus.cache.backends.redis.RedisCache",
         "LOCATION": "redis://127.0.0.1:6379/1",
@@ -135,12 +139,6 @@ CACHES = {
         "OPTIONS": {"IGNORE_EXCEPTIONS": True},
     },
 }
-
-if DJANGO_VERSION >= (4, 0):
-    CACHES["native_redis"] = {
-        "BACKEND": "django_prometheus.cache.backends.redis.NativeRedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/0",
-    }
 
 
 # Internationalization
