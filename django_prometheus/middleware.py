@@ -222,7 +222,10 @@ class PrometheusAfterMiddleware(MiddlewareMixin):
         if request.META.get("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest":
             self.label_metric(self.metrics.requests_ajax, request).inc()
 
-        content_length = int(request.META.get("CONTENT_LENGTH") or 0)
+        content_length = 0
+        raw_content_length = request.META.get("CONTENT_LENGTH", "")
+        if raw_content_length.isdigit():
+            content_length = int(raw_content_length)
         self.label_metric(self.metrics.requests_body_bytes, request).observe(content_length)
         request.prometheus_after_middleware_event = Time()
 
