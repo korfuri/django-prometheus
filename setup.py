@@ -7,7 +7,7 @@ with open("README.md") as fl:
 
 
 def get_version():
-    version_file = open("django_prometheus/__init__.py", "r").read()
+    version_file = open("django_prometheus/__init__.py").read()
     version_match = re.search(
         r'^__version__ = [\'"]([^\'"]*)[\'"]', version_file, re.MULTILINE
     )
@@ -51,7 +51,6 @@ setup(
         "Intended Audience :: Information Technology",
         "Intended Audience :: System Administrators",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
