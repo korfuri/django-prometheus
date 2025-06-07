@@ -23,7 +23,7 @@ This library provides Prometheus metrics for Django related operations:
 ### Requirements
 
 * Django >= 4.2
-* Python 3.8 and above.
+* Python 3.9 and above.
 
 ### Installation
 
