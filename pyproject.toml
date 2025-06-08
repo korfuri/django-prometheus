@@ -7,8 +7,7 @@ addopts = " --ignore django_prometheus/tests/end2end"
 
 [tool.ruff]
 line-length = 120
-target-version = "py38"
+target-version = "py39"
 
 [tool.ruff.lint]
 select = ["B", "C4", "E", "F", "I", "T10", "YTT", "W"]
-
