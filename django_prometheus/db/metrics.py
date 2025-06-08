@@ -18,7 +18,7 @@ connection_errors_total = Counter(
 
 execute_total = Counter(
     "django_db_execute_total",
-    ("Counter of executed statements by database and by vendor, including" " bulk executions."),
+    ("Counter of executed statements by database and by vendor, including bulk executions."),
     ["alias", "vendor"],
     namespace=NAMESPACE,
 )
@@ -26,7 +26,7 @@ execute_total = Counter(
 
 execute_many_total = Counter(
     "django_db_execute_many_total",
-    ("Counter of executed statements in bulk operations by database and" " by vendor."),
+    ("Counter of executed statements in bulk operations by database and by vendor."),
     ["alias", "vendor"],
     namespace=NAMESPACE,
 )

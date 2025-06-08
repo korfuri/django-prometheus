@@ -36,7 +36,7 @@ class Metrics:
         self.requests_latency_before = self.register_metric(
             Histogram,
             "django_http_requests_latency_including_middlewares_seconds",
-            ("Histogram of requests processing time (including middleware " "processing time)."),
+            ("Histogram of requests processing time (including middleware processing time)."),
             buckets=PROMETHEUS_LATENCY_BUCKETS,
             namespace=NAMESPACE,
         )
