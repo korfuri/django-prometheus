@@ -93,7 +93,7 @@ def SetupPrometheusEndpointOnPortRange(port_range, addr=""):
         thread.start()
         logger.info("Exporting Prometheus /metrics/ on port %s" % port)
         return port  # Stop trying ports at this point
-    logger.warning("Cannot export Prometheus /metrics/ - " "no available ports in supplied range")
+    logger.warning("Cannot export Prometheus /metrics/ - no available ports in supplied range")
     return None
 
 
