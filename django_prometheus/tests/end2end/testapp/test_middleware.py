@@ -14,14 +14,14 @@ def M(metric_name):
     This is just intended to help keep the lines shorter in test
     cases.
     """
-    return "django_http_%s" % metric_name
+    return f"django_http_{metric_name}"
 
 
 def T(metric_name):
     """Makes a full metric name from a short metric name like M(metric_name)
 
     This method adds a '_total' postfix for metrics."""
-    return "%s_total" % M(metric_name)
+    return f"{M(metric_name)}_total"
 
 
 class TestMiddlewareMetrics:

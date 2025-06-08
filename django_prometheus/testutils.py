@@ -189,7 +189,7 @@ def format_labels(labels):
     Out:
       '{method="GET",port="80"}'
     """
-    return "{%s}" % ",".join([f'{k}="{v}"' for k, v in labels.items()])
+    return "{{{}}}".format(",".join([f'{k}="{v}"' for k, v in labels.items()]))
 
 
 def format_vector(vector):

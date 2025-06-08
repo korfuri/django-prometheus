@@ -21,6 +21,9 @@ select = [
     # https://docs.astral.sh/ruff/rules/#flake8-debugger-t10
     # https://github.com/jbkahn/flake8-debugger
     "T10",
+    # https://docs.astral.sh/ruff/rules/#pyupgrade-up
+    # https://github.com/asottile/pyupgrade
+    "UP",
     # https://docs.astral.sh/ruff/rules/#flake8-2020-ytt
     # https://github.com/asottile-archive/flake8-2020
     "YTT",
