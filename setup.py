@@ -9,7 +9,9 @@ with open("README.md") as fl:
 def get_version():
     version_file = open("django_prometheus/__init__.py").read()
     version_match = re.search(
-        r'^__version__ = [\'"]([^\'"]*)[\'"]', version_file, re.MULTILINE
+        r'^__version__ = [\'"]([^\'"]*)[\'"]',
+        version_file,
+        re.MULTILINE,
     )
     if version_match:
         return version_match.group(1)
