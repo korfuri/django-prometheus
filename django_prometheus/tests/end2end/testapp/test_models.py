@@ -10,7 +10,7 @@ def M(metric_name):
     This is just intended to help keep the lines shorter in test
     cases.
     """
-    return "django_model_%s" % metric_name
+    return f"django_model_{metric_name}"
 
 
 @pytest.mark.django_db()
