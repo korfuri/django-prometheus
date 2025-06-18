@@ -16,9 +16,11 @@ jobs:
           fetch-depth: 0
       - name: Check if version is dev
         run: |
-          if ! grep -q "\.dev\d" django_prometheus/__init__.py; then
+          if ! grep -q "dev" django_prometheus/__init__.py; then
             echo "Version does not contain 'dev', skipping pre-release"
             exit 1
+          else
+            echo "Version contains 'dev', proceeding with pre-release"
           fi
       - name: Set up Python 3.9
         uses: actions/setup-python@v5
