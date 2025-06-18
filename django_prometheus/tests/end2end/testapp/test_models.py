@@ -1,7 +1,7 @@
 import pytest
-from testapp.models import Dog, Lawn
 
 from django_prometheus.testutils import assert_metric_diff, save_registry
+from testapp.models import Dog, Lawn
 
 
 def M(metric_name):
@@ -10,7 +10,7 @@ def M(metric_name):
     This is just intended to help keep the lines shorter in test
     cases.
     """
-    return "django_model_%s" % metric_name
+    return f"django_model_{metric_name}"
 
 
 @pytest.mark.django_db()

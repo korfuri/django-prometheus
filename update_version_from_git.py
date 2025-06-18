@@ -21,7 +21,6 @@ Get the branch/tag name with this.
     git symbolic-ref -q --short HEAD || git describe --tags --exact-match
 """
 
-import io
 import re
 import subprocess
 import sys
@@ -125,5 +124,6 @@ if __name__ == "__main__":
     else:
         print(
             "Invalid usage. Supply 0 or 1 arguments. "
-            "Argument can be either a version '1.2.3' or 'patch' if you want to increase the patch-version (1.2.3 -> 1.2.4.dev)"
+            "Argument can be either a version '1.2.3' or 'patch' "
+            "if you want to increase the patch-version (1.2.3 -> 1.2.4.dev)"
         )

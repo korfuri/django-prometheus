@@ -63,16 +63,18 @@ def ExportingCursorWrapper(cursor_class, alias, vendor):
 
         def execute(self, *args, **kwargs):
             execute_total.labels(alias, vendor).inc()
-            with query_duration_seconds.labels(**labels).time(), ExceptionCounterByType(
-                errors_total, extra_labels=labels
+            with (
+                query_duration_seconds.labels(**labels).time(),
+                ExceptionCounterByType(errors_total, extra_labels=labels),
             ):
                 return super().execute(*args, **kwargs)
 
         def executemany(self, query, param_list, *args, **kwargs):
             execute_total.labels(alias, vendor).inc(len(param_list))
             execute_many_total.labels(alias, vendor).inc(len(param_list))
-            with query_duration_seconds.labels(**labels).time(), ExceptionCounterByType(
-                errors_total, extra_labels=labels
+            with (
+                query_duration_seconds.labels(**labels).time(),
+                ExceptionCounterByType(errors_total, extra_labels=labels),
             ):
                 return super().executemany(query, param_list, *args, **kwargs)
 

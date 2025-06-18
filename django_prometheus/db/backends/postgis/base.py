@@ -1,6 +1,6 @@
 from django.contrib.gis.db.backends.postgis import base
+from django.db.backends.postgresql.base import Cursor
 
-from django_prometheus.db.backends.common import get_postgres_cursor_class
 from django_prometheus.db.common import DatabaseWrapperMixin, ExportingCursorWrapper
 
 
@@ -8,8 +8,11 @@ class DatabaseWrapper(DatabaseWrapperMixin, base.DatabaseWrapper):
     def get_new_connection(self, *args, **kwargs):
         conn = super().get_new_connection(*args, **kwargs)
         conn.cursor_factory = ExportingCursorWrapper(
-            conn.cursor_factory or get_postgres_cursor_class(), "postgis", self.vendor
+            conn.cursor_factory or Cursor(),
+            "postgis",
+            self.vendor,
         )
+
         return conn
 
     def create_cursor(self, name=None):

@@ -1,13 +1,17 @@
 import pytest
-from django import VERSION as DJANGO_VERSION
 from django.core.cache import caches
 from redis import RedisError
 
 from django_prometheus.testutils import assert_metric_equal, get_metric
 
-_SUPPORTED_CACHES = ["memcached.PyLibMCCache", "memcached.PyMemcacheCache", "filebased", "locmem", "redis"]
-if DJANGO_VERSION >= (4, 0):
-    _SUPPORTED_CACHES.append("native_redis")
+_SUPPORTED_CACHES = [
+    "memcached.PyLibMCCache",
+    "memcached.PyMemcacheCache",
+    "filebased",
+    "locmem",
+    "native_redis",
+    "redis",
+]
 
 
 class TestCachesMetrics:
