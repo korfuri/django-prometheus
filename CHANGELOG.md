@@ -1,5 +1,7 @@
 # Changelog
 
+## v2.5.0 - UNRELEASED
+
 ## v2.4.0 - June 18th, 2025
 
 * Add support for Django 5.0 and Python 3.12.
