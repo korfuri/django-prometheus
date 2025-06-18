@@ -1,6 +1,6 @@
 # Changelog
 
-## v2.4.0 - January 8th, 2025
+## v2.4.0 - June 18th, 2025
 
 * Add support for Django 5.0 and Python 3.12.
 * Replace black, flake8 and isort with Ruff
