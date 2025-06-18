@@ -6,7 +6,7 @@ on:
 jobs:
   org-check:
     name: Check GitHub Organization
-    if: ${{ github.repository_owner == 'korfuri' }}
+    if: ${{ github.repository_owner == 'django-commons' }}
     runs-on: ubuntu-latest
     steps:
       - name: Noop
