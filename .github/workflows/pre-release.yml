@@ -7,6 +7,7 @@ jobs:
   pre-release-django-prometheus-job:
     runs-on: ubuntu-latest
     name: pre-release django-prometheus
+    if: ${{ github.repository_owner == 'django-commons' }}
     permissions:
       id-token: write
     steps:
