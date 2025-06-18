@@ -1,4 +1,4 @@
-name: Release
+name: Pre-Release
 on:
   push:
     branches:
@@ -13,6 +13,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Check if version is dev
+        run: |
+          if ! grep -q "\.dev\d" django_prometheus/__init__.py; then
+            echo "Version does not contain 'dev', skipping pre-release"
+            exit 1
+          fi
       - name: Set up Python 3.9
         uses: actions/setup-python@v5
         with:
